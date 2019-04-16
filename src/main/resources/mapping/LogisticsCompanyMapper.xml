@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kzq.advance.mapper.LogisticsCompanyMapper" >
+  <resultMap id="BaseResultMap" type="com.kzq.advance.domain.LogisticsCompany" >
+    <id column="cp_code" property="cpCode" jdbcType="VARCHAR" />
+    <result column="logistics_company" property="logisticsCompany" jdbcType="VARCHAR" />
+    <result column="resource_code" property="resourceCode" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="address_detail" property="addressDetail" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="standard_template_url" property="standardTemplateUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    cp_code, logistics_company, resource_code, state, address_detail, area, city, province, 
+    standard_template_url
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_logistics_company
+    where cp_code = #{cpCode,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_logistics_company
+    where cp_code = #{cpCode,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.kzq.advance.domain.LogisticsCompany" >
+    insert into t_logistics_company (cp_code, logistics_company, resource_code, 
+      state, address_detail, area, 
+      city, province, standard_template_url
+      )
+    values (#{cpCode,jdbcType=VARCHAR}, #{logisticsCompany,jdbcType=VARCHAR}, #{resourceCode,jdbcType=VARCHAR}, 
+      #{state,jdbcType=INTEGER}, #{addressDetail,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{standardTemplateUrl,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.kzq.advance.domain.LogisticsCompany" >
+    insert into t_logistics_company
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cpCode != null" >
+        cp_code,
+      </if>
+      <if test="logisticsCompany != null" >
+        logistics_company,
+      </if>
+      <if test="resourceCode != null" >
+        resource_code,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="addressDetail != null" >
+        address_detail,
+      </if>
+      <if test="area != null" >
+        area,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="standardTemplateUrl != null" >
+        standard_template_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cpCode != null" >
+        #{cpCode,jdbcType=VARCHAR},
+      </if>
+      <if test="logisticsCompany != null" >
+        #{logisticsCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceCode != null" >
+        #{resourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="addressDetail != null" >
+        #{addressDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="standardTemplateUrl != null" >
+        #{standardTemplateUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kzq.advance.domain.LogisticsCompany" >
+    update t_logistics_company
+    <set >
+      <if test="logisticsCompany != null" >
+        logistics_company = #{logisticsCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceCode != null" >
+        resource_code = #{resourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="addressDetail != null" >
+        address_detail = #{addressDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="standardTemplateUrl != null" >
+        standard_template_url = #{standardTemplateUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where cp_code = #{cpCode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kzq.advance.domain.LogisticsCompany" >
+    update t_logistics_company
+    set logistics_company = #{logisticsCompany,jdbcType=VARCHAR},
+      resource_code = #{resourceCode,jdbcType=VARCHAR},
+      state = #{state,jdbcType=INTEGER},
+      address_detail = #{addressDetail,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      standard_template_url = #{standardTemplateUrl,jdbcType=VARCHAR}
+    where cp_code = #{cpCode,jdbcType=VARCHAR}
+  </update>
+</mapper>

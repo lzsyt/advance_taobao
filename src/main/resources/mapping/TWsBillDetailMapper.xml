@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kzq.advance.mapper.TWsBillDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.kzq.advance.domain.TWsBillDetail" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="date_created" property="dateCreated" jdbcType="TIMESTAMP" />
+    <result column="goods_id" property="goodsId" jdbcType="VARCHAR" />
+    <result column="goods_count" property="goodsCount" jdbcType="DECIMAL" />
+    <result column="goods_money" property="goodsMoney" jdbcType="DECIMAL" />
+    <result column="goods_price" property="goodsPrice" jdbcType="DECIMAL" />
+    <result column="inventory_money" property="inventoryMoney" jdbcType="DECIMAL" />
+    <result column="inventory_price" property="inventoryPrice" jdbcType="DECIMAL" />
+    <result column="show_order" property="showOrder" jdbcType="INTEGER" />
+    <result column="wsbill_id" property="wsbillId" jdbcType="VARCHAR" />
+    <result column="sn_note" property="snNote" jdbcType="VARCHAR" />
+    <result column="data_org" property="dataOrg" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="company_id" property="companyId" jdbcType="VARCHAR" />
+    <result column="sobilldetail_id" property="sobilldetailId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, date_created, goods_id, goods_count, goods_money, goods_price, inventory_money, 
+    inventory_price, show_order, wsbill_id, sn_note, data_org, memo, company_id, sobilldetail_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_ws_bill_detail
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_ws_bill_detail
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.kzq.advance.domain.TWsBillDetail" >
+    insert into t_ws_bill_detail (id, date_created, goods_id, 
+      goods_count, goods_money, goods_price, 
+      inventory_money, inventory_price, show_order, 
+      wsbill_id, sn_note, data_org, 
+      memo, company_id, sobilldetail_id
+      )
+    values (#{id,jdbcType=VARCHAR}, #{dateCreated,jdbcType=TIMESTAMP}, #{goodsId,jdbcType=VARCHAR}, 
+      #{goodsCount,jdbcType=DECIMAL}, #{goodsMoney,jdbcType=DECIMAL}, #{goodsPrice,jdbcType=DECIMAL}, 
+      #{inventoryMoney,jdbcType=DECIMAL}, #{inventoryPrice,jdbcType=DECIMAL}, #{showOrder,jdbcType=INTEGER}, 
+      #{wsbillId,jdbcType=VARCHAR}, #{snNote,jdbcType=VARCHAR}, #{dataOrg,jdbcType=VARCHAR}, 
+      #{memo,jdbcType=VARCHAR}, #{companyId,jdbcType=VARCHAR}, #{sobilldetailId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.kzq.advance.domain.TWsBillDetail" >
+    insert into t_ws_bill_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="dateCreated != null" >
+        date_created,
+      </if>
+      <if test="goodsId != null" >
+        goods_id,
+      </if>
+      <if test="goodsCount != null" >
+        goods_count,
+      </if>
+      <if test="goodsMoney != null" >
+        goods_money,
+      </if>
+      <if test="goodsPrice != null" >
+        goods_price,
+      </if>
+      <if test="inventoryMoney != null" >
+        inventory_money,
+      </if>
+      <if test="inventoryPrice != null" >
+        inventory_price,
+      </if>
+      <if test="showOrder != null" >
+        show_order,
+      </if>
+      <if test="wsbillId != null" >
+        wsbill_id,
+      </if>
+      <if test="snNote != null" >
+        sn_note,
+      </if>
+      <if test="dataOrg != null" >
+        data_org,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="sobilldetailId != null" >
+        sobilldetail_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="dateCreated != null" >
+        #{dateCreated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsCount != null" >
+        #{goodsCount,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsMoney != null" >
+        #{goodsMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsPrice != null" >
+        #{goodsPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="inventoryMoney != null" >
+        #{inventoryMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="inventoryPrice != null" >
+        #{inventoryPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="showOrder != null" >
+        #{showOrder,jdbcType=INTEGER},
+      </if>
+      <if test="wsbillId != null" >
+        #{wsbillId,jdbcType=VARCHAR},
+      </if>
+      <if test="snNote != null" >
+        #{snNote,jdbcType=VARCHAR},
+      </if>
+      <if test="dataOrg != null" >
+        #{dataOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=VARCHAR},
+      </if>
+      <if test="sobilldetailId != null" >
+        #{sobilldetailId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kzq.advance.domain.TWsBillDetail" >
+    update t_ws_bill_detail
+    <set >
+      <if test="dateCreated != null" >
+        date_created = #{dateCreated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="goodsId != null" >
+        goods_id = #{goodsId,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsCount != null" >
+        goods_count = #{goodsCount,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsMoney != null" >
+        goods_money = #{goodsMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsPrice != null" >
+        goods_price = #{goodsPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="inventoryMoney != null" >
+        inventory_money = #{inventoryMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="inventoryPrice != null" >
+        inventory_price = #{inventoryPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="showOrder != null" >
+        show_order = #{showOrder,jdbcType=INTEGER},
+      </if>
+      <if test="wsbillId != null" >
+        wsbill_id = #{wsbillId,jdbcType=VARCHAR},
+      </if>
+      <if test="snNote != null" >
+        sn_note = #{snNote,jdbcType=VARCHAR},
+      </if>
+      <if test="dataOrg != null" >
+        data_org = #{dataOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=VARCHAR},
+      </if>
+      <if test="sobilldetailId != null" >
+        sobilldetail_id = #{sobilldetailId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kzq.advance.domain.TWsBillDetail" >
+    update t_ws_bill_detail
+    set date_created = #{dateCreated,jdbcType=TIMESTAMP},
+      goods_id = #{goodsId,jdbcType=VARCHAR},
+      goods_count = #{goodsCount,jdbcType=DECIMAL},
+      goods_money = #{goodsMoney,jdbcType=DECIMAL},
+      goods_price = #{goodsPrice,jdbcType=DECIMAL},
+      inventory_money = #{inventoryMoney,jdbcType=DECIMAL},
+      inventory_price = #{inventoryPrice,jdbcType=DECIMAL},
+      show_order = #{showOrder,jdbcType=INTEGER},
+      wsbill_id = #{wsbillId,jdbcType=VARCHAR},
+      sn_note = #{snNote,jdbcType=VARCHAR},
+      data_org = #{dataOrg,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR},
+      company_id = #{companyId,jdbcType=VARCHAR},
+      sobilldetail_id = #{sobilldetailId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kzq.advance.mapper.TPwBillMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.kzq.advance.domain.TPwBill">
+		<id column="id" property="id" />
+		<result column="bill_status" property="billStatus" />
+		<result column="biz_dt" property="bizDt" />
+		<result column="biz_user_id" property="bizUserId" />
+		<result column="date_created" property="dateCreated" />
+		<result column="goods_money" property="goodsMoney" />
+		<result column="input_user_id" property="inputUserId" />
+		<result column="ref" property="ref" />
+		<result column="supplier_id" property="supplierId" />
+		<result column="warehouse_id" property="warehouseId" />
+		<result column="payment_type" property="paymentType" />
+		<result column="data_org" property="dataOrg" />
+		<result column="company_id" property="companyId" />
+		<result column="expand_by_bom" property="expandByBom" />
+		<result column="bill_memo" property="billMemo" />
+	</resultMap>
+	<resultMap id="PwBillResultMap" type="com.kzq.advance.domain.vo.PwBillVo">
+		<id column="id" property="id" />
+		<result column="bill_status" property="billStatus" />
+		<result column="biz_dt" property="bizDt" />
+		<result column="biz_user_id" property="bizUserId" />
+		<result column="date_created" property="dateCreated" />
+		<result column="goods_money" property="goodsMoney" />
+		<result column="input_user_id" property="inputUserId" />
+		<result column="ref" property="ref" />
+		<result column="supplier_id" property="supplierId" />
+		<result column="warehouse_id" property="warehouseId" />
+		<result column="payment_type" property="paymentType" />
+		<result column="data_org" property="dataOrg" />
+		<result column="company_id" property="companyId" />
+		<result column="expand_by_bom" property="expandByBom" />
+		<result column="bill_memo" property="billMemo" />
+		<result column="warehouse_name" property="warehouseName" />
+		<result column="biz_user_name" property="userName" />
+		<result column="supplier_name" property="supplierName" />
+		<result column="name" property="goodsName" />
+		<result column="code" property="code" />
+		<result column="unitName" property="unitName" />
+		<result column="goods_count" property="goodsCount" />
+
+	</resultMap>
+	<select id="findTPwBillById" resultMap="PwBillResultMap" parameterType="String">
+		  select p.ref, p.bill_status, p.supplier_id, s.name as supplier_name,
+				p.warehouse_id, w.name as  warehouse_name,p.biz_user_id,p.goods_money,
+				u.name as biz_user_name, p.biz_dt, p.payment_type,p.bill_memo
+				from t_pw_bill p, t_supplier s, t_warehouse w, t_user u
+				where p.id = #{id} and p.supplier_id = s.id and p.warehouse_id = w.id
+				and p.biz_user_id = u.id
+	</select>
+	<select id="findDetailById" resultMap="PwBillResultMap" parameterType="String">
+		 select p.id, p.goods_id, g.code, g.name, g.spec, u.name as unit_name,p.goods_count
+					from t_pw_bill_detail p, t_goods g, t_goods_unit u
+					where p.goods_Id = g.id and g.unit_id = u.id and p.pwbill_id = #{id}
+					order by p.show_order
+	</select>
+	<update id="updateTPwBill" parameterType="com.kzq.advance.domain.TPwBill">
+           update t_pw_bill set bill_status=#{bill_status} where id=#{id}
+	</update>
+	<select id="findPwBillList" resultMap="PwBillResultMap" parameterType="String">
+		SELECT p.id, p.bill_status,ref,biz_dt,w.name as warehouse_name from t_pw_bill p,t_warehouse w
+		<where>
+			p.warehouse_id = w.id
+			<if test="keywords!=null and keywords!=''">
+				and (w.name like CONCAT('%',#{keywords},'%') or ref like CONCAT('%',#{keywords},'%'))
+
+			</if>
+		</where>
+	</select>
+
+
+
+
+</mapper>

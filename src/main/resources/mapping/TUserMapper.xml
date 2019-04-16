@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kzq.advance.mapper.TUserMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.kzq.advance.domain.TUser">
+		<id column="id" property="id" />
+		<result column="enabled" property="enabled" />
+		<result column="login_name" property="loginName" />
+		<result column="name" property="name" />
+		<result column="org_id" property="orgId" />
+		<result column="org_code" property="orgCode" />
+		<result column="password" property="password" />
+		<result column="py" property="py" />
+		<result column="gender" property="gender" />
+		<result column="birthday" property="birthday" />
+		<result column="id_card_number" property="idCardNumber" />
+		<result column="tel" property="tel" />
+		<result column="tel02" property="tel02" />
+		<result column="address" property="address" />
+		<result column="data_org" property="dataOrg" />
+		<result column="company_id" property="companyId" />
+	</resultMap>
+	<select id="doLogin" resultType="String" parameterType="String">
+        SELECT password FROM t_user
+        <where>
+			login_name= #{name}
+		</where>
+
+	</select>
+	<select id="findUser" resultMap="BaseResultMap" parameterType="com.kzq.advance.domain.TUser">
+		SELECT * FROM t_user
+		<where>
+			<if test="openId!=null and openId!=''">
+				open_id= #{openId}
+			</if>
+			<if test="loginName!=null and loginName!=''">
+				login_name= #{loginName}
+			</if>
+		</where>
+
+	</select>
+	<update id="updateUserOpenId" parameterType="com.kzq.advance.domain.TUser">
+		update t_user set open_id=#{openId}
+		where login_name=#{loginName}
+	</update>
+	<select id="findUserWarehouse" resultType="String">
+		SELECT w.id FROM t_user u
+		   LEFT JOIN t_org o on u.org_id=o.id
+		   LEFT JOIN t_warehouse w on o.name=w.name
+		   where u.id=#{userId}
+	</select>
+</mapper>

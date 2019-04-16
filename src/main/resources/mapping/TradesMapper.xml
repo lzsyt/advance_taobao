@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kzq.advance.mapper.TradesMapper" >
+  <resultMap id="BaseResultMap" type="com.kzq.advance.domain.Trades" >
+    <id column="tid" property="tid" jdbcType="BIGINT" />
+    <result column="receiver_address" property="receiverAddress" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="receiver_name" property="receiverName" jdbcType="VARCHAR" />
+    <result column="payment" property="payment" jdbcType="VARCHAR" />
+    <result column="receiver_city" property="receiverCity" jdbcType="VARCHAR" />
+    <result column="receiver_district" property="receiverDistrict" jdbcType="VARCHAR" />
+    <result column="receiver_country" property="receiverCountry" jdbcType="VARCHAR" />
+    <result column="receiver_mobile" property="receiverMobile" jdbcType="VARCHAR" />
+    <result column="receiver_phone" property="receiverPhone" jdbcType="VARCHAR" />
+    <result column="receiver_town" property="receiverTown" jdbcType="VARCHAR" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="pic_path" property="picPath" jdbcType="VARCHAR" />
+    <result column="post_fee" property="postFee" jdbcType="VARCHAR" />
+    <result column="buyer_nick" property="buyerNick" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="total_fee" property="totalFee" jdbcType="VARCHAR" />
+    <result column="trade_from" property="tradeFrom" jdbcType="VARCHAR" />
+    <result column="buyer_memo" property="buyerMemo" jdbcType="VARCHAR" />
+    <result column="seller_memo" property="sellerMemo" jdbcType="VARCHAR" />
+    <result column="shop_id" property="shopId" jdbcType="INTEGER" />
+    <result column="seller_nick" property="sellerNick" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    tid, receiver_address, status, receiver_name, payment, receiver_city, receiver_district, 
+    receiver_country, receiver_mobile, receiver_phone, receiver_town, created_time, modify_time, 
+    pay_time, pic_path, post_fee, buyer_nick, title, total_fee, trade_from, buyer_memo, 
+    seller_memo, shop_id, seller_nick
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_trades
+    where tid = #{tid,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_trades
+    where tid = #{tid,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.kzq.advance.domain.Trades" >
+    insert into t_trades (tid, receiver_address, status, 
+      receiver_name, payment, receiver_city, 
+      receiver_district, receiver_country, receiver_mobile, 
+      receiver_phone, receiver_town, created_time, 
+      modify_time, pay_time, pic_path, 
+      post_fee, buyer_nick, title, 
+      total_fee, trade_from, buyer_memo, 
+      seller_memo, shop_id, seller_nick
+      )
+    values (#{tid,jdbcType=BIGINT}, #{receiverAddress,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{receiverName,jdbcType=VARCHAR}, #{payment,jdbcType=VARCHAR}, #{receiverCity,jdbcType=VARCHAR}, 
+      #{receiverDistrict,jdbcType=VARCHAR}, #{receiverCountry,jdbcType=VARCHAR}, #{receiverMobile,jdbcType=VARCHAR}, 
+      #{receiverPhone,jdbcType=VARCHAR}, #{receiverTown,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, #{payTime,jdbcType=TIMESTAMP}, #{picPath,jdbcType=VARCHAR}, 
+      #{postFee,jdbcType=VARCHAR}, #{buyerNick,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{totalFee,jdbcType=VARCHAR}, #{tradeFrom,jdbcType=VARCHAR}, #{buyerMemo,jdbcType=VARCHAR}, 
+      #{sellerMemo,jdbcType=VARCHAR}, #{shopId,jdbcType=INTEGER}, #{sellerNick,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.kzq.advance.domain.Trades" >
+    insert into t_trades
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tid != null" >
+        tid,
+      </if>
+      <if test="receiverAddress != null" >
+        receiver_address,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="receiverName != null" >
+        receiver_name,
+      </if>
+      <if test="payment != null" >
+        payment,
+      </if>
+      <if test="receiverCity != null" >
+        receiver_city,
+      </if>
+      <if test="receiverDistrict != null" >
+        receiver_district,
+      </if>
+      <if test="receiverCountry != null" >
+        receiver_country,
+      </if>
+      <if test="receiverMobile != null" >
+        receiver_mobile,
+      </if>
+      <if test="receiverPhone != null" >
+        receiver_phone,
+      </if>
+      <if test="receiverTown != null" >
+        receiver_town,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="payTime != null" >
+        pay_time,
+      </if>
+      <if test="picPath != null" >
+        pic_path,
+      </if>
+      <if test="postFee != null" >
+        post_fee,
+      </if>
+      <if test="buyerNick != null" >
+        buyer_nick,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="totalFee != null" >
+        total_fee,
+      </if>
+      <if test="tradeFrom != null" >
+        trade_from,
+      </if>
+      <if test="buyerMemo != null" >
+        buyer_memo,
+      </if>
+      <if test="sellerMemo != null" >
+        seller_memo,
+      </if>
+      <if test="shopId != null" >
+        shop_id,
+      </if>
+      <if test="sellerNick != null" >
+        seller_nick,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tid != null" >
+        #{tid,jdbcType=BIGINT},
+      </if>
+      <if test="receiverAddress != null" >
+        #{receiverAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverName != null" >
+        #{receiverName,jdbcType=VARCHAR},
+      </if>
+      <if test="payment != null" >
+        #{payment,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverCity != null" >
+        #{receiverCity,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverDistrict != null" >
+        #{receiverDistrict,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverCountry != null" >
+        #{receiverCountry,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverMobile != null" >
+        #{receiverMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverPhone != null" >
+        #{receiverPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverTown != null" >
+        #{receiverTown,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payTime != null" >
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="picPath != null" >
+        #{picPath,jdbcType=VARCHAR},
+      </if>
+      <if test="postFee != null" >
+        #{postFee,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerNick != null" >
+        #{buyerNick,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="totalFee != null" >
+        #{totalFee,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeFrom != null" >
+        #{tradeFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerMemo != null" >
+        #{buyerMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="sellerMemo != null" >
+        #{sellerMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null" >
+        #{shopId,jdbcType=INTEGER},
+      </if>
+      <if test="sellerNick != null" >
+        #{sellerNick,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kzq.advance.domain.Trades" >
+    update t_trades
+    <set >
+      <if test="receiverAddress != null" >
+        receiver_address = #{receiverAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverName != null" >
+        receiver_name = #{receiverName,jdbcType=VARCHAR},
+      </if>
+      <if test="payment != null" >
+        payment = #{payment,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverCity != null" >
+        receiver_city = #{receiverCity,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverDistrict != null" >
+        receiver_district = #{receiverDistrict,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverCountry != null" >
+        receiver_country = #{receiverCountry,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverMobile != null" >
+        receiver_mobile = #{receiverMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverPhone != null" >
+        receiver_phone = #{receiverPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverTown != null" >
+        receiver_town = #{receiverTown,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payTime != null" >
+        pay_time = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="picPath != null" >
+        pic_path = #{picPath,jdbcType=VARCHAR},
+      </if>
+      <if test="postFee != null" >
+        post_fee = #{postFee,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerNick != null" >
+        buyer_nick = #{buyerNick,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="totalFee != null" >
+        total_fee = #{totalFee,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeFrom != null" >
+        trade_from = #{tradeFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerMemo != null" >
+        buyer_memo = #{buyerMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="sellerMemo != null" >
+        seller_memo = #{sellerMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null" >
+        shop_id = #{shopId,jdbcType=INTEGER},
+      </if>
+      <if test="sellerNick != null" >
+        seller_nick = #{sellerNick,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where tid = #{tid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kzq.advance.domain.Trades" >
+    update t_trades
+    set receiver_address = #{receiverAddress,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      receiver_name = #{receiverName,jdbcType=VARCHAR},
+      payment = #{payment,jdbcType=VARCHAR},
+      receiver_city = #{receiverCity,jdbcType=VARCHAR},
+      receiver_district = #{receiverDistrict,jdbcType=VARCHAR},
+      receiver_country = #{receiverCountry,jdbcType=VARCHAR},
+      receiver_mobile = #{receiverMobile,jdbcType=VARCHAR},
+      receiver_phone = #{receiverPhone,jdbcType=VARCHAR},
+      receiver_town = #{receiverTown,jdbcType=VARCHAR},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      pay_time = #{payTime,jdbcType=TIMESTAMP},
+      pic_path = #{picPath,jdbcType=VARCHAR},
+      post_fee = #{postFee,jdbcType=VARCHAR},
+      buyer_nick = #{buyerNick,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      total_fee = #{totalFee,jdbcType=VARCHAR},
+      trade_from = #{tradeFrom,jdbcType=VARCHAR},
+      buyer_memo = #{buyerMemo,jdbcType=VARCHAR},
+      seller_memo = #{sellerMemo,jdbcType=VARCHAR},
+      shop_id = #{shopId,jdbcType=INTEGER},
+      seller_nick = #{sellerNick,jdbcType=VARCHAR}
+    where tid = #{tid,jdbcType=BIGINT}
+  </update>
+</mapper>

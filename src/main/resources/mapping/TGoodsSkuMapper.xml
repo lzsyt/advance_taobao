@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kzq.advance.mapper.TGoodsSkuMapper" >
+  <resultMap id="BaseResultMap" type="com.kzq.advance.domain.TGoodsSku" >
+    <id column="sku_id" property="skuId" jdbcType="BIGINT" />
+    <result column="num_iid" property="numIid" jdbcType="BIGINT" />
+    <result column="properties_alias" property="propertiesAlias" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    sku_id, num_iid, properties_alias
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_goods_sku
+    where sku_id = #{skuId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_goods_sku
+    where sku_id = #{skuId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.kzq.advance.domain.TGoodsSku" >
+    insert into t_goods_sku (sku_id, num_iid, properties_alias
+      )
+    values (#{skuId,jdbcType=BIGINT}, #{numIid,jdbcType=BIGINT}, #{propertiesAlias,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.kzq.advance.domain.TGoodsSku" >
+    insert into t_goods_sku
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="skuId != null" >
+        sku_id,
+      </if>
+      <if test="numIid != null" >
+        num_iid,
+      </if>
+      <if test="propertiesAlias != null" >
+        properties_alias,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="skuId != null" >
+        #{skuId,jdbcType=BIGINT},
+      </if>
+      <if test="numIid != null" >
+        #{numIid,jdbcType=BIGINT},
+      </if>
+      <if test="propertiesAlias != null" >
+        #{propertiesAlias,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kzq.advance.domain.TGoodsSku" >
+    update t_goods_sku
+    <set >
+      <if test="numIid != null" >
+        num_iid = #{numIid,jdbcType=BIGINT},
+      </if>
+      <if test="propertiesAlias != null" >
+        properties_alias = #{propertiesAlias,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where sku_id = #{skuId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kzq.advance.domain.TGoodsSku" >
+    update t_goods_sku
+    set num_iid = #{numIid,jdbcType=BIGINT},
+      properties_alias = #{propertiesAlias,jdbcType=VARCHAR}
+    where sku_id = #{skuId,jdbcType=BIGINT}
+  </update>
+</mapper>

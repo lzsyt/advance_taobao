@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kzq.advance.mapper.TShopMapper" >
+  <resultMap id="BaseResultMap" type="com.kzq.advance.domain.TShop" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="shop_name" property="shopName" jdbcType="VARCHAR" />
+    <result column="shop_token" property="shopToken" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, shop_name, shop_token
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from t_shop
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <!--查询店铺信息-->
+
+  <select id="selectShop" resultMap="BaseResultMap" parameterType="com.kzq.advance.domain.TShop" >
+    select
+    <include refid="Base_Column_List" />
+    from t_shop
+    <where>
+      <if test="shopName!=null and shopName!=''">
+        shop_name = #{shopName}
+      </if>
+    </where>
+  </select>
+
+
+  <!--查询所有店铺信息-->
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from t_shop
+    where shop_token is not null;
+  </select>
+
+  <!--删除店铺-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_shop
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.kzq.advance.domain.TShop" >
+    insert into t_shop (id, shop_name, shop_token
+      )
+    values (#{id,jdbcType=INTEGER}, #{shopName,jdbcType=VARCHAR}, #{shopToken,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.kzq.advance.domain.TShop" >
+    insert into t_shop
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="shopName != null" >
+        shop_name,
+      </if>
+      <if test="shopToken != null" >
+        shop_token,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="shopName != null" >
+        #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopToken != null" >
+        #{shopToken,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kzq.advance.domain.TShop" >
+    update t_shop
+    <set >
+      <if test="shopName != null" >
+        shop_name = #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopToken != null" >
+        shop_token = #{shopToken,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kzq.advance.domain.TShop" >
+    update t_shop
+    set shop_name = #{shopName,jdbcType=VARCHAR},
+      shop_token = #{shopToken,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

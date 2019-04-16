@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kzq.advance.mapper.TtradesOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.kzq.advance.domain.TtradesOrder" >
+    <id column="oid" property="oid" jdbcType="INTEGER" />
+    <result column="pic_path" property="picPath" jdbcType="VARCHAR" />
+    <result column="sku_properties_name" property="skuPropertiesName" jdbcType="VARCHAR" />
+    <result column="tid" property="tid" jdbcType="CHAR" />
+    <result column="refund_status" property="refundStatus" jdbcType="CHAR" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+    <result column="num_iid" property="numIid" jdbcType="CHAR" />
+    <result column="total_fee" property="totalFee" jdbcType="DECIMAL" />
+    <result column="logistics_company" property="logisticsCompany" jdbcType="CHAR" />
+    <result column="invoice_no" property="invoiceNo" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    oid, pic_path, sku_properties_name, tid, refund_status, status, title, num, num_iid, 
+    total_fee, logistics_company, invoice_no
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_trades_order
+    where oid = #{oid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_trades_order
+    where oid = #{oid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.kzq.advance.domain.TtradesOrder" >
+    insert into t_trades_order (oid, pic_path, sku_properties_name, 
+      tid, refund_status, status, title, 
+      num, num_iid, total_fee, 
+      logistics_company, invoice_no)
+    values (#{oid,jdbcType=INTEGER}, #{picPath,jdbcType=VARCHAR}, #{skuPropertiesName,jdbcType=VARCHAR}, 
+      #{tid,jdbcType=CHAR}, #{refundStatus,jdbcType=CHAR}, #{status,jdbcType=CHAR}, #{title,jdbcType=VARCHAR}, 
+      #{num,jdbcType=INTEGER}, #{numIid,jdbcType=CHAR}, #{totalFee,jdbcType=DECIMAL}, 
+      #{logisticsCompany,jdbcType=CHAR}, #{invoiceNo,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.kzq.advance.domain.TtradesOrder" >
+    insert into t_trades_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="oid != null" >
+        oid,
+      </if>
+      <if test="picPath != null" >
+        pic_path,
+      </if>
+      <if test="skuPropertiesName != null" >
+        sku_properties_name,
+      </if>
+      <if test="tid != null" >
+        tid,
+      </if>
+      <if test="refundStatus != null" >
+        refund_status,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="num != null" >
+        num,
+      </if>
+      <if test="numIid != null" >
+        num_iid,
+      </if>
+      <if test="totalFee != null" >
+        total_fee,
+      </if>
+      <if test="logisticsCompany != null" >
+        logistics_company,
+      </if>
+      <if test="invoiceNo != null" >
+        invoice_no,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="oid != null" >
+        #{oid,jdbcType=INTEGER},
+      </if>
+      <if test="picPath != null" >
+        #{picPath,jdbcType=VARCHAR},
+      </if>
+      <if test="skuPropertiesName != null" >
+        #{skuPropertiesName,jdbcType=VARCHAR},
+      </if>
+      <if test="tid != null" >
+        #{tid,jdbcType=CHAR},
+      </if>
+      <if test="refundStatus != null" >
+        #{refundStatus,jdbcType=CHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null" >
+        #{num,jdbcType=INTEGER},
+      </if>
+      <if test="numIid != null" >
+        #{numIid,jdbcType=CHAR},
+      </if>
+      <if test="totalFee != null" >
+        #{totalFee,jdbcType=DECIMAL},
+      </if>
+      <if test="logisticsCompany != null" >
+        #{logisticsCompany,jdbcType=CHAR},
+      </if>
+      <if test="invoiceNo != null" >
+        #{invoiceNo,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kzq.advance.domain.TtradesOrder" >
+    update t_trades_order
+    <set >
+      <if test="picPath != null" >
+        pic_path = #{picPath,jdbcType=VARCHAR},
+      </if>
+      <if test="skuPropertiesName != null" >
+        sku_properties_name = #{skuPropertiesName,jdbcType=VARCHAR},
+      </if>
+      <if test="tid != null" >
+        tid = #{tid,jdbcType=CHAR},
+      </if>
+      <if test="refundStatus != null" >
+        refund_status = #{refundStatus,jdbcType=CHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null" >
+        num = #{num,jdbcType=INTEGER},
+      </if>
+      <if test="numIid != null" >
+        num_iid = #{numIid,jdbcType=CHAR},
+      </if>
+      <if test="totalFee != null" >
+        total_fee = #{totalFee,jdbcType=DECIMAL},
+      </if>
+      <if test="logisticsCompany != null" >
+        logistics_company = #{logisticsCompany,jdbcType=CHAR},
+      </if>
+      <if test="invoiceNo != null" >
+        invoice_no = #{invoiceNo,jdbcType=CHAR},
+      </if>
+    </set>
+    where oid = #{oid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kzq.advance.domain.TtradesOrder" >
+    update t_trades_order
+    set pic_path = #{picPath,jdbcType=VARCHAR},
+      sku_properties_name = #{skuPropertiesName,jdbcType=VARCHAR},
+      tid = #{tid,jdbcType=CHAR},
+      refund_status = #{refundStatus,jdbcType=CHAR},
+      status = #{status,jdbcType=CHAR},
+      title = #{title,jdbcType=VARCHAR},
+      num = #{num,jdbcType=INTEGER},
+      num_iid = #{numIid,jdbcType=CHAR},
+      total_fee = #{totalFee,jdbcType=DECIMAL},
+      logistics_company = #{logisticsCompany,jdbcType=CHAR},
+      invoice_no = #{invoiceNo,jdbcType=CHAR}
+    where oid = #{oid,jdbcType=INTEGER}
+  </update>
+</mapper>

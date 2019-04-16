@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kzq.advance.mapper.TWsBillMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.kzq.advance.domain.TWsBill">
+		<id column="id" property="id" />
+		<result column="bill_status" property="billStatus" />
+		<result column="bizdt" property="bizdt" />
+		<result column="biz_user_id" property="bizUserId" />
+		<result column="customer_id" property="customerId" />
+		<result column="customer" property="customer" />
+		<result column="date_created" property="dateCreated" />
+		<result column="input_user_id" property="inputUserId" />
+		<result column="inventory_money" property="inventoryMoney" />
+		<result column="profit" property="profit" />
+		<result column="ref" property="ref" />
+		<result column="sale_money" property="saleMoney" />
+		<result column="warehouse_id" property="warehouseId" />
+		<result column="receiving_type" property="receivingType" />
+		<result column="data_org" property="dataOrg" />
+		<result column="company_id" property="companyId" />
+		<result column="memo" property="memo" />
+		<result column="deal_address" property="dealAddress" />
+		<result column="warehouse_name" property="warehouse" />
+		<result column="goods_name" property="goodsName" />
+		<result column="goods_count" property="goodsCount" />
+		<result column="unit_name" property="unitName" />
+		<result column="file_path" property="filePath" />
+		<result column="express_num" property="expressNum" />
+		<result column="express_company" property="expressCompany" />
+		<result column="shop_num" property="shopNum" />
+
+
+	</resultMap>
+	<select id="findTWsBill" resultMap="BaseResultMap" parameterType="Integer">
+        select shop_num , h.name as warehouse_name, w.date_created,bill_status,w.id
+	    from t_ws_bill w, t_warehouse h,t_ws_bill_detail d
+		<where>
+			(d.wsbill_id=w.id) AND (h.id=w.warehouse_id)
+			<if test="status!=null and status!=''">
+			   AND w.bill_status=#{status}
+			</if>
+		</where>
+	</select>
+	<select id="findByTid" resultMap="BaseResultMap" parameterType="String">
+		select deal_address,shop_num ,c.name as customer
+		from t_ws_bill b
+		LEFT JOIN t_customer c on b.customer_id=c.id
+		where  shop_num=#{id}
+
+	</select>
+
+	<select id="findDetailById"  parameterType="String" resultMap="BaseResultMap">
+         select  h.name as warehouse_name, w.date_created,bill_status,deal_address,shop_num,
+         file_path,w.express_num,w.express_company,customer_id
+				from t_ws_bill w
+				 left join t_warehouse h on h.id=w.warehouse_id
+				where w.id=#{id}
+
+	</select>
+	<select id="findGoodsByBillId"  parameterType="String" resultMap="BaseResultMap">
+          select g.name as goods_name,d.goods_count,u.name as unit_name
+				from t_ws_bill_detail d
+				left join t_goods g on g.id=d.goods_id
+				left join t_goods_unit u on u.id=g.unit_id
+
+		        <where>
+
+					 d.wsbill_id=#{id}
+
+
+				</where>
+
+
+	</select>
+	<select id="findDetailByBillIdAndWarehouse"  parameterType="com.kzq.advance.domain.TWsBill" resultMap="BaseResultMap">
+		select g.name as goods_name,d.goods_count,u.name as unit_name,h.name as warehouse_name
+		from t_ws_bill_detail d
+		left join t_goods g on g.id=d.goods_id
+		left join t_goods_unit u on u.id=g.unit_id
+		left join  t_warehouse h on h.id=d.warehouse_id
+
+
+		<where>
+
+			d.wsbill_id=#{id} and( d.warehouse_id=#{warehouseId} or d.warehouse_id is null)
+
+
+		</where>
+
+
+	</select>
+
+	<select id="findCustomerById"  parameterType="com.kzq.advance.domain.TWsBill" resultType="com.kzq.advance.domain.TCustomer">
+         SELECT name,mobile01 FROM t_customer c WHERE c.id= #{customerId}
+	</select>
+
+	<select id="updateTWsBill"  parameterType="String">
+         update t_ws_bill
+		<trim prefix="set" suffixOverrides=",">
+			<if test="filePath!=null and filePath!=''">file_path=#{filePath},</if>
+			<if test="expressNum!=null and expressNum!=''">express_num=#{expressNum},</if>
+			<if test="expressCompany!=null and expressCompany!=''">express_company=#{expressCompany},</if>
+		</trim>
+      where id=#{id}
+	</select>
+	<select id="findTWsBillbyCondition" parameterType="String" resultMap="BaseResultMap">
+		select shop_num , h.name as warehouse_name, w.date_created,bill_status,w.id
+		from t_ws_bill w
+		left join  t_warehouse h on h.id=w.warehouse_id
+		<where>
+			1=1
+			<if test="condition!=null and condition!=''">
+				and (shop_num like CONCAT("%",#{condition},"%") or h.name like CONCAT("%",#{condition},"%")or deal_address like CONCAT("%",#{condition},"%"))
+			</if>
+
+			ORDER BY date_created DESC
+		</where>
+	</select>
+
+	<!--根据仓库来查出库单详情-->
+
+	<select id="getBillByWarehouse" parameterType="Map" resultMap="BaseResultMap">
+		select shop_num , h.name as warehouse_name, w.date_created,bill_status,w.id
+		from t_ws_bill w
+		left join  t_warehouse h on h.id=w.warehouse_id
+		<where>
+			<if test="condition!=null and condition!=''">
+				and (shop_num like CONCAT("%",#{condition},"%") or h.name like CONCAT("%",#{condition},"%")or deal_address like CONCAT("%",#{condition},"%"))
+			</if>
+			<if test="warehouseId!=null and warehouseId!=''">
+				and (w.warehouse_id=#{warehouseId} or w.id in
+				(SELECT wsbill_id from t_ws_bill_detail WHERE warehouse_id=#{warehouseId} ))
+			</if>
+
+			ORDER BY date_created DESC
+		</where>
+	</select>
+</mapper>
