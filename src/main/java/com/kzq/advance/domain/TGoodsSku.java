@@ -7,6 +7,15 @@ public class TGoodsSku {
 
     private String propertiesAlias;
 
+    @Override
+    public String toString() {
+        return "TGoodsSku{" +
+                "skuId=" + skuId +
+                ", numIid=" + numIid +
+                ", propertiesAlias='" + propertiesAlias + '\'' +
+                '}';
+    }
+
     public Long getSkuId() {
         return skuId;
     }

@@ -24,4 +24,5 @@ public interface TGoodsLinkMapper {
     List<TGoodsLink> selectByShop(String nick);
 
 
+    void deleteByNumId(Long numId);
 }

@@ -3,6 +3,8 @@ package com.kzq.advance.mapper;
 import com.kzq.advance.domain.TGoodsSku;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface TGoodsSkuMapper {
     int deleteByPrimaryKey(Long skuId);
@@ -13,7 +15,13 @@ public interface TGoodsSkuMapper {
 
     TGoodsSku selectByPrimaryKey(Long skuId);
 
+    List<TGoodsSku> selectByNumId(Long numId);
+
+    int countByNumId(Long numId);
+
     int updateByPrimaryKeySelective(TGoodsSku record);
 
     int updateByPrimaryKey(TGoodsSku record);
+
+    int delSku(long skuId);
 }

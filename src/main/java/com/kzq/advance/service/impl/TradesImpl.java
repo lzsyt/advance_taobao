@@ -4,7 +4,6 @@ package com.kzq.advance.service.impl;
 import com.kzq.advance.common.utils.HttpUtils;
 import com.kzq.advance.common.utils.TbaoUtils;
 import com.kzq.advance.domain.*;
-import com.kzq.advance.domain.Trades;
 import com.kzq.advance.mapper.*;
 import com.kzq.advance.service.ITradesService;
 import com.taobao.api.domain.Item;
@@ -14,16 +13,16 @@ import com.taobao.api.internal.util.StringUtils;
 import com.taobao.api.response.TradeFullinfoGetResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author zmn
@@ -32,30 +31,34 @@ import java.util.Map;
 
 @Service("ITradesService")
 public class TradesImpl implements ITradesService {
-    @Autowired
+
+    @Resource
     private TradesMapper tradesMapper;
-    @Autowired
+    @Resource
     private TtradesOrderMapper tradesOrderMapper;
-    @Autowired
+    @Resource
     private TGoodsSkuMapper goodsSkuMapper;
-    @Autowired
+    @Resource
     private TGoodsLinkMapper goodsLinkMapper;
-    @Autowired
+    @Resource
     private TShopMapper shopMapper;
+    @Resource
+    private TUpdateLogMapper tUpdateLogMapper;
+    @Resource
+    private TUpdateLogDetailMapper tUpdateLogDetailMapper;
 
 
     protected Logger logger = LogManager.getLogger(TradesImpl.class);
 
 
-
-
     /**
      * 类型转换
+     *
      * @param t
      * @return
      */
-    public TtradesOrder formOrder(Order t){
-        TtradesOrder order=new TtradesOrder();
+    public TtradesOrder formOrder(Order t) {
+        TtradesOrder order = new TtradesOrder();
 
         order.setOid(t.getOid());
         order.setInvoiceNo(t.getInvoiceNo());
@@ -73,26 +76,27 @@ public class TradesImpl implements ITradesService {
 
 
     /**
-     *  自动生成出库单
+     * 自动生成出库单
+     *
      * @param param
      */
     public void addWsbill(String param) {//调用生成出库单的接口
 
-            String sr=HttpUtils.sendPost("http://localhost/web/Home/Sale/addWSBill", "jsonStr: "+param);
-            logger.info("生成出库单："+sr);
+        String sr = HttpUtils.sendPost("http://localhost/web/Home/Sale/addWSBill", "jsonStr: " + param);
+        logger.info("生成出库单：" + sr);
 
-        
 
     }
 
     /**
      * 添加产品链接
+     *
      * @param item
      */
     public void addGoodLink(Item item) {
 
 
-        TGoodsLink tGoodsLink=new TGoodsLink();
+        TGoodsLink tGoodsLink = new TGoodsLink();
         tGoodsLink.setDetailUrl(item.getDetailUrl());
         tGoodsLink.setNumIid(item.getNumIid());
         tGoodsLink.setNick(item.getNick());
@@ -101,14 +105,14 @@ public class TradesImpl implements ITradesService {
         //分割型号的字符串
         item.getPropertyAlias();
         //有型号
-        if (org.apache.commons.lang.StringUtils.isNotBlank(item.getPropertyAlias())){
+        if (org.apache.commons.lang.StringUtils.isNotBlank(item.getPropertyAlias())) {
             tGoodsLink.setState(1);
 
             //分割型号的字符串为map
-            Map<String,String> map = getProperty(item.getPropertyAlias());
+            Map<String, String> map = getProperty(item.getPropertyAlias());
             List<Sku> skus = item.getSkus();
-            for (Sku s:skus){
-                TGoodsSku goodsSku=new TGoodsSku();
+            for (Sku s : skus) {
+                TGoodsSku goodsSku = new TGoodsSku();
                 goodsSku.setPropertiesAlias(map.get(s.getProperties()));
                 goodsSku.setNumIid(item.getNumIid());
                 goodsSku.setSkuId(s.getSkuId());
@@ -117,7 +121,7 @@ public class TradesImpl implements ITradesService {
 
             }
 
-        }else {
+        } else {
             tGoodsLink.setState(0);
         }
 
@@ -126,32 +130,33 @@ public class TradesImpl implements ITradesService {
     }
 
 
-
     /**
      * 拆分属性字符串
+     *
      * @param PropertyAlias
      * @return
      */
 
-    public  Map<String,String> getProperty(String PropertyAlias){
+    public Map<String, String> getProperty(String PropertyAlias) {
         //拆分属性字段
-            String [] properties=  PropertyAlias.split(";");
-            Map<String,String> map=new HashMap<>();
+        String[] properties = PropertyAlias.split(";");
+        Map<String, String> map = new HashMap<>();
 
-            for (int x=0;x<properties.length;x++){
+        for (int x = 0; x < properties.length; x++) {
 
-                String prop=properties[x];
-                String  prop0=prop.substring(0,prop.lastIndexOf(":")) ;
-                String  prop1=prop.substring(prop.lastIndexOf(":")+1,prop.length()) ;
-                map.put(prop0,prop1);
+            String prop = properties[x];
+            String prop0 = prop.substring(0, prop.lastIndexOf(":"));
+            String prop1 = prop.substring(prop.lastIndexOf(":") + 1, prop.length());
+            map.put(prop0, prop1);
 
-            }
-            return map;
+        }
+        return map;
 
     }
 
     /**
      * 更新商品链接
+     *
      * @param item
      */
     public void updateGoodLink(Item item) {
@@ -162,26 +167,31 @@ public class TradesImpl implements ITradesService {
 
     /**
      * 类型转换
+     *
      * @param item
      * @return
      */
-    public TGoodsLink formatTGoodsLink(Item item){
-        TGoodsLink tGoodsLink=new TGoodsLink();
-        tGoodsLink.setDetailUrl(item.getDetailUrl());
+    public TGoodsLink formatTGoodsLink(Item item) {
+        TGoodsLink tGoodsLink = new TGoodsLink();
         tGoodsLink.setNumIid(item.getNumIid());
-        tGoodsLink.setNick(item.getNick());
-        tGoodsLink.setTitle(item.getTitle());
+        if (org.apache.commons.lang.StringUtils.isNotBlank(item.getDetailUrl()))
+            tGoodsLink.setDetailUrl(item.getDetailUrl());
+        if (org.apache.commons.lang.StringUtils.isNotBlank(item.getNick()))
+            tGoodsLink.setNick(item.getNick());
+        if (org.apache.commons.lang.StringUtils.isNotBlank(item.getTitle()))
+            tGoodsLink.setTitle(item.getTitle());
         return tGoodsLink;
     }
 
 
     /**
      * 更新链接
+     *
      * @param item
      */
 
-    public void updateLink(Item item){
-        TGoodsLink tGoodsLink=new TGoodsLink();
+    public void updateLink(Item item) {
+        TGoodsLink tGoodsLink = new TGoodsLink();
         tGoodsLink.setDetailUrl(item.getDetailUrl());
         tGoodsLink.setNumIid(item.getNumIid());
         tGoodsLink.setNick(item.getNick());
@@ -190,12 +200,12 @@ public class TradesImpl implements ITradesService {
         //分割型号的字符串
         item.getPropertyAlias();
         //有型号
-        if (org.apache.commons.lang.StringUtils.isNotBlank(item.getPropertyAlias())){
+        if (org.apache.commons.lang.StringUtils.isNotBlank(item.getPropertyAlias())) {
             tGoodsLink.setState(1);
-            Map<String,String> map = getProperty(item.getPropertyAlias());
+            Map<String, String> map = getProperty(item.getPropertyAlias());
             List<Sku> skus = item.getSkus();
-            for (Sku s:skus){
-                TGoodsSku goodsSku=new TGoodsSku();
+            for (Sku s : skus) {
+                TGoodsSku goodsSku = new TGoodsSku();
 
                 goodsSku.setPropertiesAlias(map.get(s.getProperties()));
                 goodsSku.setNumIid(item.getNumIid());
@@ -207,7 +217,7 @@ public class TradesImpl implements ITradesService {
 
             }
 
-        }else {
+        } else {
             tGoodsLink.setState(0);
         }
 
@@ -259,71 +269,78 @@ public class TradesImpl implements ITradesService {
 
     /**
      * 插入sku属性
+     *
      * @param sku
      */
-    public void addGoodSku(TGoodsSku sku){
+    public void addGoodSku(TGoodsSku sku) {
         goodsSkuMapper.insertSelective(sku);
 
     }
 
     /**
      * 更新sku属性
+     *
      * @param sku
      */
 
-    public void updateGoodSku(TGoodsSku sku){
+    public void updateGoodSku(TGoodsSku sku) {
         goodsSkuMapper.updateByPrimaryKey(sku);
 
     }
 
     /**
      * 根据id查询link
+     *
      * @param numIid
      * @return
      */
-    public TGoodsLink findLinkById(Long numIid){
-        TGoodsLink link=goodsLinkMapper.selectByPrimaryKey(numIid);
+    public TGoodsLink findLinkById(Long numIid) {
+        TGoodsLink link = goodsLinkMapper.selectByPrimaryKey(numIid);
         return link;
     }
 
     /**
      * 根据id查询sku
+     *
      * @param skuId
      * @return
      */
-    public TGoodsSku findSkuById(Long skuId){
-        TGoodsSku sku=goodsSkuMapper.selectByPrimaryKey(skuId);
+    public TGoodsSku findSkuById(Long skuId) {
+        TGoodsSku sku = goodsSkuMapper.selectByPrimaryKey(skuId);
         return sku;
     }
 
     /**
-     *  获取主图的链接
+     * 获取主图的链接
      */
-    public List<TGoodsLink> selectByPic(){
+    public List<TGoodsLink> selectByPic() {
         return goodsLinkMapper.selectByPic();
     }
 
     /**
-     *  获取所有店铺的sessionkey信息
+     * 获取所有店铺的sessionkey信息
      */
-    public List<TShop> selectAllShop() {return shopMapper.selectAll();
+    public List<TShop> selectAllShop() {
+        return shopMapper.selectAll();
     }
 
     /**
-     *  获取某个店铺的sessionkey信息
+     * 获取某个店铺的sessionkey信息
      */
     public TShop selectShop(TShop shop) {
 
         return shopMapper.selectShop(shop);
     }
+
     /**
      * 更新链接
+     *
      * @param item
      */
 
     @Override
     public void updateLinkNotDele(Item item) {
-        TGoodsLink tGoodsLink=new TGoodsLink();
+        TGoodsLink tGoodsLink = new TGoodsLink();
         tGoodsLink.setDetailUrl(item.getDetailUrl());
         tGoodsLink.setNumIid(item.getNumIid());
         tGoodsLink.setNick(item.getNick());
@@ -331,22 +348,22 @@ public class TradesImpl implements ITradesService {
         tGoodsLink.setPicPath(item.getPicUrl());
 
         //有型号
-        if (org.apache.commons.lang.StringUtils.isNotBlank(item.getPropertyAlias())){
+        if (org.apache.commons.lang.StringUtils.isNotBlank(item.getPropertyAlias())) {
             tGoodsLink.setIsSku(1);
             //拆分属性字段为map
-            Map<String,String> map = getProperty(item.getPropertyAlias());
+            Map<String, String> map = getProperty(item.getPropertyAlias());
             List<Sku> skus = item.getSkus();
-            for (Sku s:skus){
-                TGoodsSku goodsSku=new TGoodsSku();
+            for (Sku s : skus) {
+                TGoodsSku goodsSku = new TGoodsSku();
 
                 goodsSku.setPropertiesAlias(map.get(s.getProperties()));
                 goodsSku.setNumIid(item.getNumIid());
                 goodsSku.setSkuId(s.getSkuId());
                 //判断是否存在链接
-                TGoodsSku sku=findSkuById(s.getSkuId());
-                if (sku!=null&&sku.getSkuId()!=0){
+                TGoodsSku sku = findSkuById(s.getSkuId());
+                if (sku != null && sku.getSkuId() != 0) {
                     goodsSkuMapper.updateByPrimaryKey(goodsSku);
-                }else {
+                } else {
                     goodsSkuMapper.insert(goodsSku);
 
                 }
@@ -354,7 +371,7 @@ public class TradesImpl implements ITradesService {
 
             }
 
-        }else {
+        } else {
             tGoodsLink.setIsSku(0);
         }
 
@@ -362,40 +379,41 @@ public class TradesImpl implements ITradesService {
         goodsLinkMapper.updateByPrimaryKeySelective(tGoodsLink);
     }
 
-    public TShop selectSessionKey(Integer id ){
+    public TShop selectSessionKey(Integer id) {
         return shopMapper.selectByPrimaryKey(id);
     }
 
     /**
      * 获取某个订单详情
+     *
      * @param tid
      * @param shopId
      * @return
      */
-    public TradeFullinfoGetResponse getOrder(String tid,String shopId){
+    public TradeFullinfoGetResponse getOrder(String tid, String shopId) {
 
-        TradeFullinfoGetResponse re=null;
+        TradeFullinfoGetResponse re = null;
 
-       //订单号不为空
-        if(!StringUtils.isEmpty(tid)){
-            if(!StringUtils.isEmpty(shopId)){
-                logger.info("shopId不为空："+shopId);
-                TShop shop=selectSessionKey(Integer.parseInt(shopId));
-                re=TbaoUtils.findOneOrder(tid,shop.getShopToken());
+        //订单号不为空
+        if (!StringUtils.isEmpty(tid)) {
+            if (!StringUtils.isEmpty(shopId)) {
+                logger.info("shopId不为空：" + shopId);
+                TShop shop = selectSessionKey(Integer.parseInt(shopId));
+                re = TbaoUtils.findOneOrder(tid, shop.getShopToken());
                 TbaoUtils.setCurrentSessionKey(shop.getShopToken());
-                if(StringUtils.isEmpty(re.getSubMsg())){
+                if (StringUtils.isEmpty(re.getSubMsg())) {
                     return re;
                 }
-            }else {
-                logger.info("在所有店铺里查询订单"+tid);
+            } else {
+                logger.info("在所有店铺里查询订单" + tid);
                 //获取所有sessionKey
-                List<TShop> list= selectAllShop();
-                for (TShop s:list){
+                List<TShop> list = selectAllShop();
+                for (TShop s : list) {
                     logger.info(s.getShopName());
-                    if (!StringUtils.isEmpty(s.getShopToken())){
+                    if (!StringUtils.isEmpty(s.getShopToken())) {
                         //获取一个订单
-                        re=TbaoUtils.findOneOrder(tid,s.getShopToken());
-                        if(StringUtils.isEmpty(re.getSubMsg())){
+                        re = TbaoUtils.findOneOrder(tid, s.getShopToken());
+                        if (StringUtils.isEmpty(re.getSubMsg())) {
                             TbaoUtils.setCurrentSessionKey(s.getShopToken());
                             return re;
                         }
@@ -408,34 +426,36 @@ public class TradesImpl implements ITradesService {
         return null;
 
     }
+
     /**
      * 获取某个订单备注
+     *
      * @param tid
      * @param session
      * @return
      */
-    public String getMemo(String tid,String session){
+    public String getMemo(String tid, String session) {
 
-        String  memo=null;
+        String memo = null;
 
         //查询出所有店铺的session
-        if(!StringUtils.isEmpty(tid)){
+        if (!StringUtils.isEmpty(tid)) {
             //获取所有sessionKey
-            if(!StringUtils.isEmpty(session)){
-                logger.info("session不为空："+session);
+            if (!StringUtils.isEmpty(session)) {
+                logger.info("session不为空：" + session);
 
-                memo=TbaoUtils.findOrderMemo(tid,session);
+                memo = TbaoUtils.findOrderMemo(tid, session);
                 return memo;
 
-            }else {
-                logger.info("在所有店铺里查询订单"+tid);
+            } else {
+                logger.info("在所有店铺里查询订单" + tid);
 
-                List<TShop> list= selectAllShop();
-                for (TShop s:list){
-                    if (!StringUtils.isEmpty(s.getShopToken())){
+                List<TShop> list = selectAllShop();
+                for (TShop s : list) {
+                    if (!StringUtils.isEmpty(s.getShopToken())) {
                         //获取一个订单
-                        memo=TbaoUtils.findOrderMemo(tid,s.getShopToken());
-                        if(org.apache.commons.lang.StringUtils.isNotBlank(memo)){
+                        memo = TbaoUtils.findOrderMemo(tid, s.getShopToken());
+                        if (org.apache.commons.lang.StringUtils.isNotBlank(memo)) {
                             return memo;
                         }
                     }
@@ -447,7 +467,8 @@ public class TradesImpl implements ITradesService {
         return null;
 
     }
-    public Trades findTrade(Long tid){
+
+    public Trades findTrade(Long tid) {
 
         return tradesMapper.selectByPrimaryKey(tid);
     }
@@ -456,6 +477,172 @@ public class TradesImpl implements ITradesService {
     public List<TGoodsLink> selectByShop(String nick) {
 
         return goodsLinkMapper.selectByShop(nick);
+    }
+
+    @Override
+    public int updateLinkAndSku(Item item, TGoodsLink tGoodsLink, Integer logId) {
+        //调用GoodLink比对跟新的方法
+        Boolean flag1 = compareGoodLink(item, tGoodsLink, logId);
+        //调用GoodSku比对更新的方法
+        Boolean flag2 = compareGoodSku(item, logId);
+
+        return flag1 || flag2 ? 1 : 0;
+    }
+
+    private Boolean compareGoodLink(Item item, TGoodsLink tGoodsLink, Integer logId) {
+        TGoodsLink gdlink = new TGoodsLink();
+        gdlink.setNumIid(tGoodsLink.getNumIid());
+        //日志
+        StringBuffer stringBuffer = new StringBuffer("");
+        //判断是否有更新
+        Boolean flag = isUpdateGoodsLinks(item, tGoodsLink, gdlink, stringBuffer);
+        //如果有更新就数据库更新
+        if (flag) {
+            goodsLinkMapper.updateByPrimaryKeySelective(gdlink);
+            //插入日志
+            insertLogDetail(item, logId, stringBuffer, null);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private Boolean compareGoodSku(Item item, Integer logId) {
+        Boolean flag = false;
+        TGoodsSku tGoodsSku = new TGoodsSku();
+        //日志
+        StringBuffer stringBuffer = new StringBuffer();
+        //说明淘宝的item中包含sku，将本地的sku与淘宝的aku进行比对，
+        // 如果本地没有，就插入，有就比对，如果不一样就更新并插入日志
+        if (org.apache.commons.lang.StringUtils.isNotBlank(item.getPropertyAlias())) {
+            Map<String, String> map = getProperty(item.getPropertyAlias());
+            List<Sku> skus = item.getSkus();
+            for (Sku s : skus) {
+                TGoodsSku goodsSku = gettGoodsSku(item, map, s);
+                //判断是否存在sku
+                TGoodsSku sku = findSkuById(s.getSkuId());
+                if (sku != null) {
+                    boolean isUpdate = isUpdateGoodSku(tGoodsSku, stringBuffer, goodsSku, sku);
+                    //如果有更新就更新
+                    if (isUpdate) {
+                        goodsSkuMapper.updateByPrimaryKeySelective(tGoodsSku);
+                        //插入日志
+                        insertLogDetail(item, logId, stringBuffer, goodsSku.getSkuId());
+                        flag = true;
+                    }
+                } else {
+                    //插入sku
+                    goodsSkuMapper.insertSelective(goodsSku);
+                    stringBuffer.append("新增属性：");
+                    stringBuffer.append(goodsSku.toString());
+                    //插入日志
+                    insertLogDetail(item, logId, stringBuffer, goodsSku.getSkuId());
+                    flag = true;
+                }
+            }
+            //删除方法
+            delSku(item, skus);
+        }
+        return flag;
+    }
+
+    private Boolean isUpdateGoodSku(TGoodsSku tGoodsSku, StringBuffer stringBuffer, TGoodsSku goodsSku, TGoodsSku sku) {
+        //比对更新
+        tGoodsSku.setSkuId(sku.getSkuId());
+        if (!sku.getPropertiesAlias().equals(goodsSku.getPropertiesAlias())) {
+            tGoodsSku.setPropertiesAlias(goodsSku.getPropertiesAlias());
+            stringBuffer.append("属性更新为:");
+            stringBuffer.append(goodsSku.getPropertiesAlias());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private Boolean isUpdateGoodsLinks(Item item, TGoodsLink tGoodsLink, TGoodsLink gdlink, StringBuffer stringBuffer) {
+        Boolean flag = false;
+        if (!item.getTitle().equals(tGoodsLink.getTitle().trim())) {
+            //更新TGoodsLink.getTitle，插入日志
+            gdlink.setTitle(item.getTitle());
+            stringBuffer.append("淘宝链接标题更新为:");
+            stringBuffer.append(item.getTitle());
+            stringBuffer.append(";");
+            flag = true;
+        }
+        if (!item.getPicUrl().equals(tGoodsLink.getPicPath().trim())) {
+            //tGoodsLink.getPicPath(),插入日志
+            gdlink.setPicPath(item.getPicUrl());
+            stringBuffer.append("淘宝链接主图更新:");
+            stringBuffer.append(item.getPicUrl());
+            stringBuffer.append(";");
+            flag = true;
+        }
+        return flag;
+    }
+
+    private TGoodsSku gettGoodsSku(Item item, Map<String, String> map, Sku s) {
+        TGoodsSku goodsSku = new TGoodsSku();
+        goodsSku.setPropertiesAlias(map.get(s.getProperties()));
+        goodsSku.setNumIid(item.getNumIid());
+        goodsSku.setSkuId(s.getSkuId());
+        return goodsSku;
+    }
+
+    private void delSku(Item item, List<Sku> skus) {
+        int count = goodsSkuMapper.countByNumId(item.getNumIid());
+        if (skus.size() < count) {
+            List<TGoodsSku> tGoodsSkus = goodsSkuMapper.selectByNumId(item.getNumIid());
+            HashMap<Long, TGoodsSku> longTGoodsSkuHashMap = formatSkusToHashMap(skus);
+            HashMap<Long, TGoodsSku> tGoodsSkuHashMap = formatGoodsSkusToHashMap(tGoodsSkus);
+            for (Map.Entry entry : tGoodsSkuHashMap.entrySet()) {
+                if (!longTGoodsSkuHashMap.containsKey(entry.getKey())) {
+                    goodsSkuMapper.delSku((Long) entry.getKey());
+                }
+            }
+        }
+    }
+
+    private void insertLogDetail(Item item, Integer logId, StringBuffer stringBuffer, Long skuId) {
+        TUpdateLogDetail tUpdateLogDetail = new TUpdateLogDetail();
+        tUpdateLogDetail.setLogId(logId);
+        tUpdateLogDetail.setNumIid(item.getNumIid());
+        tUpdateLogDetail.setTitle(item.getTitle());
+        tUpdateLogDetail.setUpdateInfo(stringBuffer.toString());
+        if (skuId != null)
+            tUpdateLogDetail.setSkuId(skuId);
+        tUpdateLogDetailMapper.insertSelective(tUpdateLogDetail);
+    }
+
+    public HashMap formatGoodsSkusToHashMap(List<TGoodsSku> tGoodsSkus) {
+        HashMap<Long, TGoodsSku> hashMap = new HashMap<>();
+        for (TGoodsSku tGoodsSku : tGoodsSkus) {
+            hashMap.put(tGoodsSku.getSkuId(), tGoodsSku);
+        }
+        return hashMap;
+    }
+
+    public HashMap formatSkusToHashMap(List<Sku> tGoodsSkus) {
+        HashMap<Long, Sku> hashMap = new HashMap<>();
+        for (Sku sku : tGoodsSkus) {
+            hashMap.put(sku.getSkuId(), sku);
+        }
+        return hashMap;
+    }
+
+
+    @Override
+    public void delGoodLink(Long numId) {
+        goodsLinkMapper.deleteByNumId(numId);
+    }
+
+    @Override
+    public void insertLog(TUpdateLog tUpdateLog) {
+        tUpdateLogMapper.insertSelective(tUpdateLog);
+    }
+
+    @Override
+    public void updateLog(TUpdateLog tUpdateLog) {
+        tUpdateLogMapper.updateByPrimaryKeySelective(tUpdateLog);
     }
 
 
