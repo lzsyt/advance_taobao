@@ -16,6 +16,7 @@ public interface TShopMapper {
 
     TShop selectShop(TShop shop);
 
+    String findShopNameByShopId(Integer id);
 
     int updateByPrimaryKeySelective(TShop record);
 

@@ -2,10 +2,7 @@ package com.kzq.advance.common.utils;
 
 import com.taobao.api.ApiException;
 import com.taobao.api.DefaultTaobaoClient;
-import com.taobao.api.domain.Item;
-import com.taobao.api.domain.Trade;
-import com.taobao.api.domain.WaybillApplyRequest;
-import com.taobao.api.domain.WaybillApplySubscriptionInfo;
+import com.taobao.api.domain.*;
 import com.taobao.api.internal.tmc.Message;
 import com.taobao.api.internal.tmc.MessageHandler;
 import com.taobao.api.internal.tmc.MessageStatus;
@@ -84,17 +81,17 @@ public class TbaoUtils {
     /**
      * 获取店铺类目
      */
-    public static void getCategory() {
+    public static List<SellerCat> getCategory(String shopName) {
         SellercatsListGetRequest req = new SellercatsListGetRequest();
-        req.setNick("光合旗舰店");
-        req.setFields("cid,name");
+        req.setNick(shopName);
+        req.setFields("cid,created,modified,name,parent_cid,pic_url,sort_order,type");
         SellercatsListGetResponse rsp = null;
         try {
-            rsp = client.execute(req);
+            rsp = client.execute(req,sessionKey);
         } catch (ApiException e) {
             e.printStackTrace();
         }
-        System.out.println(rsp.getBody());
+        return rsp.getSellerCats();
 
     }
 
@@ -533,6 +530,19 @@ public class TbaoUtils {
         List<WaybillApplySubscriptionInfo> subscription = rsp.getSubscribtions();
         return subscription;
 
+    }
+
+
+    public static List<ShopCat> getShopCat(){
+        ShopcatsListGetRequest req = new ShopcatsListGetRequest();
+        req.setFields("cid,is_parent,name,parent_cid");
+        ShopcatsListGetResponse rsp = null;
+        try {
+            rsp = client.execute(req);
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+        return rsp.getShopCats();
     }
 
 

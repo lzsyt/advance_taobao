@@ -106,4 +106,7 @@ public interface ITradesService {
      * @param tGoodsLinkHashMap
      */
     void compareUpdate(HashMap<Long, Item> itemHashMap, HashMap<Long, TGoodsLink> tGoodsLinkHashMap);
+
+    Integer downCategory(String ShopId);
+
 }

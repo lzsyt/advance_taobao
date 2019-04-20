@@ -15,10 +15,8 @@ import com.taobao.api.request.TradeMemoUpdateRequest;
 import com.taobao.api.response.TradeFullinfoGetResponse;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -372,10 +370,9 @@ public class ClientController {
      */
 
     @RequestMapping("/updateAll")
-    public String updateAll(HttpServletRequest request, String userid) {
-        if (org.apache.commons.lang.StringUtils.isBlank(userid)) {
-            return "-1";
-        }else if(iTradesService.getUser(userid)==null){
+    public String updateAll(HttpServletRequest request, @RequestParam("userid")String userid) {
+
+        if (iTradesService.getUser(userid) == null) {
             return "-1";
         }
         long start = System.currentTimeMillis();
@@ -446,8 +443,10 @@ public class ClientController {
         StringBuffer stringBuffer = new StringBuffer();
         String substring = null;
         //得到上架商品
+        long star = System.currentTimeMillis();
         List<Item> list = TbaoUtils.getItemsOnsale("", cid, session);
-
+        long end = System.currentTimeMillis();
+        logger.info("获取上架商品的时间为：" + (end - star));
         ArrayList<String> strings = new ArrayList<>();
 
         HashMap<Long, Item> itemHashMap = new HashMap<>();
@@ -480,18 +479,20 @@ public class ClientController {
     }
 
     /**
-     *
-     * @param session  商铺的token
-     * @param strings  多个numids
-     * @param itemHashMap  上架的商品列表
-     * @param items 详细列表
-     * @return  包含详细信息的上架商品列表
+     * @param session     商铺的token
+     * @param strings     多个numids
+     * @param itemHashMap 上架的商品列表
+     * @param items       详细列表
+     * @return 包含详细信息的上架商品列表
      */
     private HashMap<Long, Item> getItemHashMap(String session, ArrayList<String> strings, HashMap<Long, Item> itemHashMap, List<Item> items) {
-        for (String s :strings) {
+        Long star = System.currentTimeMillis();
+        for (String s : strings) {
             List<Item> itemList = TbaoUtils.getProducts(s, session);
             items.addAll(itemList);
         }
+        Long end = System.currentTimeMillis();
+        logger.info("获取详细信息的时间为：" + (end - star));
         //将详细信息赋给上架的商品列表里
         for (Item i : items) {
             Item item = itemHashMap.get(i.getNumIid());
@@ -558,7 +559,10 @@ public class ClientController {
 
 
     public HashMap<Long, TGoodsLink> getTGoodSLinkByShopName(String shopName) {
+        Long start = System.currentTimeMillis();
         List<TGoodsLink> goodsLinks = iTradesService.selectByShop(shopName);
+        Long end = System.currentTimeMillis();
+        logger.info("获取Tgoodlink的时间：" + (end - start));
         return formatTGoodsLinksToMap(goodsLinks);
     }
 
@@ -580,6 +584,12 @@ public class ClientController {
         Long end = System.currentTimeMillis();
         logger.info("时间为" + (end - start));
         return itemHashMap.size();
+    }
+
+    @RequestMapping("downCategory")
+    public String downCategory(@RequestParam("shopId")String shopId, Model model) {
+        iTradesService.downCategory(shopId);
+        return "0";
     }
 
 

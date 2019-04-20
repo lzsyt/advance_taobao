@@ -1,14 +1,13 @@
 package com.kzq.advance.service.impl;
 
 
+import com.kzq.advance.common.utils.BeanUtils;
 import com.kzq.advance.common.utils.HttpUtils;
 import com.kzq.advance.common.utils.TbaoUtils;
 import com.kzq.advance.domain.*;
 import com.kzq.advance.mapper.*;
 import com.kzq.advance.service.ITradesService;
-import com.taobao.api.domain.Item;
-import com.taobao.api.domain.Order;
-import com.taobao.api.domain.Sku;
+import com.taobao.api.domain.*;
 import com.taobao.api.internal.util.StringUtils;
 import com.taobao.api.response.TradeFullinfoGetResponse;
 import org.apache.logging.log4j.LogManager;
@@ -47,6 +46,8 @@ public class TradesImpl implements ITradesService {
     private TUpdateLogMapper tUpdateLogMapper;
     @Resource
     private TUpdateLogDetailMapper tUpdateLogDetailMapper;
+    @Resource
+    private TSellerCatMapper tSellerCatMapper ;
 
     @Resource
     private TUserMapper userMapper;
@@ -62,7 +63,10 @@ public class TradesImpl implements ITradesService {
     }
 
     public List<TGoodsSku> setLongTGoodsSkuList(List<Long> numIIds){
+        long star = System.currentTimeMillis();
         TGoodsSkuList = goodsSkuMapper.selectByNumIds(numIIds);
+        long end = System.currentTimeMillis();
+        logger.info("查询goodSku的时间：" + (end - star));
         return TGoodsSkuList;
     }
     public List<TGoodsSku> getTGoodsSkuByNumId(Long numId){
@@ -704,5 +708,44 @@ public class TradesImpl implements ITradesService {
             }
         }
         return false;
+    }
+
+    @Override
+    public Integer downCategory(String shopId) {
+        String shopName = shopMapper.findShopNameByShopId(Integer.parseInt(shopId));
+        if (org.apache.commons.lang.StringUtils.isBlank(shopName)){
+            return -1;
+        }
+        HashMap<Long, SellerCat> sellerCatHashMap = formatSellerCatListToHashMap(TbaoUtils.getCategory(shopName));
+        HashMap<Long, TSellerCat> tSellerCatHashMap = formatTSellerCatListToHashMap(tSellerCatMapper.find(Integer.parseInt(shopId)));
+        for (Map.Entry entry:sellerCatHashMap.entrySet()) {
+            TSellerCat tSellerCat = new TSellerCat();
+            BeanUtils.copyProperties(entry.getValue(), tSellerCat);
+            if (tSellerCatHashMap.containsKey(entry.getKey())){
+                if (!tSellerCatHashMap.get(entry.getKey()).equals(tSellerCat)) {
+                    tSellerCatMapper.updateByPrimaryKeySelective(tSellerCat);
+                }
+            }else{
+                tSellerCat.setShopId(Integer.parseInt(shopId));
+                tSellerCat.setIsDel(Byte.parseByte("0"));
+                tSellerCatMapper.insertSelective(tSellerCat);
+            }
+        }
+        return 0;
+    }
+    public HashMap<Long, SellerCat> formatSellerCatListToHashMap(List<SellerCat> sellerCatList){
+        HashMap<Long, SellerCat> sellerCatHashMap = new HashMap<>();
+        for (SellerCat sellerCat:sellerCatList) {
+            sellerCatHashMap.put(sellerCat.getCid(), sellerCat);
+        }
+        return sellerCatHashMap;
+    }
+
+    public HashMap<Long, TSellerCat> formatTSellerCatListToHashMap(List<TSellerCat> sellerCats) {
+        HashMap<Long, TSellerCat> sellerCatHashMap = new HashMap<>();
+        for (TSellerCat sellerCat:sellerCats) {
+            sellerCatHashMap.put(sellerCat.getCid(), sellerCat);
+        }
+        return sellerCatHashMap;
     }
 }

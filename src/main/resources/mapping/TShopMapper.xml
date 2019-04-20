@@ -93,4 +93,7 @@
       shop_token = #{shopToken,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="findShopNameByShopId" resultType="java.lang.String" parameterType="java.lang.Integer">
+    select shop_name from t_shop where id=#{id}
+  </select>
 </mapper>
