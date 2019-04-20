@@ -6,6 +6,7 @@ import com.taobao.api.domain.Item;
 import com.taobao.api.domain.Order;
 import com.taobao.api.response.TradeFullinfoGetResponse;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,11 @@ import java.util.Map;
  * @since 2018-08-16
  */
 public interface ITradesService {
+
+    public TUser getUser(String userId);
+
+    public List<TGoodsSku> setLongTGoodsSkuList(List<Long> numIIds);
+
     public TtradesOrder formOrder(Order t);
 
     public void addWsbill(String param);
@@ -91,4 +97,13 @@ public interface ITradesService {
     void insertLog(TUpdateLog tUpdateLog);
 
     void updateLog(TUpdateLog tUpdateLog);
+
+    void recoverGoodLink(TGoodsLink tGoodsLink);
+
+    /**
+     * 对比更新下载goodslink
+     * @param itemHashMap
+     * @param tGoodsLinkHashMap
+     */
+    void compareUpdate(HashMap<Long, Item> itemHashMap, HashMap<Long, TGoodsLink> tGoodsLinkHashMap);
 }

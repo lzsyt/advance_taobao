@@ -21,5 +21,7 @@ public interface TUserMapper {
      public TUser findUser(TUser tUser);
      public String findUserWarehouse(String userId);
 
+     public TUser findUserByUserId(String userId);
+
 
 }

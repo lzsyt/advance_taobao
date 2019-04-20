@@ -25,7 +25,8 @@
     values (#{skuId,jdbcType=BIGINT}, #{numIid,jdbcType=BIGINT}, #{propertiesAlias,jdbcType=VARCHAR}
       )
   </insert>
-    <insert id="insertSelective" parameterType="com.kzq.advance.domain.TGoodsSku">
+    <insert id="insertSelective" parameterType="com.kzq.advance.domain.TGoodsSku" useGeneratedKeys="true"
+            keyProperty="skuId">
         insert into t_goods_sku
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="skuId != null">
@@ -65,10 +66,10 @@
         where sku_id = #{skuId,jdbcType=BIGINT}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.kzq.advance.domain.TGoodsSku">
-    update t_goods_sku
-    set num_iid = #{numIid,jdbcType=BIGINT},
-      properties_alias = #{propertiesAlias,jdbcType=VARCHAR}
-    where sku_id = #{skuId,jdbcType=BIGINT}
+        update t_goods_sku
+        set num_iid = #{numIid,jdbcType=BIGINT},
+          properties_alias = #{propertiesAlias,jdbcType=VARCHAR}
+        where sku_id = #{skuId,jdbcType=BIGINT}
   </update>
     <select id="selectByNumId" parameterType="java.lang.Long" resultMap="BaseResultMap">
       select sku_id,num_iid,properties_alias from t_goods_sku where num_iid =#{numId}
@@ -79,5 +80,12 @@
     <update id="delSku" parameterType="java.lang.Long">
     update t_goods_sku set is_del=1 where sku_id=#{skuId};
   </update>
+    <select id="selectByNumIds" parameterType="java.util.ArrayList" resultMap="BaseResultMap">
+        select sku_id,num_iid,properties_alias from t_goods_sku where num_iid in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 
 </mapper>

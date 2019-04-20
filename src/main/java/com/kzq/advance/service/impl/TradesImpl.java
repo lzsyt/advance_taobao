@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,9 +48,32 @@ public class TradesImpl implements ITradesService {
     @Resource
     private TUpdateLogDetailMapper tUpdateLogDetailMapper;
 
+    @Resource
+    private TUserMapper userMapper;
+
+    private List<TGoodsSku> TGoodsSkuList;
 
     protected Logger logger = LogManager.getLogger(TradesImpl.class);
 
+
+    @Override
+    public TUser getUser(String userId) {
+        return userMapper.findUserByUserId(userId);
+    }
+
+    public List<TGoodsSku> setLongTGoodsSkuList(List<Long> numIIds){
+        TGoodsSkuList = goodsSkuMapper.selectByNumIds(numIIds);
+        return TGoodsSkuList;
+    }
+    public List<TGoodsSku> getTGoodsSkuByNumId(Long numId){
+        List<TGoodsSku> tGoodsSkus = new ArrayList<>();
+        for (TGoodsSku tgoodsku:TGoodsSkuList) {
+            if (tgoodsku.getNumIid().toString().equals(numId.toString())){
+                tGoodsSkus.add(tgoodsku);
+            }
+        }
+        return tGoodsSkus;
+    }
 
     /**
      * 类型转换
@@ -101,6 +125,7 @@ public class TradesImpl implements ITradesService {
         tGoodsLink.setNumIid(item.getNumIid());
         tGoodsLink.setNick(item.getNick());
         tGoodsLink.setTitle(item.getTitle());
+        tGoodsLink.setPicPath(item.getPicUrl());
         tGoodsLink.setState(0);
         //分割型号的字符串
         item.getPropertyAlias();
@@ -160,7 +185,6 @@ public class TradesImpl implements ITradesService {
      * @param item
      */
     public void updateGoodLink(Item item) {
-
         goodsLinkMapper.updateByPrimaryKey(formatTGoodsLink(item));
     }
 
@@ -475,7 +499,6 @@ public class TradesImpl implements ITradesService {
 
     @Override
     public List<TGoodsLink> selectByShop(String nick) {
-
         return goodsLinkMapper.selectByShop(nick);
     }
 
@@ -489,18 +512,27 @@ public class TradesImpl implements ITradesService {
         return flag1 || flag2 ? 1 : 0;
     }
 
+
     private Boolean compareGoodLink(Item item, TGoodsLink tGoodsLink, Integer logId) {
         TGoodsLink gdlink = new TGoodsLink();
-        gdlink.setNumIid(tGoodsLink.getNumIid());
-        //日志
-        StringBuffer stringBuffer = new StringBuffer("");
-        //判断是否有更新
-        Boolean flag = isUpdateGoodsLinks(item, tGoodsLink, gdlink, stringBuffer);
-        //如果有更新就数据库更新
-        if (flag) {
+        gdlink.setNumIid(item.getNumIid());
+        if (!item.getTitle().equals(tGoodsLink.getTitle())) {
+            gdlink.setTitle(item.getTitle());
+            if (logId != null) {
+                StringBuffer stringBuffer = new StringBuffer("标题更新:").append(item.getTitle());
+                insertLogDetail(logId, item.getNumIid(), item.getTitle(), stringBuffer.toString(), null);
+            }
+        }
+        if (!item.getPicUrl().equals(tGoodsLink.getPicPath())) {
+            gdlink.setPicPath(item.getPicUrl());
+            if (logId != null) {
+                StringBuffer stringBuffer = new StringBuffer("主图更新:").append(item.getPicUrl());
+                insertLogDetail(logId, item.getNumIid(), item.getTitle(), stringBuffer.toString(), null);
+            }
+        }
+        if (org.apache.commons.lang.StringUtils.isNotBlank(gdlink.getTitle()) ||
+                org.apache.commons.lang.StringUtils.isNotBlank(gdlink.getPicPath())) {
             goodsLinkMapper.updateByPrimaryKeySelective(gdlink);
-            //插入日志
-            insertLogDetail(item, logId, stringBuffer, null);
             return true;
         } else {
             return false;
@@ -508,76 +540,61 @@ public class TradesImpl implements ITradesService {
     }
 
     private Boolean compareGoodSku(Item item, Integer logId) {
+        HashMap<Long, TGoodsSku> tGoodsSkuHashMap = getSkuByNumIId(item.getNumIid());
         Boolean flag = false;
         TGoodsSku tGoodsSku = new TGoodsSku();
-        //日志
-        StringBuffer stringBuffer = new StringBuffer();
+
         //说明淘宝的item中包含sku，将本地的sku与淘宝的aku进行比对，
         // 如果本地没有，就插入，有就比对，如果不一样就更新并插入日志
         if (org.apache.commons.lang.StringUtils.isNotBlank(item.getPropertyAlias())) {
             Map<String, String> map = getProperty(item.getPropertyAlias());
             List<Sku> skus = item.getSkus();
             for (Sku s : skus) {
-                TGoodsSku goodsSku = gettGoodsSku(item, map, s);
-                //判断是否存在sku
-                TGoodsSku sku = findSkuById(s.getSkuId());
+                //淘宝的sku
+                TGoodsSku itemSku = gettGoodsSku(item, map, s);
+                //本地的sku
+                TGoodsSku sku = tGoodsSkuHashMap.get(s.getSkuId());
                 if (sku != null) {
-                    boolean isUpdate = isUpdateGoodSku(tGoodsSku, stringBuffer, goodsSku, sku);
-                    //如果有更新就更新
-                    if (isUpdate) {
-                        goodsSkuMapper.updateByPrimaryKeySelective(tGoodsSku);
-                        //插入日志
-                        insertLogDetail(item, logId, stringBuffer, goodsSku.getSkuId());
+                    boolean isUpdate = isUpdateGoodSku(itemSku, sku, logId, item.getTitle());
+                    if (isUpdate)
                         flag = true;
-                    }
                 } else {
                     //插入sku
-                    goodsSkuMapper.insertSelective(goodsSku);
-                    stringBuffer.append("新增属性：");
-                    stringBuffer.append(goodsSku.toString());
-                    //插入日志
-                    insertLogDetail(item, logId, stringBuffer, goodsSku.getSkuId());
+                    goodsSkuMapper.insertSelective(itemSku);
+                    StringBuffer stringBuffer = new StringBuffer("新增属性：").append(itemSku.getPropertiesAlias());
+                    insertLogDetail(logId, item.getNumIid(), item.getTitle(), stringBuffer.toString(), itemSku.getSkuId());
                     flag = true;
                 }
             }
             //删除方法
-            delSku(item, skus);
+            delSku(item.getNumIid(), skus);
         }
         return flag;
     }
 
-    private Boolean isUpdateGoodSku(TGoodsSku tGoodsSku, StringBuffer stringBuffer, TGoodsSku goodsSku, TGoodsSku sku) {
-        //比对更新
-        tGoodsSku.setSkuId(sku.getSkuId());
-        if (!sku.getPropertiesAlias().equals(goodsSku.getPropertiesAlias())) {
-            tGoodsSku.setPropertiesAlias(goodsSku.getPropertiesAlias());
-            stringBuffer.append("属性更新为:");
-            stringBuffer.append(goodsSku.getPropertiesAlias());
+    /*跟新sku*/
+    private Boolean isUpdateGoodSku(TGoodsSku itemSku, TGoodsSku goodsSku, Integer logId, String title) {
+        if (itemSku.getPropertiesAlias() == null) {
+            if (goodsSku.getPropertiesAlias() == null)
+                return false;
+            else {
+                goodsSkuMapper.updateByPrimaryKeySelective(itemSku);
+                if (logId != null) {
+                    insertLogDetail(logId, goodsSku.getNumIid(), title, "属性更新:空", goodsSku.getSkuId());
+                }
+                return true;
+            }
+        }
+        if (!itemSku.getPropertiesAlias().equals(goodsSku.getPropertiesAlias())) {
+            goodsSkuMapper.updateByPrimaryKeySelective(itemSku);
+            if (logId != null) {
+                StringBuffer stringBuffer = new StringBuffer("属性更新:").append(itemSku.getPropertiesAlias());
+                insertLogDetail(logId, itemSku.getNumIid(), title, stringBuffer.toString(), itemSku.getSkuId());
+            }
             return true;
         } else {
             return false;
         }
-    }
-
-    private Boolean isUpdateGoodsLinks(Item item, TGoodsLink tGoodsLink, TGoodsLink gdlink, StringBuffer stringBuffer) {
-        Boolean flag = false;
-        if (!item.getTitle().equals(tGoodsLink.getTitle().trim())) {
-            //更新TGoodsLink.getTitle，插入日志
-            gdlink.setTitle(item.getTitle());
-            stringBuffer.append("淘宝链接标题更新为:");
-            stringBuffer.append(item.getTitle());
-            stringBuffer.append(";");
-            flag = true;
-        }
-        if (!item.getPicUrl().equals(tGoodsLink.getPicPath().trim())) {
-            //tGoodsLink.getPicPath(),插入日志
-            gdlink.setPicPath(item.getPicUrl());
-            stringBuffer.append("淘宝链接主图更新:");
-            stringBuffer.append(item.getPicUrl());
-            stringBuffer.append(";");
-            flag = true;
-        }
-        return flag;
     }
 
     private TGoodsSku gettGoodsSku(Item item, Map<String, String> map, Sku s) {
@@ -588,10 +605,10 @@ public class TradesImpl implements ITradesService {
         return goodsSku;
     }
 
-    private void delSku(Item item, List<Sku> skus) {
-        int count = goodsSkuMapper.countByNumId(item.getNumIid());
+    private void delSku(Long numId, List<Sku> skus) {
+        List<TGoodsSku> tGoodsSkus = getTGoodsSkuByNumId(numId);
+        int count = tGoodsSkus.size();
         if (skus.size() < count) {
-            List<TGoodsSku> tGoodsSkus = goodsSkuMapper.selectByNumId(item.getNumIid());
             HashMap<Long, TGoodsSku> longTGoodsSkuHashMap = formatSkusToHashMap(skus);
             HashMap<Long, TGoodsSku> tGoodsSkuHashMap = formatGoodsSkusToHashMap(tGoodsSkus);
             for (Map.Entry entry : tGoodsSkuHashMap.entrySet()) {
@@ -602,18 +619,17 @@ public class TradesImpl implements ITradesService {
         }
     }
 
-    private void insertLogDetail(Item item, Integer logId, StringBuffer stringBuffer, Long skuId) {
+    private void insertLogDetail(Integer logId, Long numIId, String title, String updateInfo, Long skuId) {
         TUpdateLogDetail tUpdateLogDetail = new TUpdateLogDetail();
         tUpdateLogDetail.setLogId(logId);
-        tUpdateLogDetail.setNumIid(item.getNumIid());
-        tUpdateLogDetail.setTitle(item.getTitle());
-        tUpdateLogDetail.setUpdateInfo(stringBuffer.toString());
-        if (skuId != null)
-            tUpdateLogDetail.setSkuId(skuId);
+        tUpdateLogDetail.setNumIid(numIId);
+        tUpdateLogDetail.setTitle(title);
+        tUpdateLogDetail.setUpdateInfo(updateInfo);
+        tUpdateLogDetail.setSkuId(skuId);
         tUpdateLogDetailMapper.insertSelective(tUpdateLogDetail);
     }
 
-    public HashMap formatGoodsSkusToHashMap(List<TGoodsSku> tGoodsSkus) {
+    public HashMap<Long, TGoodsSku> formatGoodsSkusToHashMap(List<TGoodsSku> tGoodsSkus) {
         HashMap<Long, TGoodsSku> hashMap = new HashMap<>();
         for (TGoodsSku tGoodsSku : tGoodsSkus) {
             hashMap.put(tGoodsSku.getSkuId(), tGoodsSku);
@@ -629,6 +645,10 @@ public class TradesImpl implements ITradesService {
         return hashMap;
     }
 
+    public HashMap<Long, TGoodsSku> getSkuByNumIId(Long numiid) {
+        List<TGoodsSku> tGoodsSkus = getTGoodsSkuByNumId(numiid);
+        return formatGoodsSkusToHashMap(tGoodsSkus);
+    }
 
     @Override
     public void delGoodLink(Long numId) {
@@ -645,5 +665,44 @@ public class TradesImpl implements ITradesService {
         tUpdateLogMapper.updateByPrimaryKeySelective(tUpdateLog);
     }
 
+    @Override
+    public void recoverGoodLink(TGoodsLink tGoodsLink) {
+        goodsLinkMapper.updateByPrimaryKeySelective(tGoodsLink);
+    }
 
+    @Override
+    public void compareUpdate(HashMap<Long, Item> itemHashMap, HashMap<Long, TGoodsLink> tGoodsLinkHashMap) {
+        //先查看本地有没有这个link，如果有就对比跟新，如果没有插入
+        for (Map.Entry entry : itemHashMap.entrySet()) {
+            if (tGoodsLinkHashMap.containsKey(entry.getKey())) {
+                compareGoodLink(itemHashMap.get(entry.getKey()), tGoodsLinkHashMap.get(entry.getKey()), null);
+                compareUpdateGoodSkuAndItem(itemHashMap.get(entry.getKey()));
+            } else {
+                addGoodLink(itemHashMap.get(entry.getKey()));
+            }
+        }
+    }
+
+    /*跟新goodSku不加日志方法*/
+    private Boolean compareUpdateGoodSkuAndItem(Item item) {
+        HashMap<Long, TGoodsSku> tGoodsSkuHashMap = getSkuByNumIId(item.getNumIid());
+        //说明淘宝的item中包含sku，将本地的sku与淘宝的aku进行比对，
+        // 如果本地没有，就插入，有就比对，如果不一样就更新并插入日志
+        if (org.apache.commons.lang.StringUtils.isNotBlank(item.getPropertyAlias())) {
+            Map<String, String> map = getProperty(item.getPropertyAlias());
+            List<Sku> skus = item.getSkus();
+            for (Sku s : skus) {
+                TGoodsSku itemSku = gettGoodsSku(item, map, s);
+                //判断是否存在sku
+                TGoodsSku sku = tGoodsSkuHashMap.get(s.getSkuId());
+                if (sku != null) {
+                    isUpdateGoodSku(itemSku, sku, null, null);
+                } else {
+                    //插入sku
+                    goodsSkuMapper.insertSelective(itemSku);
+                }
+            }
+        }
+        return false;
+    }
 }

@@ -50,4 +50,7 @@
 		   LEFT JOIN t_warehouse w on o.name=w.name
 		   where u.id=#{userId}
 	</select>
+	<select id="findUserByUserId" resultMap="BaseResultMap" parameterType="java.lang.String">
+	  	select * from t_user where t_user.id=#{userId};
+	</select>
 </mapper>

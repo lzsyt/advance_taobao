@@ -22,19 +22,20 @@ import java.util.Map;
 
 public class TbaoUtils {
 
-   // 正式环境
+    // 正式环境
 
-   /* static BatchTaobaoClient client = new BatchTaobaoClient (
-                     "http://gw.api.taobao.com/router/batch?","25500416", "25720ff4e7b9f8c5cfe95827c7e35479");
-*/
+    /* static BatchTaobaoClient client = new BatchTaobaoClient (
+                      "http://gw.api.taobao.com/router/batch?","25500416", "25720ff4e7b9f8c5cfe95827c7e35479");
+ */
     static DefaultTaobaoClient client = new DefaultTaobaoClient("https://eco.taobao.com/router/rest", "25500416", "25720ff4e7b9f8c5cfe95827c7e35479");
-   //光合硅能
-   final static String sessionKey="620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742";
-   //动力足
-   final static String sessionKey1="6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914";
-   //currentSessionKey
-   static String currentSessionKey="";
-    static Map<String,String> session=new HashMap<>();
+    //光合硅能
+    final static String sessionKey = "620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742";
+    //动力足
+    final static String sessionKey1 = "6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914";
+    //currentSessionKey
+    static String currentSessionKey = "";
+    static Map<String, String> session = new HashMap<>();
+
     /**
      * url:
      * http://gw.api.tbsandbox.com/router/rest
@@ -44,14 +45,13 @@ public class TbaoUtils {
      */
     // DefaultTaobaoClient  client = new DefaultTaobaoClient("http://gw.api.tbsandbox.com/router/rest", "1025500416", "25720ff4e7b9f8c5cfe95827c7e35479");
 
-    static{
+    static {
 
 
         //采用精简化的JSON结构返回，去除多余JSON节点
         client.setUseSimplifyJson(true);
 
     }
-
 
 
     public static String getCurrentSessionKey() {
@@ -63,10 +63,10 @@ public class TbaoUtils {
     }
 
     /**
- *  获取token
- */
+     * 获取token
+     */
 
-    public static void  createAuthToken(String code){
+    public static void createAuthToken(String code) {
 
         //采用精简化的JSON结构返回，去除多余JSON节点 code= AJL1Wnp5IhG9uSmV9P76iGrY282518
         TopAuthTokenCreateRequest req = new TopAuthTokenCreateRequest();
@@ -80,33 +80,35 @@ public class TbaoUtils {
         System.out.println(rsp.getBody());
 
     }
+
     /**
      * 获取店铺类目
      */
-   public static  void getCategory()  {
-       SellercatsListGetRequest req = new SellercatsListGetRequest();
-       req.setNick("光合旗舰店");
-       req.setFields("cid,name");
-       SellercatsListGetResponse rsp = null;
-       try {
-           rsp = client.execute(req);
-       } catch (ApiException e) {
-           e.printStackTrace();
-       }
-       System.out.println(rsp.getBody());
+    public static void getCategory() {
+        SellercatsListGetRequest req = new SellercatsListGetRequest();
+        req.setNick("光合旗舰店");
+        req.setFields("cid,name");
+        SellercatsListGetResponse rsp = null;
+        try {
+            rsp = client.execute(req);
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+        System.out.println(rsp.getBody());
 
     }
 
 
     /**
-     获取某个店铺所有订单，返回list
-     @param sessionKey
+     * 获取某个店铺所有订单，返回list
+     *
+     * @param sessionKey
      */
-    public  static  List<Trade> findOrders(String sessionKey){
+    public static List<Trade> findOrders(String sessionKey) {
         TradesSoldGetRequest req = new TradesSoldGetRequest();
         req.setFields("tid,created_time,modify_time,seller_memo,buyer_memo,pay_time,pic_path,post_fee,buyer_nick,orders,title,total_fee,trade_from,type,status,payment,receiver_address,receiver_name,receiver_state,receiver_town,receiver_city,receiver_district,receiver_country,receiver_mobile,receiver_phone");
-      //  req.setStartCreated(startCreated);
-      //  req.setEndCreated(StringUtils.parseDateTime("2018-12-29 10:59:59"));
+        //  req.setStartCreated(startCreated);
+        //  req.setEndCreated(StringUtils.parseDateTime("2018-12-29 10:59:59"));
         TradesSoldGetResponse rsp = null;
         //620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742
         try {
@@ -115,24 +117,25 @@ public class TbaoUtils {
             e.printStackTrace();
         }
 
-        List<Trade> list= rsp.getTrades();
+        List<Trade> list = rsp.getTrades();
 
         return list;
 
     }
 
     /**
-     *  获取某个店铺所有订单
+     * 获取某个店铺所有订单
+     *
      * @param sessionKey
      * @return
      */
-    public  static String findOrdersforStr(String sessionKey){
+    public static String findOrdersforStr(String sessionKey) {
         TradesSoldGetRequest req = new TradesSoldGetRequest();
 
         req.setFields("tid,created_time,modify_time,seller_memo,buyer_memo,pay_time,pic_path,post_fee,buyer_nick,orders,title,total_fee,trade_from,type,status,payment,receiver_address,receiver_name,receiver_state,receiver_town,receiver_city,receiver_district,receiver_country,receiver_mobile,receiver_phone");
 
         //req.setStartCreated(startCreated);
-       // req.setEndCreated(StringUtils.parseDateTime("2018-12-29 10:59:59"));
+        // req.setEndCreated(StringUtils.parseDateTime("2018-12-29 10:59:59"));
 
         TradesSoldGetResponse rsp = null;
         //620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742
@@ -146,15 +149,16 @@ public class TbaoUtils {
         return rsp.getBody();
 
     }
+
     /**
-     *     获取一个订单的详情
+     * 获取一个订单的详情
      */
 
 
-    public  static TradeFullinfoGetResponse findOneOrder(String tid,String sessionKey) {
+    public static TradeFullinfoGetResponse findOneOrder(String tid, String sessionKey) {
         TradeFullinfoGetRequest req = new TradeFullinfoGetRequest();
         req.setFields("tid,type,status,payment,seller_memo,buyer_memo,seller_nick,buyer_nick,orders,receiver_name,receiver_address,snapshot_url,pay_time,receiver_state,receiver_town,receiver_city,receiver_district,receiver_country,receiver_mobile,receiver_phone");
-       // req.setTid(315968833434800371L);
+        // req.setTid(315968833434800371L);
         req.setTid(Long.parseLong(tid));
         TradeFullinfoGetResponse rsp = null;
         try {
@@ -164,38 +168,40 @@ public class TbaoUtils {
         }
         System.out.println(rsp.getBody());
 
-            return rsp;
+        return rsp;
     }
 
     /**
      * 获取一个订单的备注
+     *
      * @param tid
      * @param sessionKey
      * @return
      */
-    public  static String findOrderMemo(String tid,String sessionKey) {
+    public static String findOrderMemo(String tid, String sessionKey) {
 
-        TradeGetResponse rsp=getTrade("seller_memo",tid,sessionKey);
-        String sellerMemo=null;
+        TradeGetResponse rsp = getTrade("seller_memo", tid, sessionKey);
+        String sellerMemo = null;
         try {
             Trade trade = rsp.getTrade();
             sellerMemo = trade.getSellerMemo();
-        }catch (Exception e){
-          e.printStackTrace();
-        }finally {
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
             return sellerMemo;
         }
 
     }
 
 
-        /**
-         * 获取订单部份信息
-         * @param tid
-         * @param sessionKey
-         * @return
-         */
-    public  static TradeGetResponse getTrade(String field,String tid,String sessionKey) {
+    /**
+     * 获取订单部份信息
+     *
+     * @param tid
+     * @param sessionKey
+     * @return
+     */
+    public static TradeGetResponse getTrade(String field, String tid, String sessionKey) {
         TradeGetRequest req = new TradeGetRequest();
         req.setFields(field);
         req.setTid(Long.parseLong(tid));
@@ -209,11 +215,12 @@ public class TbaoUtils {
 
         return rsp;
     }
+
     /**
-     *   接受消息接口
+     * 接受消息接口
      */
 
-    public  static void   acceptMessage(){
+    public static void acceptMessage() {
         TmcClient client = new TmcClient("25500416", "25720ff4e7b9f8c5cfe95827c7e35479", "default"); // 关于default参考消息分组说明
         client.setMessageHandler(new MessageHandler() {
             public void onMessage(Message message, MessageStatus status) {
@@ -232,33 +239,34 @@ public class TbaoUtils {
             }
         });
 
-            try {
-                client.connect("ws://mc.api.taobao.com"); // 消息环境地址：ws://mc.api.tbsandbox.com/
-            } catch (com.taobao.api.internal.toplink.LinkException e) {
-                e.printStackTrace();
-            }
+        try {
+            client.connect("ws://mc.api.taobao.com"); // 消息环境地址：ws://mc.api.tbsandbox.com/
+        } catch (com.taobao.api.internal.toplink.LinkException e) {
+            e.printStackTrace();
+        }
 
     }
 
 
-
     /**
-     *     获取所有出售中的商品列表
+     * 获取所有出售中的商品列表
      */
 
-    public  static List<Item>   getItemsOnsale(String title,String sessionKey){
+    public static List<Item> getItemsOnsale(String title, Long cid, String sessionKey) {
         ItemsOnsaleGetRequest req = new ItemsOnsaleGetRequest();
         req.setFields("num_iid,title,nick,price,approve_status,sku,pic_url,props");
-        if (StringUtils.areNotEmpty(title)){
+        if (StringUtils.areNotEmpty(title)) {
             req.setQ(title);
-
+        }
+        if (StringUtils.areNotEmpty(String.valueOf(cid))) {
+            req.setCid(cid);
         }
         req.setPageSize(10L);
         ItemsOnsaleGetResponse rsp = null;
-        List<Item> items=new ArrayList<Item>();
+        List<Item> items = new ArrayList<Item>();
         try {
-            Long size=getCount(title,sessionKey);
-            for (int i=1;i<=size/10+1;i++){
+            Long size = getCount(title, sessionKey);
+            for (int i = 1; i <= size / 10 + 1; i++) {
                 req.setPageNo(Long.valueOf(i));
                 rsp = client.execute(req, sessionKey);
                 items.addAll(rsp.getItems());
@@ -272,15 +280,16 @@ public class TbaoUtils {
 
     /**
      * 获取商品列表的总数
+     *
      * @param title
      * @param sessionKey
      * @return
      */
 
-    public  static Long getCount(String title,String sessionKey){
+    public static Long getCount(String title, String sessionKey) {
         ItemsOnsaleGetRequest req = new ItemsOnsaleGetRequest();
         req.setFields("num_iid");
-        if (StringUtils.areNotEmpty(title)){
+        if (StringUtils.areNotEmpty(title)) {
             req.setQ(title);
 
         }
@@ -292,15 +301,14 @@ public class TbaoUtils {
         } catch (ApiException e) {
             e.printStackTrace();
         }
-        System.out.println("size:"+rsp.getTotalResults());
-
         return rsp.getTotalResults();
     }
+
     /**
-     *     获取某个产品详细信息
+     * 获取某个产品详细信息
      */
 
-    public  static Item   getProduct(long numIid,String sessionKey){
+    public static Item getProduct(long numIid, String sessionKey) {
         ItemSellerGetRequest req = new ItemSellerGetRequest();
         req.setFields("num_iid,detail_url,title,pic_url,nick,price,approve_status,sku,property_alias,properties_alias");
         req.setNumIid(numIid);
@@ -310,17 +318,29 @@ public class TbaoUtils {
         } catch (ApiException e) {
             e.printStackTrace();
         }
-       return rsp.getItem();
+        return rsp.getItem();
+    }
 
-
+    public static List<Item> getProducts(String numids, String sessionKey) {
+        ItemsSellerListGetRequest req = new ItemsSellerListGetRequest();
+        req.setFields("num_iid,sku,property_alias");
+        req.setNumIids(numids);
+        ItemsSellerListGetResponse rsp = null;
+        try {
+            rsp = client.execute(req, sessionKey);
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+        return rsp.getItems();
     }
 
     /**
      * 物流发货
+     *
      * @return
      */
 
-    public static int sendLogistics(){
+    public static int sendLogistics() {
         LogisticsOnlineSendRequest req = new LogisticsOnlineSendRequest();
         req.setSubTid("1,2,3");
         //淘宝交易id
@@ -345,56 +365,57 @@ public class TbaoUtils {
 
     /**
      * 更新备注
+     *
      * @param sessionKey
      * @throws LinkException
      */
- public static String updateTradeMemo(TradeMemoUpdateRequest req,String sessionKey){
+    public static String updateTradeMemo(TradeMemoUpdateRequest req, String sessionKey) {
 
 
-
-     TradeMemoUpdateResponse rsp = null;
-     try {
-         rsp = client.execute(req, sessionKey);
-     } catch (ApiException e) {
-         e.printStackTrace();
-     }
-     return  rsp.getBody();
-
- }
-
-    /**
-     * 添加备注
-
-     * @throws LinkException
-     */
-    public static String addTradeMemo(TradeMemoAddRequest req,String sessionKey){
-
-        TradeMemoAddResponse rsp=null;
+        TradeMemoUpdateResponse rsp = null;
         try {
             rsp = client.execute(req, sessionKey);
         } catch (ApiException e) {
             e.printStackTrace();
         }
-        return  rsp.getBody();
+        return rsp.getBody();
 
     }
-    //删除备注
-    public  static String deleteMemo( String tid,String delete,String sessionKey){
-        String memo=findOrderMemo(tid,sessionKey);
-        memo=memo.replace(delete,"");
 
-        memo=memo.trim();
-        TradeMemoUpdateRequest req=new TradeMemoUpdateRequest();
+    /**
+     * 添加备注
+     *
+     * @throws LinkException
+     */
+    public static String addTradeMemo(TradeMemoAddRequest req, String sessionKey) {
+
+        TradeMemoAddResponse rsp = null;
+        try {
+            rsp = client.execute(req, sessionKey);
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+        return rsp.getBody();
+
+    }
+
+    //删除备注
+    public static String deleteMemo(String tid, String delete, String sessionKey) {
+        String memo = findOrderMemo(tid, sessionKey);
+        memo = memo.replace(delete, "");
+
+        memo = memo.trim();
+        TradeMemoUpdateRequest req = new TradeMemoUpdateRequest();
         req.setTid(347255267786949048L);
         req.setMemo(memo);
-        updateTradeMemo(req,sessionKey);
+        updateTradeMemo(req, sessionKey);
         return memo;
     }
 
     /**
      * 获取电子面单
      */
-    public static String getWallbill(String cpCode, CainiaoWaybillIiGetRequest.UserInfoDto sender, List<CainiaoWaybillIiGetRequest.TradeOrderInfoDto> orderInfos){
+    public static String getWallbill(String cpCode, CainiaoWaybillIiGetRequest.UserInfoDto sender, List<CainiaoWaybillIiGetRequest.TradeOrderInfoDto> orderInfos) {
 
         CainiaoWaybillIiGetRequest req = new CainiaoWaybillIiGetRequest();
         CainiaoWaybillIiGetRequest.WaybillCloudPrintApplyNewRequest obj1 = new CainiaoWaybillIiGetRequest.WaybillCloudPrintApplyNewRequest();
@@ -415,7 +436,7 @@ public class TbaoUtils {
     /**
      * 获取电子面单
      */
-    public static  String getWallbillTest(String cpCode/*, CainiaoWaybillIiUpdateRequest.UserInfoDto sender*/){
+    public static String getWallbillTest(String cpCode/*, CainiaoWaybillIiUpdateRequest.UserInfoDto sender*/) {
 
         CainiaoWaybillIiGetRequest req = new CainiaoWaybillIiGetRequest();
         CainiaoWaybillIiGetRequest.WaybillCloudPrintApplyNewRequest obj1 = new CainiaoWaybillIiGetRequest.WaybillCloudPrintApplyNewRequest();
@@ -440,7 +461,7 @@ public class TbaoUtils {
         obj6.setObjectId("1");
         CainiaoWaybillIiGetRequest.OrderInfoDto obj8 = new CainiaoWaybillIiGetRequest.OrderInfoDto();
         obj8.setOrderChannelsType("TB");
-        List<String> list=new ArrayList<String>();
+        List<String> list = new ArrayList<String>();
         list.add("12123123");
         obj8.setTradeOrderList(list);
         obj6.setOrderInfo(obj8);
@@ -471,7 +492,7 @@ public class TbaoUtils {
         obj15.setName("Bar");
         obj15.setPhone("057123222");
         obj6.setRecipient(obj15);
-      //http:\/\/cloudprint.cainiao.com\/template\/standard\/101\/607
+        //http:\/\/cloudprint.cainiao.com\/template\/standard\/101\/607
         obj6.setTemplateUrl("http://cloudprint.cainiao.com/template/standard/101");
 
         obj6.setUserId(12L);
@@ -492,11 +513,12 @@ public class TbaoUtils {
         return rsp.getBody();
 
     }
+
     /**
      * 查询面单服务订购及面单使用情况
      */
 
-    public  static List<WaybillApplySubscriptionInfo> waybillISearch(){
+    public static List<WaybillApplySubscriptionInfo> waybillISearch() {
         WlbWaybillISearchRequest req = new WlbWaybillISearchRequest();
         WaybillApplyRequest obj1 = new WaybillApplyRequest();
         req.setWaybillApplyRequest(obj1);
@@ -508,23 +530,21 @@ public class TbaoUtils {
         }
         System.out.println(rsp.getBody());
 
-        List<WaybillApplySubscriptionInfo> subscription=rsp.getSubscribtions();
+        List<WaybillApplySubscriptionInfo> subscription = rsp.getSubscribtions();
         return subscription;
 
     }
 
 
-
     /**
-     *
      * @param args
      * @throws LinkException
      */
-        public static void main(String[] args) throws LinkException, ApiException {
-            CainiaoWaybillIiSearchRequest req = new CainiaoWaybillIiSearchRequest();
-            req.setCpCode("EYB");
-            CainiaoWaybillIiSearchResponse rsp = client.execute(req, sessionKey);
-            System.out.println(rsp.getBody());
+    public static void main(String[] args) throws LinkException, ApiException {
+        CainiaoWaybillIiSearchRequest req = new CainiaoWaybillIiSearchRequest();
+        req.setCpCode("EYB");
+        CainiaoWaybillIiSearchResponse rsp = client.execute(req, sessionKey);
+        System.out.println(rsp.getBody());
           /*  String memo=findOrderMemo("347255267786949048","6201e186d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914");
             System.out.println(memo);*/
 
@@ -545,5 +565,6 @@ public class TbaoUtils {
        /*   //  deleteMemo("347255267786949048","3.25聚光明阿里,系统管理员采购振荡器下单成本：410元(1+1+2)，订单号：346606688301015367","6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914");
             String memo=findOrderMemo("347255267786949048","6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914");
             System.out.println(memo);*/
-        }
+    }
+
 }

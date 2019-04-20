@@ -19,6 +19,16 @@ public class TGoodsLink {
 
     private Integer isSku;
 
+    private Integer isDel;
+
+    public Integer getIsDel() {
+        return isDel;
+    }
+
+    public void setIsDel(Integer isDel) {
+        this.isDel = isDel;
+    }
+
     public Long getNumIid() {
         return numIid;
     }

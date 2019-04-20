@@ -24,4 +24,7 @@ public interface TGoodsSkuMapper {
     int updateByPrimaryKey(TGoodsSku record);
 
     int delSku(long skuId);
+
+    List<TGoodsSku> selectByNumIds(List<Long> list);
+
 }

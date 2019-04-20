@@ -11,9 +11,10 @@
         <result column="state" property="state" jdbcType="INTEGER"/>
         <result column="pic_path" property="picPath" jdbcType="VARCHAR"/>
         <result column="is_sku" property="isSku" jdbcType="INTEGER"/>
+        <result column="is_del" property="isDel"/>
     </resultMap>
     <sql id="Base_Column_List">
-    num_iid, title, detail_url, goods_id, property_alias, nick, state, pic_path, is_sku
+    num_iid, title, detail_url, goods_id, property_alias, nick, state, pic_path, is_sku,is_del
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
         select
@@ -144,6 +145,9 @@
             </if>
             <if test="isSku != null">
                 is_sku = #{isSku,jdbcType=INTEGER},
+            </if>
+            <if test="isDel != null">
+                is_del = #{isDel,jdbcType=INTEGER},
             </if>
         </set>
         where num_iid = #{numIid,jdbcType=BIGINT}
