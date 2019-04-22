@@ -370,7 +370,7 @@ public class ClientController {
      */
 
     @RequestMapping("/updateAll")
-    public String updateAll(HttpServletRequest request, @RequestParam("userid")String userid) {
+    public String updateAll(HttpServletRequest request, @RequestParam("userId")String userid) {
 
         if (iTradesService.getUser(userid) == null) {
             return "-1";
