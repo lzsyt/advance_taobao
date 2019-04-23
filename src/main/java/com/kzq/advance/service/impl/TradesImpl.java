@@ -7,7 +7,10 @@ import com.kzq.advance.common.utils.TbaoUtils;
 import com.kzq.advance.domain.*;
 import com.kzq.advance.mapper.*;
 import com.kzq.advance.service.ITradesService;
-import com.taobao.api.domain.*;
+import com.taobao.api.domain.Item;
+import com.taobao.api.domain.Order;
+import com.taobao.api.domain.SellerCat;
+import com.taobao.api.domain.Sku;
 import com.taobao.api.internal.util.StringUtils;
 import com.taobao.api.response.TradeFullinfoGetResponse;
 import org.apache.logging.log4j.LogManager;
@@ -32,6 +35,9 @@ import java.util.Map;
 @Service("ITradesService")
 public class TradesImpl implements ITradesService {
 
+
+    @Resource
+    private TGoodsLinkMapMapper tGoodsLinkMapMapper;
     @Resource
     private TradesMapper tradesMapper;
     @Resource
@@ -69,6 +75,7 @@ public class TradesImpl implements ITradesService {
         logger.info("查询goodSku的时间：" + (end - star));
         return TGoodsSkuList;
     }
+
     public List<TGoodsSku> getTGoodsSkuByNumId(Long numId){
         List<TGoodsSku> tGoodsSkus = new ArrayList<>();
         for (TGoodsSku tgoodsku:TGoodsSkuList) {
@@ -564,10 +571,12 @@ public class TradesImpl implements ITradesService {
                         flag = true;
                 } else {
                     //插入sku
-                    goodsSkuMapper.insertSelective(itemSku);
-                    StringBuffer stringBuffer = new StringBuffer("新增属性：").append(itemSku.getPropertiesAlias());
-                    insertLogDetail(logId, item.getNumIid(), item.getTitle(), stringBuffer.toString(), itemSku.getSkuId());
-                    flag = true;
+                    if (!existSku(itemSku)){
+                        goodsSkuMapper.insertSelective(itemSku);
+                        StringBuffer stringBuffer = new StringBuffer("新增属性：").append(itemSku.getPropertiesAlias());
+                        insertLogDetail(logId, item.getNumIid(), item.getTitle(), stringBuffer.toString(), itemSku.getSkuId());
+                        flag = true;
+                    }
                 }
             }
             //删除方法
@@ -576,7 +585,37 @@ public class TradesImpl implements ITradesService {
         return flag;
     }
 
-    /*跟新sku*/
+    /**
+     * 根据skuId判断sku是否存在的
+     * @param itemSku
+     */
+    private Boolean existSku(TGoodsSku itemSku) {
+        TGoodsSku TGS = goodsSkuMapper.selectByPrimaryKey(itemSku.getSkuId());
+        if (TGS!=null){
+            goodsSkuMapper.updateByPrimaryKeySelective(itemSku);
+            TGoodsLinkMap GoodsLinkMap = tGoodsLinkMapMapper.selectBySkuId(itemSku.getSkuId());
+            if (GoodsLinkMap!=null){
+                if (!String.valueOf(GoodsLinkMap.getSkuId()).equals(itemSku.getSkuId())&&
+                        String.valueOf(GoodsLinkMap.getNumIid()).equals(itemSku.getNumIid())){
+                    TGoodsLinkMap tGoodsLinkMap = new TGoodsLinkMap();
+                    tGoodsLinkMap.setSkuId(String.valueOf(itemSku.getSkuId()));
+                    tGoodsLinkMap.setNumIid(String.valueOf(itemSku.getNumIid()));
+                    tGoodsLinkMapMapper.updateBySkuIdSelective(tGoodsLinkMap);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     *  更新sku
+     * @param itemSku
+     * @param goodsSku
+     * @param logId
+     * @param title
+     * @return
+     */
     private Boolean isUpdateGoodSku(TGoodsSku itemSku, TGoodsSku goodsSku, Integer logId, String title) {
         if (itemSku.getPropertiesAlias() == null) {
             if (goodsSku.getPropertiesAlias() == null)
@@ -687,7 +726,11 @@ public class TradesImpl implements ITradesService {
         }
     }
 
-    /*跟新goodSku不加日志方法*/
+    /**
+     * 跟新goodSku不加日志方法
+     * @param item
+     * @return
+     */
     private Boolean compareUpdateGoodSkuAndItem(Item item) {
         HashMap<Long, TGoodsSku> tGoodsSkuHashMap = getSkuByNumIId(item.getNumIid());
         //说明淘宝的item中包含sku，将本地的sku与淘宝的aku进行比对，
@@ -703,7 +746,9 @@ public class TradesImpl implements ITradesService {
                     isUpdateGoodSku(itemSku, sku, null, null);
                 } else {
                     //插入sku
-                    goodsSkuMapper.insertSelective(itemSku);
+                    if (!existSku(itemSku)){
+                        goodsSkuMapper.insertSelective(itemSku);
+                    };
                 }
             }
         }
@@ -733,6 +778,7 @@ public class TradesImpl implements ITradesService {
         }
         return 0;
     }
+
     public HashMap<Long, SellerCat> formatSellerCatListToHashMap(List<SellerCat> sellerCatList){
         HashMap<Long, SellerCat> sellerCatHashMap = new HashMap<>();
         for (SellerCat sellerCat:sellerCatList) {

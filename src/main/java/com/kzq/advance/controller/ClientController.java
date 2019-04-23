@@ -1,5 +1,6 @@
 package com.kzq.advance.controller;
 
+import com.kzq.advance.common.utils.ControllerUtils;
 import com.kzq.advance.common.utils.TbaoUtils;
 import com.kzq.advance.common.utils.URLUtils;
 import com.kzq.advance.domain.*;
@@ -35,7 +36,6 @@ public class ClientController {
     /**
      * 添加所有链接
      */
-
     @GetMapping("/addAllLinks")
     public String addAllLinks(HttpServletRequest request) {
         String token = request.getParameter("token");
@@ -98,7 +98,6 @@ public class ClientController {
     /**
      * 更新备注
      */
-
     @RequestMapping("/updateSellerMemo")
     public String updateSellerMemo(HttpServletRequest request) {
         //店铺号
@@ -387,11 +386,11 @@ public class ClientController {
         List<TGoodsLink> goodsLinks = iTradesService.selectByShop(shop.getShopName());
         int i = 0;
 
-        TUpdateLog tUpdateLog = insetTUpdateLog(userid, shopId);
+        TUpdateLog tUpdateLog = ControllerUtils.insetTUpdateLog(userid, shopId, iTradesService);
 
         Integer logId = tUpdateLog.getId();
 
-        HashMap<Long, Item> itemHashMap = getItems(session, null);
+        HashMap<Long, Item> itemHashMap = ControllerUtils.getItems(session, null,iTradesService);
 
         for (TGoodsLink e : goodsLinks) {
             Item item = new Item();
@@ -412,123 +411,14 @@ public class ClientController {
         tUpdateLog.setUpdateTotal(i);
         iTradesService.updateLog(tUpdateLog);
         //如果线上有线下更新了，就恢复
-        HashMap<Long, TGoodsLink> tGoodsLinkMap = formatTGoodsLinksToMap(goodsLinks);
-        recoverGoodLink(tGoodsLinkMap, itemHashMap);
+        HashMap<Long, TGoodsLink> tGoodsLinkMap = ControllerUtils.formatTGoodsLinksToMap(goodsLinks);
+        ControllerUtils.recoverGoodLink(tGoodsLinkMap, itemHashMap,iTradesService);
         long end = System.currentTimeMillis();
         logger.info("时间为" + (end - start));
         return Integer.toString(i);
 
     }
 
-    private TUpdateLog insetTUpdateLog(String userid, String shopId) {
-        TUpdateLog tUpdateLog = new TUpdateLog();
-        tUpdateLog.setShopId(Integer.parseInt(shopId));
-        tUpdateLog.setUpdateTime(new Date());
-        tUpdateLog.setUpdateUserId(userid);
-        iTradesService.insertLog(tUpdateLog);
-        return tUpdateLog;
-    }
-
-    /**
-     * 根据店铺的token和cid 得到淘宝所有上架的Item
-     *
-     * @param session
-     * @param cid
-     * @return
-     */
-    public HashMap<Long, Item> getItems(String session, Long cid) {
-        //
-        ArrayList<Long> numIdList = new ArrayList<>();
-
-        StringBuffer stringBuffer = new StringBuffer();
-        String substring = null;
-        //得到上架商品
-        long star = System.currentTimeMillis();
-        List<Item> list = TbaoUtils.getItemsOnsale("", cid, session);
-        long end = System.currentTimeMillis();
-        logger.info("获取上架商品的时间为：" + (end - star));
-        ArrayList<String> strings = new ArrayList<>();
-
-        HashMap<Long, Item> itemHashMap = new HashMap<>();
-
-        for (int i = 0; i < list.size(); i++) {
-
-            numIdList.add(list.get(i).getNumIid());
-
-            itemHashMap.put(list.get(i).getNumIid(), list.get(i));
-            //拼接numiid
-            stringBuffer.append(list.get(i).getNumIid()).append(",");
-            //如果stringBuffer中的numiid达到20个存入strings
-            if (i % 19 == 0 && i > 1) {
-                substring = stringBuffer.substring(0, stringBuffer.length() - 1);
-                strings.add(substring);
-                stringBuffer.setLength(0);
-            }
-            //如果到结尾了但是不到20个也把nums赋给strings
-            if ((i == list.size() - 1) && (i % 19 != 0)) {
-                substring = stringBuffer.substring(0, stringBuffer.length() - 1);
-                strings.add(substring);
-                stringBuffer.setLength(0);
-            }
-        }
-        List<Item> items = new ArrayList<>();
-
-        iTradesService.setLongTGoodsSkuList(numIdList);
-
-        return getItemHashMap(session, strings, itemHashMap, items);
-    }
-
-    /**
-     * @param session     商铺的token
-     * @param strings     多个numids
-     * @param itemHashMap 上架的商品列表
-     * @param items       详细列表
-     * @return 包含详细信息的上架商品列表
-     */
-    private HashMap<Long, Item> getItemHashMap(String session, ArrayList<String> strings, HashMap<Long, Item> itemHashMap, List<Item> items) {
-        Long star = System.currentTimeMillis();
-        for (String s : strings) {
-            List<Item> itemList = TbaoUtils.getProducts(s, session);
-            items.addAll(itemList);
-        }
-        Long end = System.currentTimeMillis();
-        logger.info("获取详细信息的时间为：" + (end - star));
-        //将详细信息赋给上架的商品列表里
-        for (Item i : items) {
-            Item item = itemHashMap.get(i.getNumIid());
-            item.setPropertyAlias(i.getPropertyAlias());
-            item.setSkus(i.getSkus());
-            itemHashMap.put(i.getNumIid(), item);
-        }
-        return itemHashMap;
-    }
-
-    /**
-     * 格式化TGoodsLinks，变成HashMap
-     *
-     * @param goodsLinks
-     * @return
-     */
-    public HashMap<Long, TGoodsLink> formatTGoodsLinksToMap(List<TGoodsLink> goodsLinks) {
-        HashMap<Long, TGoodsLink> tGoodsLinkHashMap = new HashMap<>();
-        for (TGoodsLink i : goodsLinks) {
-            tGoodsLinkHashMap.put(i.getNumIid(), i);
-        }
-        return tGoodsLinkHashMap;
-    }
-
-
-    //如果线上有，线下被删掉了，那么就恢复
-    public void recoverGoodLink(HashMap<Long, TGoodsLink> tGoodsLinkHashMap, HashMap<Long, Item> itemHashMap) {
-        for (Map.Entry entry : itemHashMap.entrySet()) {
-            TGoodsLink tGoodsLink = tGoodsLinkHashMap.get(entry.getKey());
-            if (tGoodsLink != null && tGoodsLink.getIsDel() == 1) {
-                //恢复方法
-                tGoodsLink.setIsDel(0);
-                iTradesService.recoverGoodLink(tGoodsLink);
-            }
-        }
-    }
 
     /**
      * 根据订单号获取订单信息
@@ -558,14 +448,6 @@ public class ClientController {
     }
 
 
-    public HashMap<Long, TGoodsLink> getTGoodSLinkByShopName(String shopName) {
-        Long start = System.currentTimeMillis();
-        List<TGoodsLink> goodsLinks = iTradesService.selectByShop(shopName);
-        Long end = System.currentTimeMillis();
-        logger.info("获取Tgoodlink的时间：" + (end - start));
-        return formatTGoodsLinksToMap(goodsLinks);
-    }
-
     @RequestMapping("/down")
     public Integer downLoad(String shopId, String cid) {
         Long start = System.currentTimeMillis();
@@ -575,9 +457,9 @@ public class ClientController {
             category = Long.parseLong(cid);
         }
         //获得淘宝上的items
-        HashMap<Long, Item> itemHashMap = getItems(shop.getShopToken(), category);
+        HashMap<Long, Item> itemHashMap = ControllerUtils.getItems(shop.getShopToken(), category, iTradesService);
         //获得本地的items
-        HashMap<Long, TGoodsLink> tGoodsLinkHashMap = getTGoodSLinkByShopName(shop.getShopName());
+        HashMap<Long, TGoodsLink> tGoodsLinkHashMap = ControllerUtils.getTGoodSLinkByShopName(shop.getShopName(),iTradesService);
         //比较更新
         iTradesService.compareUpdate(itemHashMap, tGoodsLinkHashMap);
         //返回更新的条数
@@ -591,6 +473,7 @@ public class ClientController {
         iTradesService.downCategory(shopId);
         return "0";
     }
+
 
 
 }
