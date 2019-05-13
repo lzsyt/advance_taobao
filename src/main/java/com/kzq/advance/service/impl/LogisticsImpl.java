@@ -5,13 +5,10 @@ import com.kzq.advance.domain.LogisticsCompany;
 import com.kzq.advance.mapper.LogisticsCompanyMapper;
 import com.kzq.advance.service.ILogisticsService;
 import com.taobao.api.request.CainiaoWaybillIiGetRequest;
-import com.taobao.api.response.CainiaoWaybillIiGetResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * <p>
@@ -41,6 +38,7 @@ public class LogisticsImpl implements ILogisticsService {
         CainiaoWaybillIiGetRequest.AddressDto address = new CainiaoWaybillIiGetRequest.AddressDto();
         address.setDetail(logistics.getAddressDetail());
         //address.setDetail(logistics.getAddressDetail());
+        address.setCity(logistics.getCity());
         address.setDistrict(logistics.getArea());
         address.setProvince(logistics.getProvince());
         return address;

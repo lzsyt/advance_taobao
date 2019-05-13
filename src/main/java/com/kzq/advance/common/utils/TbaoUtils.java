@@ -21,16 +21,11 @@ public class TbaoUtils {
 
     // 正式环境
 
-    /* static BatchTaobaoClient client = new BatchTaobaoClient (
-                      "http://gw.api.taobao.com/router/batch?","25500416", "25720ff4e7b9f8c5cfe95827c7e35479");
- */
-    static DefaultTaobaoClient client = new DefaultTaobaoClient("https://eco.taobao.com/router/rest", "null", "null");
-    //光合硅能
-    final static String sessionKey = "null";
-    //动力足
-    final static String sessionKey1 = "null";
-    //currentSessionKey
+    static DefaultTaobaoClient client = new DefaultTaobaoClient("https://eco.taobao.com/router/rest", "25500416", "25720ff4e7b9f8c5cfe95827c7e35479");
+    static final String sessionKey = "620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742";
+    static final String sessionKey1 = "6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914";
     static String currentSessionKey = "";
+
     static Map<String, String> session = new HashMap<>();
 
     /**
@@ -101,7 +96,8 @@ public class TbaoUtils {
      *
      * @param sessionKey
      */
-    public static List<Trade> findOrders(String sessionKey) {
+    public static List<Trade> findOrders(String sessionKey, List<Trade> tradeList,Long offer) {
+
         TradesSoldGetRequest req = new TradesSoldGetRequest();
         req.setFields("tid,created_time,modify_time,seller_memo,buyer_memo,pay_time,pic_path,post_fee,buyer_nick,orders,title,total_fee,trade_from,type,status,payment,receiver_address,receiver_name,receiver_state,receiver_town,receiver_city,receiver_district,receiver_country,receiver_mobile,receiver_phone");
         //  req.setStartCreated(startCreated);
@@ -109,15 +105,21 @@ public class TbaoUtils {
         TradesSoldGetResponse rsp = null;
         //620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742
         try {
+            req.setStatus("WAIT_SELLER_SEND_GOODS");
+            req.setPageNo(offer);
+            req.setPageSize(40L);
+            req.setUseHasNext(true);
             rsp = client.execute(req, sessionKey);
         } catch (ApiException e) {
             e.printStackTrace();
         }
-
-        List<Trade> list = rsp.getTrades();
-
-        return list;
-
+        tradeList.addAll(rsp.getTrades());
+        if (rsp.getHasNext()){
+            findOrders(sessionKey, tradeList, ++offer);
+        }else{
+            return tradeList;
+        }
+        return tradeList;
     }
 
     /**
@@ -150,8 +152,6 @@ public class TbaoUtils {
     /**
      * 获取一个订单的详情
      */
-
-
     public static TradeFullinfoGetResponse findOneOrder(String tid, String sessionKey) {
         TradeFullinfoGetRequest req = new TradeFullinfoGetRequest();
         req.setFields("tid,type,status,payment,seller_memo,buyer_memo,seller_nick,buyer_nick,orders,receiver_name,receiver_address,snapshot_url,pay_time,receiver_state,receiver_town,receiver_city,receiver_district,receiver_country,receiver_mobile,receiver_phone");
@@ -317,7 +317,9 @@ public class TbaoUtils {
         }
         return rsp.getItem();
     }
-
+    /*
+    * 根据numiid查询商品详情详情
+    * */
     public static List<Item> getProducts(String numids, String sessionKey) {
         ItemsSellerListGetRequest req = new ItemsSellerListGetRequest();
         req.setFields("num_iid,sku,property_alias");
@@ -551,12 +553,12 @@ public class TbaoUtils {
      * @throws LinkException
      */
     public static void main(String[] args) throws LinkException, ApiException {
-        CainiaoWaybillIiSearchRequest req = new CainiaoWaybillIiSearchRequest();
-        req.setCpCode("EYB");
-        CainiaoWaybillIiSearchResponse rsp = client.execute(req, sessionKey);
-        System.out.println(rsp.getBody());
-          /*  String memo=findOrderMemo("347255267786949048","6201e186d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914");
-            System.out.println(memo);*/
+//        CainiaoWaybillIiSearchRequest req = new CainiaoWaybillIiSearchRequest();
+//        req.setCpCode("EYB");
+//        CainiaoWaybillIiSearchResponse rsp = client.execute(req, sessionKey);
+//        System.out.println(rsp.getBody());
+            String memo=findOrderMemo("347255267786949048","6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914");
+            System.out.println(memo);
 
             /*    CainiaoCloudprintStdtemplatesGetRequest req = new CainiaoCloudprintStdtemplatesGetRequest();
             CainiaoCloudprintStdtemplatesGetResponse rsp = client.execute(req);

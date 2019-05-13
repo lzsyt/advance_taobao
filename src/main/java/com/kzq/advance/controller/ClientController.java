@@ -316,9 +316,10 @@ public class ClientController {
         orderInfoDto.setRecipient(userInfo);
         String template_url = logisticsCompany.getStandardTemplateUrl();
         //加入模本信息
-        //http:\/\/cloudprint.cainiao.com\/template\/standard\/101\/607
+        //http://cloudprint.cainiao.com/template/standard/101
+        logger.info("模板url：" +template_url);
 
-        orderInfoDto.setTemplateUrl(logisticsCompany.getStandardTemplateUrl());
+        orderInfoDto.setTemplateUrl(template_url);
         orderInfoDto.setUserId(1L);
         List<CainiaoWaybillIiGetRequest.TradeOrderInfoDto> orderInfos = new ArrayList<CainiaoWaybillIiGetRequest.TradeOrderInfoDto>();
         orderInfos.add(orderInfoDto);
