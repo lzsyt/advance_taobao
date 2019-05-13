@@ -9,6 +9,7 @@ import com.kzq.advance.service.ITradesService;
 import com.kzq.advance.service.IWsBillService;
 import com.taobao.api.domain.Item;
 import com.taobao.api.domain.Sku;
+import com.taobao.api.domain.Trade;
 import com.taobao.api.internal.util.StringUtils;
 import com.taobao.api.request.CainiaoWaybillIiGetRequest;
 import com.taobao.api.request.TradeMemoAddRequest;
@@ -20,7 +21,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class ClientController {
@@ -330,7 +334,6 @@ public class ClientController {
      *
      * @return
      */
-
     @RequestMapping("/updateLink")
     public String updateLink(HttpServletRequest request) {
         String numIid = request.getParameter("numIid");
@@ -425,7 +428,6 @@ public class ClientController {
      *
      * @return
      */
-
     @PostMapping("/getOrders")
     public String getOrders(HttpServletRequest request) {
         String shopNum = request.getParameter("shopNum");
@@ -447,7 +449,12 @@ public class ClientController {
 
     }
 
-
+    /**
+     * 下载商品链接
+     * @param shopId
+     * @param cid
+     * @return
+     */
     @RequestMapping("/down")
     public Integer downLoad(String shopId, String cid) {
         Long start = System.currentTimeMillis();
@@ -468,13 +475,33 @@ public class ClientController {
         return itemHashMap.size();
     }
 
-    @RequestMapping("downCategory")
+    /**
+     * 下载商品分类
+     * @param shopId
+     * @param model
+     * @return
+     */
+    @RequestMapping("/downCategory")
     public String downCategory(@RequestParam("shopId")String shopId, Model model) {
         iTradesService.downCategory(shopId);
         return "0";
     }
 
 
+    /**
+     * 根据店铺id查询已付款且未发货的链接信息
+     * @param shopId
+     * @return
+     */
+    @RequestMapping("/findOrders")
+    public List<Trade> findOrders(@RequestParam("shopid") String shopId) {
+        TShop shop = iTradesService.selectSessionKey(Integer.parseInt(shopId));
+        if (StringUtils.isEmpty(shop.getShopToken())) {
+            return null;
+        }
+        List<Trade> tradeList = TbaoUtils.findOrders(shop.getShopToken(), new ArrayList<Trade>(), 1L);
+        return tradeList;
+    }
 
 }
 
