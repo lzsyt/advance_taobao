@@ -2,6 +2,7 @@ package com.kzq.advance.controller;
 
 import com.kzq.advance.common.utils.ControllerUtils;
 import com.kzq.advance.common.utils.TbaoUtils;
+import com.kzq.advance.common.utils.TradeStatus;
 import com.kzq.advance.common.utils.URLUtils;
 import com.kzq.advance.domain.*;
 import com.kzq.advance.service.ILogisticsService;
@@ -495,7 +496,7 @@ public class ClientController {
      * @return
      */
     @RequestMapping("/findOrders")
-    public List<Trade> findOrders(@RequestParam("shopid") String shopId) {
+    public List<Trade> findOrders(@RequestParam("shopId") String shopId) {
         TShop shop = iTradesService.selectSessionKey(Integer.parseInt(shopId));
         if (StringUtils.isEmpty(shop.getShopToken())) {
             return null;
@@ -504,5 +505,23 @@ public class ClientController {
         return tradeList;
     }
 
+    /**
+     * 根据店铺id和订单号查询订单状态
+     * @param tid  订单号
+     * @param shopId 店铺号
+     * @return 订单的状态
+     */
+    @RequestMapping("/getStatusByTid")
+    public String getStatusByTid(
+            @RequestParam(value = "tid",required = true) String tid,
+            @RequestParam(value = "shopId",required = true) String shopId) {
+        TShop shop = iTradesService.selectSessionKey(Integer.parseInt(shopId));
+        if (StringUtils.isEmpty(shop.getShopToken())) {
+            return null;
+        }
+        String files = "tid,type,status,payment,orders";
+        String string = TbaoUtils.getTrade(files, tid, shop.getShopToken()).getTrade().getStatus();
+        return TradeStatus.getValueByKey(string);
+    }
 }
 
