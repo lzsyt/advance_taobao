@@ -1,3 +1,67 @@
+GET http://localhost:8080/advance-1.0.1/getStatusByTid?tid=347255267786949048&shopId=8
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-05-28T021732.200.txt
+
+###
+
+GET http://localhost:8080/advance-1.0.1/getStatusByTid?tid=347255267786949048&shopId=9
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-05-28T021616.500.json
+
+###
+
+GET http://localhost:8080/advance-1.0.1/getStatusByTid?tid=347255267786949048&shopId=6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-05-28T021547.500.json
+
+###
+
+GET http://localhost:8080/advance-1.0.1/findOrders?shopId=8
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-05-28T021439.200.json
+
+###
+
+GET http://localhost:8080/advance-1.0.1/findOrders?shopid=8
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-05-28T015249.404.json
+
+###
+
+GET http://localhost:8080/advance-1.0.1/findOrders?shopId=8
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-05-28T014705.500.json
+
+###
+
+GET http://localhost:8080/advace-1.0.1/findOrders?shopId=8
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-05-28T014559.404.html
+
+###
+
+GET http://localhost:8080/findOrders?shopid=8
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-05-28T105914.200.json
+
+###
+
 GET http://localhost:8080/advance-1.0.1/findOrders?shopid=8
 Accept: */*
 Cache-Control: no-cache
@@ -305,64 +369,6 @@ Cache-Control: no-cache
 POST http://101.132.24.66:8081/advance-1.0.1/updateAll?shopId=8&userId=001B133C-A289-11E8-B710-00163E0CF556
 Accept: */*
 Cache-Control: no-cache
-
-###
-
-POST http://101.132.24.66:8081/advance-1.0.1/updateAll?shopId=8&userId=001B133C-A289-11E8-B710-00163E0CF556
-Accept: */*
-Cache-Control: no-cache
-
-###
-
-POST http://101.132.24.66:8081/advance-1.0.1/updateAll?shopId=8&userId=001B133C-A289-11E8-B710-00163E0CF556
-Accept: */*
-Cache-Control: no-cache
-
-###
-
-POST http://192.168.1.199:8080/advance/getOrders?shopNum=273861955050594838
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-04-22T120729.200.txt
-
-###
-
-POST http://192.168.1.199:8080/advance/getOrders?shopNum=273861955050594838&shopId=8
-Accept: */*
-Cache-Control: no-cache
-
-###
-
-POST http://192.168.1.199:8080/advance/downLoadLink?shopNum=273861955050594838&shopId=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-04-22T114629.200.json
-
-###
-
-POST http://192.168.1.199:8080/advance/downLoadLink?shopNum=273861955050594838&shopId=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-04-22T113729.500.json
-
-###
-
-POST http://192.168.1.199:8080/downLoadLink?shopNum=273861955050594838&shopId=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-04-22T112313.200.json
-
-###
-
-POST http://192.168.1.199:8080/downLoadLink?shopNum=273861955050594838&shopId=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-04-22T112203.200.json
 
 ###
 
