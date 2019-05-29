@@ -21,8 +21,12 @@ public class TbaoUtils {
 
     // 正式环境
 
-    public TbaoUtils() {
-    }
+    static DefaultTaobaoClient client = new DefaultTaobaoClient("https://eco.taobao.com/router/rest", "25500416", "25720ff4e7b9f8c5cfe95827c7e35479");
+    static final String sessionKey = "620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742";
+    static final String sessionKey1 = "6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914";
+    static String currentSessionKey = "";
+
+    static Map<String, String> session = new HashMap<>();
 
     /**
      * url:
