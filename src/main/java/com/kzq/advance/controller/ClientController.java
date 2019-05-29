@@ -496,7 +496,7 @@ public class ClientController {
      * @return
      */
     @RequestMapping("/findOrders")
-    public List<Trade> findOrders(@RequestParam("shopId") String shopId) {
+    public List<Trade> findOrders(@RequestParam("shopid") String shopId) {
         TShop shop = iTradesService.selectSessionKey(Integer.parseInt(shopId));
         if (StringUtils.isEmpty(shop.getShopToken())) {
             return null;

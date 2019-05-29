@@ -24,7 +24,7 @@ public class AdvanceApplicationTests {
         //服务地址
         config.setServerUrl("http://localhost:8010");
         //生成到一个文档
-        config.setAllInOne(true);
+        config.setAllInOne(false);
         //采用严格模式
         config.isStrict();
         //文档输出路径
@@ -63,6 +63,14 @@ public class AdvanceApplicationTests {
         String sessionkey = "6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914";
         String string = TbaoUtils.getTrade(files, orders, sessionkey).getTrade().getStatus();
         System.out.println(TradeStatus.getValueByKey(string));
+    }
+
+
+    @Test
+    public void printTradleStatus(){
+        for (TradeStatus t : TradeStatus.values()) {
+            System.out.println(t.getValues());
+        }
     }
 
 }

@@ -1,3 +1,51 @@
+GET http://localhost:8080/findOrders?tid=347255267786949048&shopId=8
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-05-28T052928.200.txt
+
+###
+
+GET http://localhost:8080/findOrders?tid=347255267786949048&shopId=8
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-05-28T051841.200.json
+
+###
+
+GET http://localhost:8080/findOrders?tid=347255267786949048&shopId=8
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-05-28T051503.200.json
+
+###
+
+GET http://localhost:8080/advance-1.0.1/findOrders?tid=347255267786949048&shopId=8
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-05-28T051453.404.json
+
+###
+
+GET http://localhost:8080/advance-1.0.1/findOrders?tid=347255267786949048&shopId=8
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-05-28T041816.200.json
+
+###
+
+GET http://localhost:8080/advance-1.0.1/findOrders?tid=347255267786949048&shopId=8
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-05-28T023519.200.json
+
+###
+
 GET http://localhost:8080/advance-1.0.1/getStatusByTid?tid=347255267786949048&shopId=8
 Accept: */*
 Cache-Control: no-cache
@@ -333,42 +381,6 @@ Accept: */*
 Cache-Control: no-cache
 
 <> 2019-04-22T034010.400.json
-
-###
-
-POST localhost:8080/updateAll?shopNum=001B133C-A289-11E8-B710-00163E0CF556&shopId=8
-Accept: */*
-Cache-Control: no-cache
-
-###
-
-POST localhost:8080/updateAll?shopNum=001B133C-A289-11E8-B710-00163E0CF556&shopId=8
-Accept: */*
-Cache-Control: no-cache
-
-###
-
-POST localhost:8080/updateAll?shopNum=001B133C-A289-11E8-B710-00163E0CF556&shopId=8
-Accept: */*
-Cache-Control: no-cache
-
-###
-
-POST /101.132.24.66?shopId=8&userId=001B133C-A289-11E8-B710-00163E0CF556
-Accept: */*
-Cache-Control: no-cache
-
-###
-
-POST 101.132.24.66:8081/advance-1.0.1/updateAll?shopId=8&userId=001B133C-A289-11E8-B710-00163E0CF556
-Accept: */*
-Cache-Control: no-cache
-
-###
-
-POST http://101.132.24.66:8081/advance-1.0.1/updateAll?shopId=8&userId=001B133C-A289-11E8-B710-00163E0CF556
-Accept: */*
-Cache-Control: no-cache
 
 ###
 
