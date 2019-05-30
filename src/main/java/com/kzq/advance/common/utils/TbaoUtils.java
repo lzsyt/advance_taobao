@@ -99,7 +99,7 @@ public class TbaoUtils {
     public static List<Trade> findOrders(String sessionKey, List<Trade> tradeList,Long offer) {
 
         TradesSoldGetRequest req = new TradesSoldGetRequest();
-        req.setFields("tid,created_time,modify_time,seller_memo,buyer_memo,pay_time,pic_path,post_fee,buyer_nick,orders,title,total_fee,trade_from,type,status,payment,receiver_address,receiver_name,receiver_state,receiver_town,receiver_city,receiver_district,receiver_country,receiver_mobile,receiver_phone");
+        req.setFields("tid,buyer_nick,buyer_open_uid,new_presell,buyer_memo,orders,pay_time,payment,receiver_address,receiver_city,receiver_country,receiver_district,receiver_mobile,receiver_name,receiver_state,receiver_town,seller_memo,seller_nick,snapshot_url,status,tid_str,type");
         //  req.setStartCreated(startCreated);
         //  req.setEndCreated(StringUtils.parseDateTime("2018-12-29 10:59:59"));
         TradesSoldGetResponse rsp = null;
@@ -113,7 +113,14 @@ public class TbaoUtils {
         } catch (ApiException e) {
             e.printStackTrace();
         }
-        tradeList.addAll(rsp.getTrades());
+        List<Trade> trades = rsp.getTrades();
+        for (Trade trade : trades) {
+            Trade trade1= getTrade("seller_memo,buyer_memo", String.valueOf(trade.getTid()), sessionKey).getTrade();
+            trade.setBuyerMemo(trade1.getBuyerMemo());
+            trade.setSellerMemo(trade1.getSellerMemo());
+        }
+
+        tradeList.addAll(trades);
         if (rsp.getHasNext()){
             findOrders(sessionKey, tradeList, ++offer);
         }else{
