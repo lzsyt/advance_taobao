@@ -5,11 +5,15 @@ import com.kzq.advance.common.utils.TradeStatus;
 import com.kzq.advance.service.ITradesService;
 import com.power.doc.builder.ApiDocBuilder;
 import com.power.doc.model.ApiConfig;
+import com.taobao.api.domain.Trade;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -22,7 +26,7 @@ public class AdvanceApplicationTests {
     public void contextLoads() {
         ApiConfig config = new ApiConfig();
         //服务地址
-        config.setServerUrl("http://localhost:8010");
+        config.setServerUrl("http://192.168.1.125:8080/");
         //生成到一个文档
         config.setAllInOne(false);
         //采用严格模式
@@ -59,7 +63,7 @@ public class AdvanceApplicationTests {
     @Test
     public void testGetTrade(){
         String files = "tid,type,status,payment,orders";
-        String orders = "347255267786949048";
+        String orders = "222039342296450103";
         String sessionkey = "6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914";
         String string = TbaoUtils.getTrade(files, orders, sessionkey).getTrade().getStatus();
         System.out.println(TradeStatus.getValueByKey(string));
@@ -73,4 +77,28 @@ public class AdvanceApplicationTests {
         }
     }
 
+    @Test
+    public void refund(){
+        Long start = System.currentTimeMillis();
+
+        Trade trade = TbaoUtils.getBillDetail("470596321371328882", "created,modified,end_time", "6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914");
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        System.out.println("created：" + dateFormat.format(trade.getCreated()));
+        System.out.println("modified：" + dateFormat.format(trade.getModified()));
+        System.out.println("end_time：" + dateFormat.format(trade.getEndTime()));
+//
+//
+//        List<Refund> refundArrayList = TbaoUtils.getRefund("6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914");
+//
+//        for (Refund refund:refundArrayList) {
+//            if (refund.getTid().equals("450548994078385285")){
+//                System.out.println("..............................");
+//            }
+//            System.out.println("tid："+refund.getTid() + "      created ：" + dateFormat.format(refund.getCreated()) + "         modified：" + dateFormat.format(refund.getModified()));
+//        }
+//        System.out.println(refundArrayList.size());
+//        Long end = System.currentTimeMillis();
+//        System.out.println(end - start);
+    }
 }

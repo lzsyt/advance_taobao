@@ -12,10 +12,7 @@ import com.taobao.api.request.*;
 import com.taobao.api.response.*;
 
 import javax.naming.LinkException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TbaoUtils {
 
@@ -71,6 +68,55 @@ public class TbaoUtils {
         }
         System.out.println(rsp.getBody());
 
+    }
+
+    /**
+     *  获取订单的部分信息
+     * @param tid
+     * @param fields
+     * @return
+     */
+    public static Trade getBillDetail(String tid, String fields,String sessionKey) {
+        TradeFullinfoGetRequest req = new TradeFullinfoGetRequest();
+        req.setFields(fields);
+        // req.setTid(315968833434800371L);
+        req.setTid(Long.parseLong(tid));
+        TradeFullinfoGetResponse rsp = null;
+        try {
+            rsp = client.execute(req, sessionKey);
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+        System.out.println(rsp.getBody());
+
+        return rsp.getTrade();
+    }
+
+    /**
+     * @param sessionKey
+     * @return
+     */
+    public static List<Refund> getRefund(String sessionKey, List<Refund> refundList, Long offer,String date) {
+        RefundsReceiveGetRequest req = new RefundsReceiveGetRequest();
+        req.setFields("refund_id, tid");
+        req.setPageNo(offer);
+        req.setPageSize(100L);
+        req.setStartModified(StringUtils.parseDateTime(date));
+        req.setUseHasNext(true);
+        RefundsReceiveGetResponse rsp = null;
+        try {
+            rsp = client.execute(req, sessionKey);
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+        List<Refund> list = rsp.getRefunds();
+        boolean bool = rsp.getHasNext();
+        refundList.addAll(list);
+
+        if (rsp.getHasNext()){
+            getRefund(sessionKey, refundList, ++offer, date);
+        }
+        return refundList;
     }
 
     /**
@@ -553,6 +599,8 @@ public class TbaoUtils {
         }
         return rsp.getShopCats();
     }
+
+
 
 
     /**
