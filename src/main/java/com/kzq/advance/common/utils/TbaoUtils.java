@@ -2,6 +2,7 @@ package com.kzq.advance.common.utils;
 
 import com.taobao.api.ApiException;
 import com.taobao.api.DefaultTaobaoClient;
+import com.taobao.api.TaobaoClient;
 import com.taobao.api.domain.*;
 import com.taobao.api.internal.tmc.Message;
 import com.taobao.api.internal.tmc.MessageHandler;
@@ -564,8 +565,6 @@ public class TbaoUtils {
 //        req.setCpCode("EYB");
 //        CainiaoWaybillIiSearchResponse rsp = client.execute(req, sessionKey);
 //        System.out.println(rsp.getBody());
-            String memo=findOrderMemo("347255267786949048","6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914");
-            System.out.println(memo);
 
             /*    CainiaoCloudprintStdtemplatesGetRequest req = new CainiaoCloudprintStdtemplatesGetRequest();
             CainiaoCloudprintStdtemplatesGetResponse rsp = client.execute(req);

@@ -56,21 +56,5 @@ public class AdvanceApplicationTests {
 //
 //    }
 
-    @Test
-    public void testGetTrade(){
-        String files = "tid,type,status,payment,orders";
-        String orders = "347255267786949048";
-        String sessionkey = "6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914";
-        String string = TbaoUtils.getTrade(files, orders, sessionkey).getTrade().getStatus();
-        System.out.println(TradeStatus.getValueByKey(string));
-    }
-
-
-    @Test
-    public void printTradleStatus(){
-        for (TradeStatus t : TradeStatus.values()) {
-            System.out.println(t.getValues());
-        }
-    }
 
 }
