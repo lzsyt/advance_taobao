@@ -9,6 +9,7 @@ import com.kzq.advance.service.ILogisticsService;
 import com.kzq.advance.service.ITradesService;
 import com.kzq.advance.service.IWsBillService;
 import com.taobao.api.domain.Item;
+import com.taobao.api.domain.Refund;
 import com.taobao.api.domain.Sku;
 import com.taobao.api.domain.Trade;
 import com.taobao.api.internal.util.StringUtils;
@@ -22,10 +23,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RestController
 public class ClientController {
@@ -522,6 +523,108 @@ public class ClientController {
         String files = "tid,type,status,payment,orders";
         String string = TbaoUtils.getTrade(files, tid, shop.getShopToken()).getTrade().getStatus();
         return TradeStatus.getValueByKey(string);
+    }
+
+
+    /**
+     *  传入tid判断是否退款，通过开始时间，和结束时间缩短时间
+     * @param ShopIdAndTidstr   传入的tid和和shopid
+     * @return 已经退款的tid
+     */
+    @RequestMapping("getRefund")
+    public List<String> getRefund(@RequestParam(required = true) String ShopIdAndTidstr,String startTime) throws ParseException {
+
+        long start = System.currentTimeMillis();
+
+        HashMap<String, String> stringStringHashMap = new HashMap<>();
+        String shopId = null;
+        String tid = null;
+
+        int count2 = 0;
+
+        List<String> ShopIdAndTids = Arrays.asList(ShopIdAndTidstr.split(";"));
+
+        for (String string: ShopIdAndTids) {
+            shopId = string.substring(string.indexOf(":")+1);
+            tid = string.substring(0, string.indexOf(":"));
+            TShop shop = iTradesService.selectSessionKey(Integer.parseInt(shopId));
+            count2++;
+
+            if (StringUtils.isEmpty(shop.getShopToken())) {
+                return null;
+            }
+            if (stringStringHashMap.containsKey(shop.getShopToken())){
+                stringStringHashMap.put(shop.getShopToken(), stringStringHashMap.get(shop.getShopToken()) + "," + tid);
+            }else{
+                stringStringHashMap.put(shop.getShopToken(), tid);
+            }
+        }
+        List<String> list = new ArrayList<>();
+
+        long sum = 0;
+
+        int count = 0;
+
+        int refundcount = 0;
+
+        for (Map.Entry entry:stringStringHashMap.entrySet()) {
+            List<Refund> refunds = new ArrayList<>();
+
+            long start2 = System.currentTimeMillis();
+                //原来的查询方法
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            TbaoUtils.getRefund(String.valueOf(entry.getKey()), refunds, 1L,dateFormat.parse(startTime) ,new Date());
+
+//            List<String> tids2 = Arrays.asList(entry.getValue().toString().split(","));
+//
+//            for (String string:tids2) {
+//                Trade trade = TbaoUtils.getTrade("created,modified", string, String.valueOf(entry.getKey())).getTrade();
+//                Date tradeModified = trade.getModified();
+//
+//                Date startTime,endTime = null;
+//                Calendar c = Calendar.getInstance();
+//                c.setTime(tradeModified);
+//
+//
+//
+//                c.add(Calendar.DAY_OF_MONTH, -1);
+//                startTime = c.getTime();
+//                c.add(Calendar.DAY_OF_MONTH, 2);
+//                endTime = c.getTime();
+//
+//                List<Refund> refundList = new ArrayList<>();
+//
+//                TbaoUtils.getRefund(String.valueOf(entry.getKey()), refundList, 1L, startTime, endTime);
+//
+//            }
+
+            refundcount += refunds.size();
+            count++;
+
+            long end2 = System.currentTimeMillis();
+            sum += (end2 - start2);
+
+            List<String> tids = Arrays.asList(entry.getValue().toString().split(","));
+            for (String string:tids) {
+                for (Refund refund:refunds) {
+                    if (string.equals(String.valueOf(refund.getTid()))) {
+                        if (!list.contains(string)){
+                            list.add(string);
+                        }
+                    }
+                }
+            }
+        }
+        long end = System.currentTimeMillis();
+        logger.info("方法执行时间是：" +(end - start));
+        logger.info("调用淘宝的时间为：" + sum);
+        logger.info("调用淘宝方法的次数为：" + count);
+        logger.info("查询数据库的时间是：" + count2);
+        logger.info("本地代码执行的时间是：" + ((end - start) - (sum)));
+        logger.info("本次一共从淘宝中查询数据：" + refundcount);
+        logger.info("本次要判断要退款的tid条数为：" + ShopIdAndTids.size());
+        logger.info("实际退款的条数为：" + list.size());
+        return list;
     }
 }
 

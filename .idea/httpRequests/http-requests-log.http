@@ -1,384 +1,390 @@
-GET http://localhost:8080/findOrders?tid=347255267786949048&shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-30T094331.200.txt
-
-###
-
-GET http://localhost:8080/findOrders?tid=347255267786949048&shopid=8
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;407799744614022436:9;&startTime=2019-04-06 04:40:19
 Accept: */*
 Cache-Control: no-cache
 
 ###
 
-GET http://localhost:8080/findOrders?tid=347255267786949048&shopid=8
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;407799744614022436:9;&startTime=2019-04-06 04:40:19
 Accept: */*
 Cache-Control: no-cache
 
-<> 2019-05-30T093828.200.txt
+<> 2019-06-06T045402.200.json
 
 ###
 
-GET http://localhost:8080/findOrders?tid=347255267786949048&shopid=8
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;407799744614022436:9;&startTime=2019-04-06 04:40:19
 Accept: */*
 Cache-Control: no-cache
 
-<> 2019-05-30T085458.200.txt
+<> 2019-06-06T045317-1.200.json
 
 ###
 
-GET http://localhost:8080/findOrders?tid=347255267786949048&shopid=8
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;407799744614022436:9;&startTime=2019-04-06 04:40:19
 Accept: */*
 Cache-Control: no-cache
 
-<> 2019-05-30T085054.200.txt
+<> 2019-06-06T045317.200.json
 
 ###
 
-GET http://localhost:8080/findOrders?tid=347255267786949048&shopid=8
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;407799744614022436:9;&startTime=2019-04-06 04:40:19
 Accept: */*
 Cache-Control: no-cache
 
-<> 2019-05-30T084745.200.txt
+<> 2019-06-06T045224.200.json
 
 ###
 
-GET http://localhost:8080/findOrders?tid=347255267786949048&shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-29T051556.200.txt
-
-###
-
-GET http://localhost:8080/findOrders?tid=347255267786949048&shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-29T051233.200.json
-
-###
-
-GET http://localhost:8080/advance-1.0.1/findOrders?tid=347255267786949048&shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-29T051224.404.json
-
-###
-
-GET http://localhost:8080/advance-1.0.1/getStatusByTid?tid=347255267786949048&shopId=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-29T101839.200.txt
-
-###
-
-GET http://localhost:8080/advance-1.0.1/findOrders?tid=347255267786949048&shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-29T100936.200.json
-
-###
-
-GET http://localhost:8080/advance-1.0.1/findOrders?tid=347255267786949048&shopId=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-29T100247.400.json
-
-###
-
-GET http://localhost:8080/findOrders?tid=347255267786949048&shopId=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-28T052928.200.txt
-
-###
-
-GET http://localhost:8080/findOrders?tid=347255267786949048&shopId=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-28T051841.200.json
-
-###
-
-GET http://localhost:8080/findOrders?tid=347255267786949048&shopId=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-28T051503.200.json
-
-###
-
-GET http://localhost:8080/advance-1.0.1/findOrders?tid=347255267786949048&shopId=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-28T051453.404.json
-
-###
-
-GET http://localhost:8080/advance-1.0.1/findOrders?tid=347255267786949048&shopId=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-28T041816.200.json
-
-###
-
-GET http://localhost:8080/advance-1.0.1/findOrders?tid=347255267786949048&shopId=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-28T023519.200.json
-
-###
-
-GET http://localhost:8080/advance-1.0.1/getStatusByTid?tid=347255267786949048&shopId=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-28T021732.200.txt
-
-###
-
-GET http://localhost:8080/advance-1.0.1/getStatusByTid?tid=347255267786949048&shopId=9
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-28T021616.500.json
-
-###
-
-GET http://localhost:8080/advance-1.0.1/getStatusByTid?tid=347255267786949048&shopId=6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-28T021547.500.json
-
-###
-
-GET http://localhost:8080/advance-1.0.1/findOrders?shopId=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-28T021439.200.json
-
-###
-
-GET http://localhost:8080/advance-1.0.1/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-28T015249.404.json
-
-###
-
-GET http://localhost:8080/advance-1.0.1/findOrders?shopId=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-28T014705.500.json
-
-###
-
-GET http://localhost:8080/advace-1.0.1/findOrders?shopId=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-28T014559.404.html
-
-###
-
-GET http://localhost:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-28T105914.200.json
-
-###
-
-GET http://localhost:8080/advance-1.0.1/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-13T041836.200.json
-
-###
-
-GET http://localhost:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-13T034936.200.html
-
-###
-
-GET http://localhost:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-13T034907.200.html
-
-###
-
-POST http://localhost:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-13T034859.405.html
-
-###
-
-POST http://101.132.24.66:8080/advance-1.0.1/findOrders?shopid=8
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;407799744614022436:9;&startTime=2019-04-06 04:40:19
 Accept: */*
 Cache-Control: no-cache
 
 ###
 
-POST http://localhost:8080/findOrders?shopid=8
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;407799744614022436:9;&startTime=2019-04-06 04:40:19
 Accept: */*
 Cache-Control: no-cache
 
-<> 2019-05-13T101344.200.json
+<> 2019-06-06T044422.200.json
 
 ###
 
-POST http://localhost:8080/findOrders?shopid=8
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;407799744614022436:9;&startTime=2019-04-06 04:40:19
 Accept: */*
 Cache-Control: no-cache
 
-<> 2019-05-13T101256.200.json
+<> 2019-06-06T044159.200.json
 
 ###
 
-POST http://localhost:8080/findOrders?shopid=8
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;407799744614022436:9;&startTime=2019-04-06 04:40:19
 Accept: */*
 Cache-Control: no-cache
 
-<> 2019-05-13T101214.200.json
+<> 2019-06-06T044140.200.json
 
 ###
 
-POST http://localhost:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-###
-
-POST http://localhost:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-13T090305.200.json
-
-###
-
-POST http://localhost:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-10T102037.404.json
-
-###
-
-POST http://localhost:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-10T102005.404.json
-
-###
-
-POST http://localhost:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-05-10T101758.404.json
-
-###
-
-POST http://localhost:8080/advance-1.0.1/getOrders?shopNum=335729570751774353
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-04-22T052939.200.txt
-
-###
-
-POST http://localhost:8080/advance-1.0.1/getOrders?shopNum=335729570751774353
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-04-22T052936.200.txt
-
-###
-
-POST http://localhost:8080/getOrders?shopNum=335729570751774353
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-04-22T052627.200.txt
-
-###
-
-POST http://localhost:8080/getOrders?shopNum=277830978376405427
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;407799744614022436:9;&startTime=2019-04-06 04:40:19
 Accept: */*
 Cache-Control: no-cache
 
 ###
 
-POST http://localhost:8080/getOrders?shopNum=241449293970346410
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;407799744614022436:9;
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T043510.500.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9; 273195588472484589:9; 407506947203749119:9; 408558595302707643:9;407799744614022436:9;
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T042246.500.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9; 273195588472484589:9; 407506947203749119:9; 408558595302707643:9;407799744614022436:8;
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T042210.500.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;458781664795915439:8;
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T041703.200.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;458781664795915439:8;
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T041506.500.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;458781664795915439:8;
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T041049.200.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;8;458781664795915439:8;
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T041009.500.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;8;458781664795915439:8;
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T041002.500.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;474664481477028845:8;458781664795915439:8;
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T040827.500.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;474664481477028845:8;458781664795915439:8;&startTime=2019-04-17 15:26:17&endTime=2019-06-06 10:12:43
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T014513.500.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;474664481477028845:8;458781664795915439:8;&startTime=2019-04-17 15:26:17&endTime=2019-06-06 10:12:43
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T014354.500.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;474664481477028845:8;458781664795915439:8;&startTime=2019-04-17 15:26:17&endTime=2019-06-06 10:12:43
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T014341.500.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;474664481477028845:8;458781664795915439:8;&startTime=2019-04-17 15:26:17&endTime=2019-06-06 10:12:43
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T014232.500.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;474664481477028845:8;458781664795915439:8;&startTime=2019-04-17 15:26:17&endTime=2019-06-06 10:12:43
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T014138.500.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;474664481477028845:8;458781664795915439:8;&startTime=2019-04-17 15:26:17&endTime=2019-06-06 10:12:43
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T014013.500.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;474664481477028845:8;458781664795915439:8;&startTime=2019-04-17 15:26:17&endTime=2019-06-06 10:12:43
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T114945.500.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;474664481477028845:8;458781664795915439:8;&startTime=2019-04-17 15:26:17&endTime=2019-06-06 10:12:43
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T113143.500.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;474664481477028845:8;458781664795915439:8;&startTime=2019-04-17 15:26:17&endTime=2019-06-06 10:12:43
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T113028.500.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;474664481477028845:8;458781664795915439:8;&startTime=2019-04-17 15:26:17&endTime=2019-06-06 10:12:43
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T112458.200.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;474664481477028845:8;458781664795915439:8;&startTime=2019-04-17 15:26:17&endTime=2019-06-06 10:12:43
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T112407.200.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;474664481477028845:8;458781664795915439:8;&startTime=2019-04-17 15:26:17&endTime=2019-06-06 10:12:43
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T112243.200.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;474664481477028845:8;458781664795915439:8;&startTime=2019-04-17 15:26:17&endTime=2019-06-06 10:12:43
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T112239.200.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;474664481477028845:8;458781664795915439:8;&startTime=2019-04-17 15:26:17&endTime=2019-06-06 10:12:43
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T112113.200.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;474664481477028845:8;458781664795915439:8;&startTime=2019-04-17 15:26:17&endTime=2019-06-06 10:12:43
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T111553.200.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=469251106432482544:8;474664481477028845:8;458781664795915439:8;&startTime=2019-04-17 15:26:17&endTime=2019-06-06 10:12:43
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-06T111159.200.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;450548994078385285:8;&startTime=2019-04-17 15:26:17
 Accept: */*
 Cache-Control: no-cache
 
 ###
 
-POST http://localhost:8080/getOrders?shopNum=265260707285999152
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;450548994078385285:8;&startTime=2019-04-17 15:26:17
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-05T030539.200.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;450548994078385285:8;&startTime=2019-04-17 15:26:17
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-05T114616.200.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;450548994078385285:8;&startTime=2019-04-17 15:26:17
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-05T114108.200.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;450548994078385285:8;&startTime=2019-04-17 15:26:17
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-05T113442.200.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;450548994078385285:8;&startTime=2019-04-17 15:26:17
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-05T113303.200.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;450548994078385285:8;&startTime=2019-04-17 15:26:17
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-05T112949.200.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;450548994078385285:8;&startTime=2019-04-17 15:26:17
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-05T112714.200.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;450548994078385285:8;&startTime=2019-04-17 15:26:17
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-05T112450.200.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;450548994078385285:8;&startTime=2019-04-17 15:26:17
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-05T112225.200.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;450548994078385285:8;&startTime=2019-04-17 15:26:17
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-05T111919.200.json
+
+###
+
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;450548994078385285:8;&startTime=2019-04-17 15:26:17
 Accept: */*
 Cache-Control: no-cache
 
 ###
 
-POST http://localhost:8080/getOrders?shopNum=265260707285999152
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;450548994078385285:8;&startTime=2019-04-17 15:26:17
 Accept: */*
 Cache-Control: no-cache
+
+<> 2019-06-05T110042.200.json
 
 ###
 
-POST http://localhost:8080/getOrders?shopNum=265260707285999152&userId=001B133C-A289-11E8-B710-00163E0CF556
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;450548994078385285:8;&startTime=2019-04-17 15:26:17
 Accept: */*
 Cache-Control: no-cache
+
+<> 2019-06-05T105703.200.json
 
 ###
 
-POST http://localhost:8080/getOrders?shopNum=001B133C-A289-11E8-B710-00163E0CF556&userId=001B133C-A289-11E8-B710-00163E0CF556
+GET http://localhost:8080/getRefund?ShopIdAndTidstr=402090627793246479:9;272761316396907088:9;405483040554200422:9;273195588472484589:9;407506947203749119:9;408558595302707643:9;450548994078385285:8;&startTime=2019-04-17 15:26:17
 Accept: */*
 Cache-Control: no-cache
 
-<> 2019-04-22T052355.500.json
-
-###
-
-POST http://localhost:8080/updateAll?shopNum=001B133C-A289-11E8-B710-00163E0CF556&shopId=8&userId=001B133C-A289-11E8-B710-00163E0CF556
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-04-22T052241.200.txt
-
-###
-
-POST http://localhost:8080/updateAll?shopNum=001B133C-A289-11E8-B710-00163E0CF556&shopId=8&userId=001B133C-A289-11E8-B710-00163E0CF556
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-04-22T052202.200.txt
+<> 2019-06-05T105603.200.json
 
 ###
 
