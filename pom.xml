@@ -144,14 +144,6 @@
             <systemPath>${project.basedir}/lib/taobao-sdk-java-auto_1550801864232-20190316.jar</systemPath>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.mchange/mchange-commons-java -->
-        <dependency>
-            <groupId>com.mchange</groupId>
-            <artifactId>mchange-commons-java</artifactId>
-            <version>0.2.11</version>
-        </dependency>
-
-
         <!--<dependency>-->
             <!--<groupId>org.quartz-scheduler</groupId>-->
             <!--<artifactId>quartz</artifactId>-->
