@@ -51,6 +51,16 @@ public class Trades {
 
     private String sellerNick;
 
+    private String isRefund;
+
+    public String getIsRefund() {
+        return isRefund;
+    }
+
+    public void setIsRefund(String isRefund) {
+        this.isRefund = isRefund;
+    }
+
     public Long getTid() {
         return tid;
     }

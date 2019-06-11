@@ -26,6 +26,8 @@
     <result column="seller_memo" property="sellerMemo" jdbcType="VARCHAR" />
     <result column="shop_id" property="shopId" jdbcType="INTEGER" />
     <result column="seller_nick" property="sellerNick" jdbcType="VARCHAR" />
+    <result column="is_refund" property="isRefund"/>
+
   </resultMap>
   <sql id="Base_Column_List" >
     tid, receiver_address, status, receiver_name, payment, receiver_city, receiver_district, 
@@ -216,7 +218,10 @@
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.kzq.advance.domain.Trades" >
     update t_trades
-    <set >
+    <set>
+      <if test="isRefund != null">
+        is_refund = #{isRefund},
+      </if>
       <if test="receiverAddress != null" >
         receiver_address = #{receiverAddress,jdbcType=VARCHAR},
       </if>

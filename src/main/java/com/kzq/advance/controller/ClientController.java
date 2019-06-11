@@ -23,6 +23,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -524,17 +527,14 @@ public class ClientController {
 
 
     /**
-     *
-     * @param ShopIdAndTidstr
-     * @param startTime
-     * @return
+     *  传入tid判断是否退款，通过开始时间，和结束时间缩短时间
+     * @param ShopIdAndTidstr   传入的tid和和shopid
+     * @return 已经退款的tid
      */
     @RequestMapping("getRefund")
-    public List<String> getRefund(@RequestParam(required = true) String ShopIdAndTidstr,
-                                  @RequestParam(required = true) String startTime) {
+    public List<String> getRefund(@RequestParam(required = true) String ShopIdAndTidstr,String startTime) throws ParseException {
 
         long start = System.currentTimeMillis();
-
 
         HashMap<String, String> stringStringHashMap = new HashMap<>();
         String shopId = null;
@@ -561,7 +561,6 @@ public class ClientController {
         }
         List<String> list = new ArrayList<>();
 
-
         long sum = 0;
 
         int count = 0;
@@ -572,8 +571,33 @@ public class ClientController {
             List<Refund> refunds = new ArrayList<>();
 
             long start2 = System.currentTimeMillis();
+                //原来的查询方法
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            TbaoUtils.getRefund(String.valueOf(entry.getKey()), refunds, 1L,dateFormat.parse(startTime) ,new Date());
 
-            TbaoUtils.getRefund(String.valueOf(entry.getKey()), refunds, 1L, startTime);
+//            List<String> tids2 = Arrays.asList(entry.getValue().toString().split(","));
+//
+//            for (String string:tids2) {
+//                Trade trade = TbaoUtils.getTrade("created,modified", string, String.valueOf(entry.getKey())).getTrade();
+//                Date tradeModified = trade.getModified();
+//
+//                Date startTime,endTime = null;
+//                Calendar c = Calendar.getInstance();
+//                c.setTime(tradeModified);
+//
+//
+//
+//                c.add(Calendar.DAY_OF_MONTH, -1);
+//                startTime = c.getTime();
+//                c.add(Calendar.DAY_OF_MONTH, 2);
+//                endTime = c.getTime();
+//
+//                List<Refund> refundList = new ArrayList<>();
+//
+//                TbaoUtils.getRefund(String.valueOf(entry.getKey()), refundList, 1L, startTime, endTime);
+//
+//            }
+
             refundcount += refunds.size();
             count++;
 
@@ -584,13 +608,13 @@ public class ClientController {
             for (String string:tids) {
                 for (Refund refund:refunds) {
                     if (string.equals(String.valueOf(refund.getTid()))) {
-                        list.add(string);
+                        if (!list.contains(string)){
+                            list.add(string);
+                        }
                     }
                 }
             }
         }
-
-
         long end = System.currentTimeMillis();
         logger.info("方法执行时间是：" +(end - start));
         logger.info("调用淘宝的时间为：" + sum);

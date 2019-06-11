@@ -1,5 +1,7 @@
 package com.kzq.advance.common.utils;
 
+import com.kzq.advance.domain.Trades;
+import com.kzq.advance.mapper.TradesMapper;
 import com.taobao.api.ApiException;
 import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.domain.*;
@@ -10,11 +12,15 @@ import com.taobao.api.internal.tmc.TmcClient;
 import com.taobao.api.internal.util.StringUtils;
 import com.taobao.api.request.*;
 import com.taobao.api.response.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.naming.LinkException;
 import java.util.*;
 
 public class TbaoUtils {
+
+    static Logger logger = LoggerFactory.getLogger(TbaoUtils.class);
 
     // 正式环境
 
@@ -70,6 +76,65 @@ public class TbaoUtils {
 
     }
 
+
+    /**
+     * 通知修改退款的或取消退款的
+     * @param topic
+     * @param content
+     * @param tradesMapper
+     */
+    public static boolean infoRefund(String topic, String content, TradesMapper tradesMapper) {
+
+        topic = topic.trim();
+        content = content.trim();
+
+        boolean isSucceed = false;
+
+        if (topic.equals("taobao_refund_RefundCreated")){
+            //退款
+            Trades trades = new Trades();
+            Long tid = getTidFromContent(content);
+            if (tid != null) {
+                trades.setTid(tid);
+                trades.setIsRefund("1");
+                isSucceed = tradesMapper.updateByPrimaryKeySelective(trades) > 0;
+            }
+
+        } else if (topic.equals("taobao_refund_RefundClosed")) {
+            //取消退款
+            Trades trades = new Trades();
+            Long tid = getTidFromContent(content);
+            if (tid != null) {
+                trades.setTid(tid);
+                trades.setIsRefund("0");
+                isSucceed = tradesMapper.updateByPrimaryKeySelective(trades) > 0;
+            }
+        } else {
+            logger.info("收到其他消息");
+        }
+        return isSucceed;
+    }
+
+    /**
+     * 得到message.content 的tid
+     * @param infoContent message.content
+     * @return
+     */
+    public static Long getTidFromContent(String infoContent) {
+        infoContent = infoContent.replace("{", "");
+        infoContent = infoContent.replace("}", "");
+        infoContent = infoContent.replaceAll("\"", "");
+        List<String> stringArrayList = Arrays.asList(infoContent.split(","));
+        for (String string : stringArrayList) {
+            System.out.println(string);
+            if (string.contains("tid")) {
+                return Long.parseLong(string.substring(string.indexOf(":") + 1));
+            }
+        }
+        return null;
+    }
+
+
     /**
      *  获取订单的部分信息
      * @param tid
@@ -93,28 +158,51 @@ public class TbaoUtils {
     }
 
     /**
+     *
+     * @param refundId
      * @param sessionKey
      * @return
      */
-    public static List<Refund> getRefund(String sessionKey, List<Refund> refundList, Long offer,String date) {
-        RefundsReceiveGetRequest req = new RefundsReceiveGetRequest();
-        req.setFields("refund_id, tid");
-        req.setPageNo(offer);
-        req.setPageSize(100L);
-        req.setStartModified(StringUtils.parseDateTime(date));
-        req.setUseHasNext(true);
-        RefundsReceiveGetResponse rsp = null;
+    public static Refund getRefundDetail(String refundId,String sessionKey){
+        RefundGetRequest req = new RefundGetRequest();
+        req.setFields("refund_id,tid,title,address,good_return_time,created,modified,good_return_time");
+        req.setRefundId(Long.parseLong(refundId));
+        RefundGetResponse rsp = null;
         try {
             rsp = client.execute(req, sessionKey);
         } catch (ApiException e) {
             e.printStackTrace();
         }
-        List<Refund> list = rsp.getRefunds();
-        boolean bool = rsp.getHasNext();
-        refundList.addAll(list);
+        System.out.println(rsp.getBody());
+        return rsp.getRefund();
+    }
 
+
+    /**
+     * @param sessionKey
+     * @return
+     */
+    public static List<Refund> getRefund(String sessionKey, List<Refund> refundList, Long offer, Date start,Date end) {
+        RefundsReceiveGetRequest req = new RefundsReceiveGetRequest();
+        req.setFields("refund_id, tid");
+        req.setPageNo(offer);
+        req.setPageSize(100L);
+        req.setUseHasNext(true);
+        req.setStartModified(start);
+        req.setEndModified(end);
+        RefundsReceiveGetResponse rsp = null;
+        try {
+
+            rsp = client.execute(req, sessionKey);
+            System.out.println(rsp.getBody());
+
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+        List<Refund> list = rsp.getRefunds();
+        refundList.addAll(list);
         if (rsp.getHasNext()){
-            getRefund(sessionKey, refundList, ++offer, date);
+            getRefund(sessionKey, refundList, ++offer, start, end);
         }
         return refundList;
     }
@@ -612,7 +700,10 @@ public class TbaoUtils {
 //        req.setCpCode("EYB");
 //        CainiaoWaybillIiSearchResponse rsp = client.execute(req, sessionKey);
 //        System.out.println(rsp.getBody());
-            String memo=findOrderMemo("347255267786949048","6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914");
+
+
+            //光合硅能旗舰店
+            String memo=TbaoUtils.findOrderMemo("425524353967012217","6200824224b73677a8d4375add3237e3ZZ21bb86aa67d8c305543718");
             System.out.println(memo);
 
             /*    CainiaoCloudprintStdtemplatesGetRequest req = new CainiaoCloudprintStdtemplatesGetRequest();
@@ -629,9 +720,9 @@ public class TbaoUtils {
                 e.printStackTrace();
             }
             System.out.println(rsp.getBody());*/
-       /*   //  deleteMemo("347255267786949048","3.25聚光明阿里,系统管理员采购振荡器下单成本：410元(1+1+2)，订单号：346606688301015367","6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914");
-            String memo=findOrderMemo("347255267786949048","6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914");
-            System.out.println(memo);*/
+//            deleteMemo("347255267786949048","3.25聚光明阿里,系统管理员采购振荡器下单成本：410元(1+1+2)，订单号：346606688301015367","6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914");
+//            String memo=findOrderMemo("347255267786949048","6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914");
+//            System.out.println(memo);
     }
 
 }
