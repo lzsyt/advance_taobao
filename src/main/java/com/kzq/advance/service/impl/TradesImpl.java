@@ -176,6 +176,7 @@ public class TradesImpl implements ITradesService {
     public Map<String, String> getProperty(String PropertyAlias) {
         //拆分属性字段
         String[] properties = PropertyAlias.split(";");
+
         Map<String, String> map = new HashMap<>();
 
         for (int x = 0; x < properties.length; x++) {
@@ -649,17 +650,23 @@ public class TradesImpl implements ITradesService {
     }
 
     private void delSku(Long numId, List<Sku> skus) {
-        List<TGoodsSku> tGoodsSkus = getTGoodsSkuByNumId(numId);
-        int count = tGoodsSkus.size();
-        if (skus.size() < count) {
-            HashMap<Long, TGoodsSku> longTGoodsSkuHashMap = formatSkusToHashMap(skus);
-            HashMap<Long, TGoodsSku> tGoodsSkuHashMap = formatGoodsSkusToHashMap(tGoodsSkus);
-            for (Map.Entry entry : tGoodsSkuHashMap.entrySet()) {
-                if (!longTGoodsSkuHashMap.containsKey(entry.getKey())) {
-                    goodsSkuMapper.delSku((Long) entry.getKey());
-                }
+//        List<TGoodsSku> tGoodsSkus = getTGoodsSkuByNumId(numId);
+//        int count = tGoodsSkus.size();
+
+        for (Sku sku:skus) {
+            if (sku.getQuantity() == 0) {
+                goodsSkuMapper.delSku(sku.getSkuId());
             }
         }
+//        if (skus.size() < count) {
+//            HashMap<Long, TGoodsSku> longTGoodsSkuHashMap = formatSkusToHashMap(skus);
+//            HashMap<Long, TGoodsSku> tGoodsSkuHashMap = formatGoodsSkusToHashMap(tGoodsSkus);
+//            for (Map.Entry entry : tGoodsSkuHashMap.entrySet()) {
+//                if (!longTGoodsSkuHashMap.containsKey(entry.getKey())) {
+//                    goodsSkuMapper.delSku((Long) entry.getKey());
+//                }
+//            }
+//        }
     }
 
     private void insertLogDetail(Integer logId, Long numIId, String title, String updateInfo, Long skuId) {

@@ -134,14 +134,14 @@
             <artifactId>com.taobao.sdk</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/taobao-sdk-java-auto_1550801864232-20190316-source.jar</systemPath>
+            <systemPath>${project.basedir}/src/lib/taobao-sdk-java-auto_1550801864232-20190316-source.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.taobao.sdk</groupId>
             <artifactId>com.taobao.sdk</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/taobao-sdk-java-auto_1550801864232-20190316.jar</systemPath>
+            <systemPath>${project.basedir}/src/lib/taobao-sdk-java-auto_1550801864232-20190316.jar</systemPath>
         </dependency>
 
         <!--<dependency>-->
@@ -212,36 +212,35 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
                             <mainClass>com.kzq.advance.AdvanceApplication</mainClass>
                         </manifest>
                     </archive>
-
-
                 </configuration>
 
             </plugin>
 
 
-            <!--2、把附属的jar打到jar内部的lib目录中 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.10</version>
-                <executions>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+            <!--&lt;!&ndash;2、把附属的jar打到jar内部的lib目录中 &ndash;&gt;-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-dependency-plugin</artifactId>-->
+                <!--<version>2.10</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>copy-dependencies</id>-->
+                        <!--<phase>package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>copy-dependencies</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<type>jar</type>-->
+                            <!--<includeTypes>jar</includeTypes>-->
+                            <!--<includeScope>runtime</includeScope>-->
+                            <!--<outputDirectory>${project.build.sourceDirectory}/lib</outputDirectory>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
 
 
             <!-- 3、打包过程忽略Junit测试 -->
@@ -283,12 +282,27 @@
                                     <directory>src/main/resources.${spring.profiles.active}</directory>
                                     <filtering>false</filtering>
                                 </resource>
+                                <resource>
+                                    <directory>src/lib</directory>
+                                    <targetPath>BOOT-INF/lib/</targetPath>
+                                    <includes>
+                                        <include>**/*.jar</include>
+                                    </includes>
+                                </resource>
                             </resources>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
+
+
+
         </plugins>
+
+
+
+
     </build>
 
 
