@@ -1,6 +1,5 @@
 package com.kzq.advance;
 
-import com.kzq.advance.common.utils.ControllerUtils;
 import com.kzq.advance.service.ITradesService;
 import com.taobao.api.ApiException;
 import com.taobao.api.DefaultTaobaoClient;
@@ -31,7 +30,7 @@ public class TestGoodLink {
 
         String session = "620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742";
 
-        HashMap<Long, Item> itemHashMap = ControllerUtils.getItems(session, null,iTradesService);
+        HashMap<Long, Item> itemHashMap = iTradesService.getItems(session, null);
 
 
         for (Map.Entry entry:itemHashMap.entrySet()) {
