@@ -109,4 +109,10 @@ public interface ITradesService {
 
     Integer downCategory(String ShopId);
 
+    public  HashMap<Long, TGoodsLink> getTGoodSLinkByShopName(String shopName);
+
+    public  void recoverGoodLink(HashMap<Long, TGoodsLink> tGoodsLinkHashMap, HashMap<Long, Item> itemHashMap);
+
+
+
 }

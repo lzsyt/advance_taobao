@@ -134,14 +134,14 @@
             <artifactId>com.taobao.sdk</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/taobao-sdk-java-auto_1550801864232-20190316-source.jar</systemPath>
+            <systemPath>${project.basedir}/src/lib/taobao-sdk-java-auto_1550801864232-20190316-source.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.taobao.sdk</groupId>
             <artifactId>com.taobao.sdk</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/taobao-sdk-java-auto_1550801864232-20190316.jar</systemPath>
+            <systemPath>${project.basedir}/src/lib/taobao-sdk-java-auto_1550801864232-20190316.jar</systemPath>
         </dependency>
 
         <!--<dependency>-->
@@ -212,8 +212,8 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
+                       <!--    <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>-->
                             <mainClass>com.kzq.advance.AdvanceApplication</mainClass>
                         </manifest>
                     </archive>
@@ -274,7 +274,7 @@
                             <delimiters>
                                 <delimiter>#</delimiter>
                             </delimiters>
-                            <resources>
+                          <resources>
                                 <resource>
                                     <directory>src/main/resources/</directory>
                                     <filtering>true</filtering>
@@ -283,12 +283,23 @@
                                     <directory>src/main/resources.${spring.profiles.active}</directory>
                                     <filtering>false</filtering>
                                 </resource>
+                               <resource>
+                                    <directory>src/lib</directory>
+                                    <targetPath>BOOT-INF/lib/</targetPath>
+                                    <includes>
+                                        <include>**/*.jar</include>
+                                    </includes>
+                                </resource>
                             </resources>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
+
+
+
+
     </build>
 
 
