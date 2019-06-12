@@ -4,7 +4,6 @@ import com.kzq.advance.domain.Trades;
 import com.kzq.advance.mapper.TradesMapper;
 import com.taobao.api.ApiException;
 import com.taobao.api.DefaultTaobaoClient;
-import com.taobao.api.TaobaoClient;
 import com.taobao.api.domain.*;
 import com.taobao.api.internal.tmc.Message;
 import com.taobao.api.internal.tmc.MessageHandler;
@@ -450,7 +449,7 @@ public class TbaoUtils {
 
     public static Item getProduct(long numIid, String sessionKey) {
         ItemSellerGetRequest req = new ItemSellerGetRequest();
-        req.setFields("num_iid,detail_url,title,pic_url,nick,price,approve_status,sku,property_alias,properties_alias");
+        req.setFields("num_iid,detail_url,title,pic_url,nick,price,approve_status,sku,property_alias,properties_alias,skus");
         req.setNumIid(numIid);
         ItemSellerGetResponse rsp = null;
         try {
@@ -462,7 +461,7 @@ public class TbaoUtils {
         return rsp.getItem();
     }
     /*
-    * 根据numiid查询商品详情详情
+    * 根据numiid查询商品详情
     * */
     public static List<Item> getProducts(String numids, String sessionKey) {
         ItemsSellerListGetRequest req = new ItemsSellerListGetRequest();
@@ -706,6 +705,11 @@ public class TbaoUtils {
 //        System.out.println(rsp.getBody());
      // getProduct(41211667580L,"620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742");
         List<Item> items= getProducts("584375462366","620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742");
+
+
+            //光合硅能旗舰店
+            String memo=TbaoUtils.findOrderMemo("425524353967012217","6200824224b73677a8d4375add3237e3ZZ21bb86aa67d8c305543718");
+            System.out.println(memo);
 
             /*    CainiaoCloudprintStdtemplatesGetRequest req = new CainiaoCloudprintStdtemplatesGetRequest();
             CainiaoCloudprintStdtemplatesGetResponse rsp = client.execute(req);
