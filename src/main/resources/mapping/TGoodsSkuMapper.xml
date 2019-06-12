@@ -59,6 +59,7 @@
             <if test="numIid != null">
                 num_iid = #{numIid,jdbcType=BIGINT},
             </if>
+
             <if test="propertiesAlias != null">
                 properties_alias = #{propertiesAlias,jdbcType=VARCHAR},
             </if>
@@ -68,14 +69,14 @@
     <update id="updateByPrimaryKey" parameterType="com.kzq.advance.domain.TGoodsSku">
         update t_goods_sku
         set num_iid = #{numIid,jdbcType=BIGINT},
-          properties_alias = #{propertiesAlias,jdbcType=VARCHAR}
+          properties_alias = #{propertiesAlias,jdbcType=VARCHAR},is_del=#{isDel}
         where sku_id = #{skuId,jdbcType=BIGINT}
   </update>
     <select id="selectByNumId" parameterType="java.lang.Long" resultMap="BaseResultMap">
       select sku_id,num_iid,properties_alias from t_goods_sku where num_iid =#{numId}
   </select>
     <select id="countByNumId" parameterType="java.lang.Long" resultType="java.lang.Integer">
-    select count(*)from t_goods_sku where num_iid =#{numId}
+    select count(*) from t_goods_sku where num_iid =#{numId}
   </select>
     <update id="delSku" parameterType="java.lang.Long">
     update t_goods_sku set is_del=1 where sku_id=#{skuId};

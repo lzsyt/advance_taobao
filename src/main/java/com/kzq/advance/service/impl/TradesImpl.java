@@ -257,48 +257,7 @@ public class TradesImpl implements ITradesService {
         //插入产品链接
         goodsLinkMapper.updateByPrimaryKey(tGoodsLink);
     }
-    /**
-     * 只更新不删除
-     * @param item
-     */
 
-/*    public void updateLinkNotDele(Item item){
-        TGoodsLink tGoodsLink=new TGoodsLink();
-        tGoodsLink.setDetailUrl(item.getDetailUrl());
-        tGoodsLink.setNumIid(item.getNumIid());
-        tGoodsLink.setNick(item.getNick());
-        tGoodsLink.setTitle(item.getTitle());
-        //有型号
-        if (org.apache.commons.lang.StringUtils.isNotBlank(item.getPropertyAlias())){
-            tGoodsLink.setState(1);
-            //拆分属性字段为map
-            Map<String,String> map = getProperty(item.getPropertyAlias());
-            List<Sku> skus = item.getSkus();
-            for (Sku s:skus){
-                TGoodsSku goodsSku=new TGoodsSku();
-
-                goodsSku.setPropertiesAlias(map.get(s.getProperties()));
-                goodsSku.setNumIid(item.getNumIid());
-                goodsSku.setSkuId(s.getSkuId());
-               //判断是否存在链接
-                TGoodsSku sku=findSkuById(s.getSkuId());
-                if (sku!=null&&sku.getSkuId()!=0){
-                    goodsSkuMapper.updateByPrimaryKey(sku);
-                }else {
-                    goodsSkuMapper.insert(sku);
-
-                }
-
-
-            }
-
-        }else {
-            tGoodsLink.setState(0);
-        }
-
-        //插入产品链接
-        goodsLinkMapper.updateByPrimaryKey(tGoodsLink);
-    }*/
 
     /**
      * 插入sku属性
@@ -392,6 +351,14 @@ public class TradesImpl implements ITradesService {
                 goodsSku.setPropertiesAlias(map.get(s.getProperties()));
                 goodsSku.setNumIid(item.getNumIid());
                 goodsSku.setSkuId(s.getSkuId());
+                if(s.getQuantity()<1){
+                    goodsSku.setIsDel(1);
+                }else {
+
+                    goodsSku.setIsDel(0);
+
+                }
+
                 //判断是否存在链接
                 TGoodsSku sku = findSkuById(s.getSkuId());
                 if (sku != null && sku.getSkuId() != 0) {

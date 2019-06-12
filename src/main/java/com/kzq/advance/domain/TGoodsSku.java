@@ -7,6 +7,10 @@ public class TGoodsSku {
 
     private String propertiesAlias;
 
+    private Integer isDel;
+
+
+
     @Override
     public String toString() {
         return "TGoodsSku{" +
@@ -38,5 +42,13 @@ public class TGoodsSku {
 
     public void setPropertiesAlias(String propertiesAlias) {
         this.propertiesAlias = propertiesAlias == null ? null : propertiesAlias.trim();
+    }
+
+    public Integer getIsDel() {
+        return isDel;
+    }
+
+    public void setIsDel(Integer isDel) {
+        this.isDel = isDel;
     }
 }
