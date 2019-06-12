@@ -113,6 +113,15 @@ public interface ITradesService {
 
     public  void recoverGoodLink(HashMap<Long, TGoodsLink> tGoodsLinkHashMap, HashMap<Long, Item> itemHashMap);
 
+    /**
+     * 根据店铺的token和cid 得到淘宝所有上架的Item
+     * @param session
+     * @param cid
+     * @return
+     */
+    public  HashMap<Long, Item> getItems(String session, Long cid);
 
+    public  TUpdateLog insetTUpdateLog(String userid, String shopId);
 
+    public  HashMap<Long, TGoodsLink> formatTGoodsLinksToMap(List<TGoodsLink> goodsLinks);
 }
