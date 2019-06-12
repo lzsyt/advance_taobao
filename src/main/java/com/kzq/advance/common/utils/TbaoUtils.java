@@ -401,6 +401,7 @@ public class TbaoUtils {
         }
         req.setPageSize(10L);
         ItemsOnsaleGetResponse rsp = null;
+
         List<Item> items = new ArrayList<Item>();
         try {
             Long size = getCount(title, sessionKey);
@@ -456,6 +457,7 @@ public class TbaoUtils {
         } catch (ApiException e) {
             e.printStackTrace();
         }
+        System.out.println(rsp.getBody());
         return rsp.getItem();
     }
     /*
@@ -471,6 +473,7 @@ public class TbaoUtils {
         } catch (ApiException e) {
             e.printStackTrace();
         }
+        System.out.println(rsp.getBody());
         return rsp.getItems();
     }
 
@@ -700,6 +703,8 @@ public class TbaoUtils {
 //        req.setCpCode("EYB");
 //        CainiaoWaybillIiSearchResponse rsp = client.execute(req, sessionKey);
 //        System.out.println(rsp.getBody());
+     // getProduct(41211667580L,"620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742");
+        List<Item> items= getProducts("584375462366","620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742");
 
 
             //光合硅能旗舰店

@@ -18,10 +18,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -800,5 +797,137 @@ public class TradesImpl implements ITradesService {
             sellerCatHashMap.put(sellerCat.getCid(), sellerCat);
         }
         return sellerCatHashMap;
+    }
+
+
+    /**
+     * 插入操作日志
+     * @param userid
+     * @param shopId
+     * @return
+     */
+    public  TUpdateLog insetTUpdateLog(String userid, String shopId) {
+        TUpdateLog tUpdateLog = new TUpdateLog();
+        tUpdateLog.setShopId(Integer.parseInt(shopId));
+        tUpdateLog.setUpdateTime(new Date());
+        tUpdateLog.setUpdateUserId(userid);
+        insertLog(tUpdateLog);
+        return tUpdateLog;
+    }
+
+    /**
+     * 根据店铺的token和cid 得到淘宝所有上架的Item
+     * @param session
+     * @param cid
+     * @return
+     */
+    public  HashMap<Long, Item> getItems(String session, Long cid) {
+        //
+        ArrayList<Long> numIdList = new ArrayList<>();
+
+        StringBuffer stringBuffer = new StringBuffer();
+        String substring = null;
+        //得到上架商品
+        long star = System.currentTimeMillis();
+        List<Item> list = TbaoUtils.getItemsOnsale("", cid, session);
+        long end = System.currentTimeMillis();
+        logger.info("获取上架商品的时间为：" + (end - star));
+        ArrayList<String> strings = new ArrayList<>();
+
+        HashMap<Long, Item> itemHashMap = new HashMap<>();
+
+        for (int i = 0; i < list.size(); i++) {
+
+            numIdList.add(list.get(i).getNumIid());
+
+            itemHashMap.put(list.get(i).getNumIid(), list.get(i));
+            //拼接numiid
+            stringBuffer.append(list.get(i).getNumIid()).append(",");
+            //如果stringBuffer中的numiid达到20个存入strings
+            if (i % 19 == 0 && i > 1) {
+                substring = stringBuffer.substring(0, stringBuffer.length() - 1);
+                strings.add(substring);
+                stringBuffer.setLength(0);
+            }
+            //如果到结尾了但是不到20个也把nums赋给strings
+            if ((i == list.size() - 1) && (i % 19 != 0)) {
+                substring = stringBuffer.substring(0, stringBuffer.length() - 1);
+                strings.add(substring);
+                stringBuffer.setLength(0);
+            }
+        }
+        List<Item> items = new ArrayList<>();
+
+        setLongTGoodsSkuList(numIdList);
+
+        return getItemHashMap(session, strings, itemHashMap, items);
+    }
+
+    /**
+     * @param session     商铺的token
+     * @param strings     多个numids
+     * @param itemHashMap 上架的商品列表
+     * @param items       详细列表
+     * @return 包含详细信息的上架商品列表
+     */
+    private  HashMap<Long, Item> getItemHashMap(String session, ArrayList<String> strings, HashMap<Long, Item> itemHashMap, List<Item> items) {
+        Long star = System.currentTimeMillis();
+        for (String s : strings) {
+            List<Item> itemList = TbaoUtils.getProducts(s, session);
+            items.addAll(itemList);
+        }
+        Long end = System.currentTimeMillis();
+        logger.info("获取详细信息的时间为：" + (end - star));
+        //将详细信息赋给上架的商品列表里
+        for (Item i : items) {
+            Item item = itemHashMap.get(i.getNumIid());
+            item.setPropertyAlias(i.getPropertyAlias());
+            item.setSkus(i.getSkus());
+            itemHashMap.put(i.getNumIid(), item);
+        }
+        return itemHashMap;
+    }
+
+    /**
+     * 格式化TGoodsLinks，变成HashMap
+     *
+     * @param goodsLinks
+     * @return
+     */
+    public  HashMap<Long, TGoodsLink> formatTGoodsLinksToMap(List<TGoodsLink> goodsLinks) {
+        HashMap<Long, TGoodsLink> tGoodsLinkHashMap = new HashMap<>();
+        for (TGoodsLink i : goodsLinks) {
+            tGoodsLinkHashMap.put(i.getNumIid(), i);
+        }
+        return tGoodsLinkHashMap;
+    }
+
+    /**
+     * 如果线上有，线下被删掉了，那么就恢复
+     * @param tGoodsLinkHashMap
+     * @param itemHashMap
+     */
+    public  void recoverGoodLink(HashMap<Long, TGoodsLink> tGoodsLinkHashMap, HashMap<Long, Item> itemHashMap) {
+        for (Map.Entry entry : itemHashMap.entrySet()) {
+            TGoodsLink tGoodsLink = tGoodsLinkHashMap.get(entry.getKey());
+            if (tGoodsLink != null && tGoodsLink.getIsDel() == 1) {
+                //恢复方法
+                tGoodsLink.setIsDel(0);
+                recoverGoodLink(tGoodsLink);
+            }
+        }
+    }
+
+    /**
+     * 根据goodLink得到shopName
+     * @param shopName
+     * @return
+     */
+    public  HashMap<Long, TGoodsLink> getTGoodSLinkByShopName(String shopName) {
+        Long start = System.currentTimeMillis();
+        List<TGoodsLink> goodsLinks = selectByShop(shopName);
+        Long end = System.currentTimeMillis();
+        logger.info("获取Tgoodlink的时间：" + (end - start));
+        return formatTGoodsLinksToMap(goodsLinks);
     }
 }

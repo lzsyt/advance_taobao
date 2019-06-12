@@ -1,6 +1,5 @@
 package com.kzq.advance.controller;
 
-import com.kzq.advance.common.utils.ControllerUtils;
 import com.kzq.advance.common.utils.TbaoUtils;
 import com.kzq.advance.common.utils.TradeStatus;
 import com.kzq.advance.common.utils.URLUtils;
@@ -392,11 +391,11 @@ public class ClientController {
         List<TGoodsLink> goodsLinks = iTradesService.selectByShop(shop.getShopName());
         int i = 0;
 
-        TUpdateLog tUpdateLog = ControllerUtils.insetTUpdateLog(userid, shopId, iTradesService);
+        TUpdateLog tUpdateLog = iTradesService.insetTUpdateLog(userid, shopId);
 
         Integer logId = tUpdateLog.getId();
 
-        HashMap<Long, Item> itemHashMap = ControllerUtils.getItems(session, null,iTradesService);
+        HashMap<Long, Item> itemHashMap = iTradesService.getItems(session, null);
 
         for (TGoodsLink e : goodsLinks) {
             Item item = new Item();
@@ -417,8 +416,8 @@ public class ClientController {
         tUpdateLog.setUpdateTotal(i);
         iTradesService.updateLog(tUpdateLog);
         //如果线上有线下更新了，就恢复
-        HashMap<Long, TGoodsLink> tGoodsLinkMap = ControllerUtils.formatTGoodsLinksToMap(goodsLinks);
-        ControllerUtils.recoverGoodLink(tGoodsLinkMap, itemHashMap,iTradesService);
+        HashMap<Long, TGoodsLink> tGoodsLinkMap = iTradesService.formatTGoodsLinksToMap(goodsLinks);
+        iTradesService.recoverGoodLink(tGoodsLinkMap, itemHashMap);
         long end = System.currentTimeMillis();
         logger.info("时间为" + (end - start));
         return Integer.toString(i);
@@ -467,9 +466,9 @@ public class ClientController {
             category = Long.parseLong(cid);
         }
         //获得淘宝上的items
-        HashMap<Long, Item> itemHashMap = ControllerUtils.getItems(shop.getShopToken(), category, iTradesService);
+        HashMap<Long, Item> itemHashMap = iTradesService.getItems(shop.getShopToken(), category);
         //获得本地的items
-        HashMap<Long, TGoodsLink> tGoodsLinkHashMap = ControllerUtils.getTGoodSLinkByShopName(shop.getShopName(),iTradesService);
+        HashMap<Long, TGoodsLink> tGoodsLinkHashMap = iTradesService.getTGoodSLinkByShopName(shop.getShopName());
         //比较更新
         iTradesService.compareUpdate(itemHashMap, tGoodsLinkHashMap);
         //返回更新的条数

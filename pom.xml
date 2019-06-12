@@ -212,35 +212,36 @@
                 <configuration>
                     <archive>
                         <manifest>
+                       <!--    <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>-->
                             <mainClass>com.kzq.advance.AdvanceApplication</mainClass>
                         </manifest>
                     </archive>
+
+
                 </configuration>
 
             </plugin>
 
 
-            <!--&lt;!&ndash;2、把附属的jar打到jar内部的lib目录中 &ndash;&gt;-->
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-dependency-plugin</artifactId>-->
-                <!--<version>2.10</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>copy-dependencies</id>-->
-                        <!--<phase>package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>copy-dependencies</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<type>jar</type>-->
-                            <!--<includeTypes>jar</includeTypes>-->
-                            <!--<includeScope>runtime</includeScope>-->
-                            <!--<outputDirectory>${project.build.sourceDirectory}/lib</outputDirectory>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
+            <!--2、把附属的jar打到jar内部的lib目录中 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
 
             <!-- 3、打包过程忽略Junit测试 -->
@@ -273,7 +274,7 @@
                             <delimiters>
                                 <delimiter>#</delimiter>
                             </delimiters>
-                            <resources>
+                          <resources>
                                 <resource>
                                     <directory>src/main/resources/</directory>
                                     <filtering>true</filtering>
@@ -282,7 +283,7 @@
                                     <directory>src/main/resources.${spring.profiles.active}</directory>
                                     <filtering>false</filtering>
                                 </resource>
-                                <resource>
+                               <resource>
                                     <directory>src/lib</directory>
                                     <targetPath>BOOT-INF/lib/</targetPath>
                                     <includes>
@@ -294,10 +295,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-
-
-
         </plugins>
 
 
