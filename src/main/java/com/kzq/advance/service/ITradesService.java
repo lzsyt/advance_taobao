@@ -119,9 +119,12 @@ public interface ITradesService {
      * @param cid
      * @return
      */
-    public  HashMap<Long, Item> getItems(String session, Long cid);
+    public  HashMap<Long, Item> getItems(String session, Long cid,String title);
 
     public  TUpdateLog insetTUpdateLog(String userid, String shopId);
 
     public  HashMap<Long, TGoodsLink> formatTGoodsLinksToMap(List<TGoodsLink> goodsLinks);
+
+
+    public boolean infoRefund(String topic, String content);
 }

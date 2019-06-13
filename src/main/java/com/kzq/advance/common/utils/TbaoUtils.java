@@ -73,65 +73,6 @@ public class TbaoUtils {
             e.printStackTrace();
         }
         System.out.println(rsp.getBody());
-
-    }
-
-
-    /**
-     * 通知修改退款的或取消退款的
-     * @param topic
-     * @param content
-     * @param tradesMapper
-     */
-    public static boolean infoRefund(String topic, String content, TradesMapper tradesMapper) {
-
-        topic = topic.trim();
-        content = content.trim();
-
-        boolean isSucceed = false;
-
-        if (topic.equals("taobao_refund_RefundCreated")){
-            //退款
-            Trades trades = new Trades();
-            Long tid = getTidFromContent(content);
-            if (tid != null) {
-                trades.setTid(tid);
-                trades.setIsRefund("1");
-                isSucceed = tradesMapper.updateByPrimaryKeySelective(trades) > 0;
-            }
-
-        } else if (topic.equals("taobao_refund_RefundClosed")) {
-            //取消退款
-            Trades trades = new Trades();
-            Long tid = getTidFromContent(content);
-            if (tid != null) {
-                trades.setTid(tid);
-                trades.setIsRefund("0");
-                isSucceed = tradesMapper.updateByPrimaryKeySelective(trades) > 0;
-            }
-        } else {
-            logger.info("收到其他消息");
-        }
-        return isSucceed;
-    }
-
-    /**
-     * 得到message.content 的tid
-     * @param infoContent message.content
-     * @return
-     */
-    public static Long getTidFromContent(String infoContent) {
-        infoContent = infoContent.replace("{", "");
-        infoContent = infoContent.replace("}", "");
-        infoContent = infoContent.replaceAll("\"", "");
-        List<String> stringArrayList = Arrays.asList(infoContent.split(","));
-        for (String string : stringArrayList) {
-            System.out.println(string);
-            if (string.contains("tid")) {
-                return Long.parseLong(string.substring(string.indexOf(":") + 1));
-            }
-        }
-        return null;
     }
 
 
@@ -182,9 +123,9 @@ public class TbaoUtils {
      * @param sessionKey
      * @return
      */
-    public static List<Refund> getRefund(String sessionKey, List<Refund> refundList, Long offer, Date start,Date end) {
+    public static List<Refund> getRefund(String sessionKey, List<Refund> refundList, Long offer, Date start, Date end) {
         RefundsReceiveGetRequest req = new RefundsReceiveGetRequest();
-        req.setFields("refund_id, tid");
+        req.setFields("refund_id,tid,status");
         req.setPageNo(offer);
         req.setPageSize(100L);
         req.setUseHasNext(true);
@@ -201,7 +142,12 @@ public class TbaoUtils {
         }
         List<Refund> list = rsp.getRefunds();
         refundList.addAll(list);
-        if (rsp.getHasNext()){
+        if (rsp.getHasNext()) {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             getRefund(sessionKey, refundList, ++offer, start, end);
         }
         return refundList;

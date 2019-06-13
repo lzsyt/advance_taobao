@@ -5,6 +5,8 @@ import com.kzq.advance.common.utils.TradeStatus;
 import com.kzq.advance.service.ITradesService;
 import com.power.doc.builder.ApiDocBuilder;
 import com.power.doc.model.ApiConfig;
+import com.taobao.api.domain.Refund;
+import com.taobao.api.domain.Trade;
 import com.taobao.api.internal.tmc.MessageStatus;
 import com.taobao.api.internal.tmc.TmcClient;
 import com.taobao.api.request.TradeMemoUpdateRequest;
@@ -13,6 +15,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -23,17 +32,17 @@ public class AdvanceApplicationTests {
 
     @Test
     public void contextLoads() {
-//        ApiConfig config = new ApiConfig();
-//        //服务地址
-//        config.setServerUrl("http://192.168.1.125:8080/");
-//        //生成到一个文档
-//        config.setAllInOne(false);
-//        //采用严格模式
-//        config.isStrict();
-//        //文档输出路径
-//        config.setOutPath("/doc");
-//        ApiDocBuilder.builderControllersApi(config);
-//        //将生成的文档输出到/Users/dujf/Downloads/md目录下，严格模式下api-doc会检测Controller的接口注释
+        ApiConfig config = new ApiConfig();
+        //服务地址
+        config.setServerUrl("http://192.168.1.125:8080/");
+        //生成到一个文档
+        config.setAllInOne(false);
+        //采用严格模式
+        config.isStrict();
+        //文档输出路径
+        config.setOutPath("/doc");
+        ApiDocBuilder.builderControllersApi(config);
+        //将生成的文档输出到/Users/dujf/Downloads/md目录下，严格模式下api-doc会检测Controller的接口注释
     }
 
 
@@ -80,21 +89,24 @@ public class AdvanceApplicationTests {
     public void refund() {
 //        Long start = System.currentTimeMillis();
 //
-//        Trade trade = TbaoUtils.getBillDetail("470596321371328882", "created,modified,end_time", "6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914");
+//        Trade trade = TbaoUtils.getBillDetail("463843875447855161", "created,modified,end_time", "62012096cddc8baefhj5886554f90ba427386d6e41b65e72072458248");
 //
 //        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 //        System.out.println("created：" + dateFormat.format(trade.getCreated()));
 //        System.out.println("modified：" + dateFormat.format(trade.getModified()));
-//        System.out.println("end_time：" + dateFormat.format(trade.getEndTime()));
+//
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(trade.getModified());
+//        calendar.add(Calendar.HOUR, 1);
+//        Date date = calendar.getTime();
 //
 //
-//        List<Refund> refundArrayList = TbaoUtils.getRefund("6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914");
+//        List<Refund> refundArrayList = TbaoUtils.getRefund("62012096cddc8baefhj5886554f90ba427386d6e41b65e72072458248", new ArrayList<Refund>(), 1L, trade.getCreated(), date);
 //
 //        for (Refund refund:refundArrayList) {
-//            if (refund.getTid().equals("450548994078385285")){
+//            if (refund.getTid().equals("463843875447855161")){
 //                System.out.println("..............................");
 //            }
-//            System.out.println("tid："+refund.getTid() + "      created ：" + dateFormat.format(refund.getCreated()) + "         modified：" + dateFormat.format(refund.getModified()));
 //        }
 //        System.out.println(refundArrayList.size());
 //        Long end = System.currentTimeMillis();
@@ -251,16 +263,16 @@ public class AdvanceApplicationTests {
 //        String token = "6200824224b73677a8d4375add3237e3ZZ21bb86aa67d8c305543718";
 //
 //        //光合硅能旗舰店
-//        String memo2 = TbaoUtils.findOrderMemo(tid, token);
-//        System.out.println("原备注");
-//        System.out.println(memo2);
-//        System.out.println("..................");
+////        String memo2 = TbaoUtils.findOrderMemo(tid, token);
+////        System.out.println("原备注");
+////        System.out.println(memo2);
+////        System.out.println("..................");
 //
 //        System.out.println("还原");
 //        TradeMemoUpdateRequest replaceRequest = new TradeMemoUpdateRequest();
 //        String originalMemo = TbaoUtils.findOrderMemo(tid, token);
 //        replaceRequest.setTid(Long.parseLong(tid));
-//        String newMome = originalMemo.replace(";添加测试备注;添加测试备注;添加测试备注", "");
+//        String newMome = originalMemo.replace(";添加测试备注;添加测试备注;添加测试备注;添加测试备注", "");
 //        replaceRequest.setMemo(newMome);
 //        TbaoUtils.updateTradeMemo(replaceRequest, token);
 //        System.out.println("............................");
@@ -272,16 +284,16 @@ public class AdvanceApplicationTests {
 //        System.out.println("..................");
 
     }
-//
-//
-//    //查询备注
-//    @Test
-//    public void findmem(){
+
+
+    //查询备注
+    @Test
+    public void findmem(){
 //        String tid = "425524353967012217";
 //        String token = "6200824224b73677a8d4375add3237e3ZZ21bb86aa67d8c305543718";
 //        String memo2 = TbaoUtils.findOrderMemo(tid, token);
 //        System.out.println("修改之后的备注");
 //        System.out.println(memo2);
 //        System.out.println("..................");
-//    }
+    }
 }

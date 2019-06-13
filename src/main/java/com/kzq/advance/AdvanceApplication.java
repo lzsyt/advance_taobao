@@ -3,6 +3,7 @@ package com.kzq.advance;
 import com.kzq.advance.common.util.SpringUtil;
 import com.kzq.advance.common.utils.TbaoUtils;
 import com.kzq.advance.mapper.TradesMapper;
+import com.kzq.advance.service.ITradesService;
 import com.taobao.api.internal.tmc.Message;
 import com.taobao.api.internal.tmc.MessageHandler;
 import com.taobao.api.internal.tmc.MessageStatus;
@@ -24,8 +25,7 @@ public class AdvanceApplication extends SpringBootServletInitializer {
     public static void main(String[] args) throws Exception {
         SpringApplication.run(AdvanceApplication.class, args);
 
-        TradesMapper tradesMapper = SpringUtil.getBean(TradesMapper.class);
-
+        ITradesService iTradesService = SpringUtil.getBean(ITradesService.class);
         TmcClient client = new TmcClient("25500416", "25720ff4e7b9f8c5cfe95827c7e35479", "default"); // 关于default参考消息分组说明
 
         client.setMessageHandler(new MessageHandler() {
@@ -33,7 +33,7 @@ public class AdvanceApplication extends SpringBootServletInitializer {
                 try {
                     System.out.println("getTopic：" + message.getTopic());
                     System.out.println("getContent" + message.getContent());
-                    TbaoUtils.infoRefund(message.getTopic(), message.getContent(), tradesMapper);
+                    iTradesService.infoRefund(message.getTopic(), message.getContent());
 
                 } catch (Exception e) {
                     e.printStackTrace();

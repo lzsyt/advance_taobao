@@ -19,13 +19,13 @@ public class testinfo {
 
     @Test
     public void test(){
-        String topic = "taobao_refund_RefundCreated";
+        String topic = "taobao_refund_RefundClosed";
         String infoContent = "{\n" +
                 "\t\"refund_id\":\"592823138\",\n" +
                 "\t\"buyer_nick\":\"碎银子\",\n" +
                 "\t\"refund_fee\":\"21.32\",\n" +
                 "\t\"oid\":\"110770592823138\",\n" +
-                "\t\"tid\":\"110770592823138\",\n" +
+                "\t\"tid\":\"463843875447855161\",\n" +
                 "\t\"refund_phase\":\"onsale\",\n" +
                 "\t\"bill_type\":\"refund_bill\",\n" +
                 "\t\"seller_nick\":\"麦包包\",\n" +
@@ -33,9 +33,9 @@ public class testinfo {
                 "}";
 
 
-        boolean flag = TbaoUtils.infoRefund(topic, infoContent, tradesMapper);
+//        boolean flag = TbaoUtils.infoRefund(topic, infoContent, tradesMapper);
 
-        System.out.println(flag);
+//        System.out.println(flag);
 
     }
 

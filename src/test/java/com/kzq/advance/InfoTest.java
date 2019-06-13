@@ -25,7 +25,6 @@ public class InfoTest {
     @Resource
     private TShopMapper tShopMapper;
 
-
     //查看授权列表
     @Test
     public void xiaoxifuwuapi(){
@@ -36,8 +35,6 @@ public class InfoTest {
         }
 
     }
-
-
 
 
     public void xiaoxifuwuapi(String shopName) {
@@ -84,7 +81,7 @@ public class InfoTest {
 
         DefaultTaobaoClient client = new DefaultTaobaoClient("https://eco.taobao.com/router/rest", "25500416", "25720ff4e7b9f8c5cfe95827c7e35479");
         TmcUserPermitRequest req = new TmcUserPermitRequest();
-        req.setTopics("taobao_refund_RefundCreated,taobao_refund_RefundClosed,taobao_trade_TradeMemoModified");
+        req.setTopics("taobao_refund_RefundCreated,taobao_refund_RefundClosed");
         TmcUserPermitResponse rsp = null;
         try {
             rsp = client.execute(req, token);

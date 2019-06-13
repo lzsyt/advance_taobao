@@ -788,7 +788,7 @@ public class TradesImpl implements ITradesService {
      * @param cid
      * @return
      */
-    public  HashMap<Long, Item> getItems(String session, Long cid) {
+    public  HashMap<Long, Item> getItems(String session, Long cid,String title) {
         //
         ArrayList<Long> numIdList = new ArrayList<>();
 
@@ -796,7 +796,7 @@ public class TradesImpl implements ITradesService {
         String substring = null;
         //得到上架商品
         long star = System.currentTimeMillis();
-        List<Item> list = TbaoUtils.getItemsOnsale("", cid, session);
+        List<Item> list = TbaoUtils.getItemsOnsale(title, cid, session);
         long end = System.currentTimeMillis();
         logger.info("获取上架商品的时间为：" + (end - star));
         ArrayList<String> strings = new ArrayList<>();
@@ -896,5 +896,61 @@ public class TradesImpl implements ITradesService {
         Long end = System.currentTimeMillis();
         logger.info("获取Tgoodlink的时间：" + (end - start));
         return formatTGoodsLinksToMap(goodsLinks);
+    }
+
+    /**
+     * 通知修改退款的或取消退款的
+     * @param topic
+     * @param content
+     */
+    public boolean infoRefund(String topic, String content) {
+
+        topic = topic.trim();
+        content = content.trim();
+
+        boolean isSucceed = false;
+
+        if (topic.equals("taobao_refund_RefundCreated")){
+            //退款
+            Trades trades = new Trades();
+            Long tid = getTidFromContent(content);
+            if (tid != null) {
+                trades.setTid(tid);
+                trades.setIsRefund("1");
+                isSucceed = tradesMapper.updateByPrimaryKeySelective(trades) > 0;
+            }
+
+        } else if (topic.equals("taobao_refund_RefundClosed")) {
+            //取消退款
+            Trades trades = new Trades();
+            Long tid = getTidFromContent(content);
+            if (tid != null) {
+                trades.setTid(tid);
+                trades.setIsRefund("0");
+                isSucceed = tradesMapper.updateByPrimaryKeySelective(trades) > 0;
+            }
+        } else {
+            logger.info("收到其他消息");
+        }
+        return isSucceed;
+    }
+
+    /**
+     * 得到message.content 的tid
+     * @param infoContent message.content
+     * @return
+     */
+    public static Long getTidFromContent(String infoContent) {
+        infoContent = infoContent.replace("{", "");
+        infoContent = infoContent.replace("}", "");
+        infoContent = infoContent.replaceAll("\"", "");
+        List<String> stringArrayList = Arrays.asList(infoContent.split(","));
+        for (String string : stringArrayList) {
+            System.out.println(string);
+            if (string.contains("tid")) {
+                return Long.parseLong(string.substring(string.indexOf(":") + 1));
+            }
+        }
+        return null;
     }
 }
