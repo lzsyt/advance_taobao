@@ -1,5 +1,7 @@
 package com.kzq.advance.common.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -7,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SpringUtil implements ApplicationContextAware {
+
+    private static Logger logger = LoggerFactory.getLogger(SpringUtil.class);
 
 
     private static ApplicationContext applicationContext;
@@ -17,9 +21,7 @@ public class SpringUtil implements ApplicationContextAware {
             SpringUtil.applicationContext = applicationContext;
         }
 
-        System.out.println("========ApplicationContext配置成功,在普通类可以通过调用SpringUtils.getAppContext()获取applicationContext对象,applicationContext=" + SpringUtil.applicationContext + "========");
-
-        System.out.println("---------------------------------------------------------------------");
+        logger.info("========ApplicationContext配置成功,在普通类可以通过调用SpringUtils.getAppContext()获取applicationContext对象,applicationContext={}========", SpringUtil.applicationContext);
     }
 
     //获取applicationContext

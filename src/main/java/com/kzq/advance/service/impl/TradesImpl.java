@@ -50,7 +50,7 @@ public class TradesImpl implements ITradesService {
     @Resource
     private TUpdateLogDetailMapper tUpdateLogDetailMapper;
     @Resource
-    private TSellerCatMapper tSellerCatMapper ;
+    private TSellerCatMapper tSellerCatMapper;
 
     @Resource
     private TUserMapper userMapper;
@@ -65,7 +65,7 @@ public class TradesImpl implements ITradesService {
         return userMapper.findUserByUserId(userId);
     }
 
-    public List<TGoodsSku> setLongTGoodsSkuList(List<Long> numIIds){
+    public List<TGoodsSku> setLongTGoodsSkuList(List<Long> numIIds) {
         long star = System.currentTimeMillis();
         TGoodsSkuList = goodsSkuMapper.selectByNumIds(numIIds);
         long end = System.currentTimeMillis();
@@ -73,10 +73,10 @@ public class TradesImpl implements ITradesService {
         return TGoodsSkuList;
     }
 
-    public List<TGoodsSku> getTGoodsSkuByNumId(Long numId){
+    public List<TGoodsSku> getTGoodsSkuByNumId(Long numId) {
         List<TGoodsSku> tGoodsSkus = new ArrayList<>();
-        for (TGoodsSku tgoodsku:TGoodsSkuList) {
-            if (tgoodsku.getNumIid().toString().equals(numId.toString())){
+        for (TGoodsSku tgoodsku : TGoodsSkuList) {
+            if (tgoodsku.getNumIid().toString().equals(numId.toString())) {
                 tGoodsSkus.add(tgoodsku);
             }
         }
@@ -351,9 +351,9 @@ public class TradesImpl implements ITradesService {
                 goodsSku.setPropertiesAlias(map.get(s.getProperties()));
                 goodsSku.setNumIid(item.getNumIid());
                 goodsSku.setSkuId(s.getSkuId());
-                if(s.getQuantity()<1){
+                if (s.getQuantity() < 1) {
                     goodsSku.setIsDel(1);
-                }else {
+                } else {
 
                     goodsSku.setIsDel(0);
 
@@ -536,7 +536,7 @@ public class TradesImpl implements ITradesService {
                         flag = true;
                 } else {
                     //插入sku
-                    if (!existSku(itemSku)){
+                    if (!existSku(itemSku)) {
                         goodsSkuMapper.insertSelective(itemSku);
                         StringBuffer stringBuffer = new StringBuffer("新增属性：").append(itemSku.getPropertiesAlias());
                         insertLogDetail(logId, item.getNumIid(), item.getTitle(), stringBuffer.toString(), itemSku.getSkuId());
@@ -552,16 +552,17 @@ public class TradesImpl implements ITradesService {
 
     /**
      * 根据skuId判断sku是否存在的
+     *
      * @param itemSku
      */
     private Boolean existSku(TGoodsSku itemSku) {
         TGoodsSku TGS = goodsSkuMapper.selectByPrimaryKey(itemSku.getSkuId());
-        if (TGS!=null){
+        if (TGS != null) {
             goodsSkuMapper.updateByPrimaryKeySelective(itemSku);
             TGoodsLinkMap GoodsLinkMap = tGoodsLinkMapMapper.selectBySkuId(itemSku.getSkuId());
-            if (GoodsLinkMap!=null){
-                if (!String.valueOf(GoodsLinkMap.getSkuId()).equals(itemSku.getSkuId())&&
-                        String.valueOf(GoodsLinkMap.getNumIid()).equals(itemSku.getNumIid())){
+            if (GoodsLinkMap != null) {
+                if (!String.valueOf(GoodsLinkMap.getSkuId()).equals(itemSku.getSkuId()) &&
+                        String.valueOf(GoodsLinkMap.getNumIid()).equals(itemSku.getNumIid())) {
                     TGoodsLinkMap tGoodsLinkMap = new TGoodsLinkMap();
                     tGoodsLinkMap.setSkuId(String.valueOf(itemSku.getSkuId()));
                     tGoodsLinkMap.setNumIid(String.valueOf(itemSku.getNumIid()));
@@ -574,7 +575,8 @@ public class TradesImpl implements ITradesService {
     }
 
     /**
-     *  更新sku
+     * 更新sku
+     *
      * @param itemSku
      * @param goodsSku
      * @param logId
@@ -617,7 +619,7 @@ public class TradesImpl implements ITradesService {
 //        List<TGoodsSku> tGoodsSkus = getTGoodsSkuByNumId(numId);
 //        int count = tGoodsSkus.size();
 
-        for (Sku sku:skus) {
+        for (Sku sku : skus) {
             if (sku.getQuantity() == 0) {
                 goodsSkuMapper.delSku(sku.getSkuId());
             }
@@ -699,6 +701,7 @@ public class TradesImpl implements ITradesService {
 
     /**
      * 跟新goodSku不加日志方法
+     *
      * @param item
      * @return
      */
@@ -717,7 +720,7 @@ public class TradesImpl implements ITradesService {
                     isUpdateGoodSku(itemSku, sku, null, null);
                 } else {
                     //插入sku
-                    if (!existSku(itemSku)){
+                    if (!existSku(itemSku)) {
                         goodsSkuMapper.insertSelective(itemSku);
                     };
                 }
@@ -729,19 +732,19 @@ public class TradesImpl implements ITradesService {
     @Override
     public Integer downCategory(String shopId) {
         String shopName = shopMapper.findShopNameByShopId(Integer.parseInt(shopId));
-        if (org.apache.commons.lang.StringUtils.isBlank(shopName)){
+        if (org.apache.commons.lang.StringUtils.isBlank(shopName)) {
             return -1;
         }
         HashMap<Long, SellerCat> sellerCatHashMap = formatSellerCatListToHashMap(TbaoUtils.getCategory(shopName));
         HashMap<Long, TSellerCat> tSellerCatHashMap = formatTSellerCatListToHashMap(tSellerCatMapper.find(Integer.parseInt(shopId)));
-        for (Map.Entry entry:sellerCatHashMap.entrySet()) {
+        for (Map.Entry entry : sellerCatHashMap.entrySet()) {
             TSellerCat tSellerCat = new TSellerCat();
             BeanUtils.copyProperties(entry.getValue(), tSellerCat);
-            if (tSellerCatHashMap.containsKey(entry.getKey())){
+            if (tSellerCatHashMap.containsKey(entry.getKey())) {
                 if (!tSellerCatHashMap.get(entry.getKey()).equals(tSellerCat)) {
                     tSellerCatMapper.updateByPrimaryKeySelective(tSellerCat);
                 }
-            }else{
+            } else {
                 tSellerCat.setShopId(Integer.parseInt(shopId));
                 tSellerCat.setIsDel(Byte.parseByte("0"));
                 tSellerCatMapper.insertSelective(tSellerCat);
@@ -750,9 +753,9 @@ public class TradesImpl implements ITradesService {
         return 0;
     }
 
-    public HashMap<Long, SellerCat> formatSellerCatListToHashMap(List<SellerCat> sellerCatList){
+    public HashMap<Long, SellerCat> formatSellerCatListToHashMap(List<SellerCat> sellerCatList) {
         HashMap<Long, SellerCat> sellerCatHashMap = new HashMap<>();
-        for (SellerCat sellerCat:sellerCatList) {
+        for (SellerCat sellerCat : sellerCatList) {
             sellerCatHashMap.put(sellerCat.getCid(), sellerCat);
         }
         return sellerCatHashMap;
@@ -760,7 +763,7 @@ public class TradesImpl implements ITradesService {
 
     public HashMap<Long, TSellerCat> formatTSellerCatListToHashMap(List<TSellerCat> sellerCats) {
         HashMap<Long, TSellerCat> sellerCatHashMap = new HashMap<>();
-        for (TSellerCat sellerCat:sellerCats) {
+        for (TSellerCat sellerCat : sellerCats) {
             sellerCatHashMap.put(sellerCat.getCid(), sellerCat);
         }
         return sellerCatHashMap;
@@ -769,11 +772,12 @@ public class TradesImpl implements ITradesService {
 
     /**
      * 插入操作日志
+     *
      * @param userid
      * @param shopId
      * @return
      */
-    public  TUpdateLog insetTUpdateLog(String userid, String shopId) {
+    public TUpdateLog insetTUpdateLog(String userid, String shopId) {
         TUpdateLog tUpdateLog = new TUpdateLog();
         tUpdateLog.setShopId(Integer.parseInt(shopId));
         tUpdateLog.setUpdateTime(new Date());
@@ -784,11 +788,12 @@ public class TradesImpl implements ITradesService {
 
     /**
      * 根据店铺的token和cid 得到淘宝所有上架的Item
+     *
      * @param session
      * @param cid
      * @return
      */
-    public  HashMap<Long, Item> getItems(String session, Long cid,String title) {
+    public HashMap<Long, Item> getItems(String session, Long cid, String title) {
         //
         ArrayList<Long> numIdList = new ArrayList<>();
 
@@ -837,7 +842,7 @@ public class TradesImpl implements ITradesService {
      * @param items       详细列表
      * @return 包含详细信息的上架商品列表
      */
-    private  HashMap<Long, Item> getItemHashMap(String session, ArrayList<String> strings, HashMap<Long, Item> itemHashMap, List<Item> items) {
+    private HashMap<Long, Item> getItemHashMap(String session, ArrayList<String> strings, HashMap<Long, Item> itemHashMap, List<Item> items) {
         Long star = System.currentTimeMillis();
         for (String s : strings) {
             List<Item> itemList = TbaoUtils.getProducts(s, session);
@@ -861,7 +866,7 @@ public class TradesImpl implements ITradesService {
      * @param goodsLinks
      * @return
      */
-    public  HashMap<Long, TGoodsLink> formatTGoodsLinksToMap(List<TGoodsLink> goodsLinks) {
+    public HashMap<Long, TGoodsLink> formatTGoodsLinksToMap(List<TGoodsLink> goodsLinks) {
         HashMap<Long, TGoodsLink> tGoodsLinkHashMap = new HashMap<>();
         for (TGoodsLink i : goodsLinks) {
             tGoodsLinkHashMap.put(i.getNumIid(), i);
@@ -871,10 +876,11 @@ public class TradesImpl implements ITradesService {
 
     /**
      * 如果线上有，线下被删掉了，那么就恢复
+     *
      * @param tGoodsLinkHashMap
      * @param itemHashMap
      */
-    public  void recoverGoodLink(HashMap<Long, TGoodsLink> tGoodsLinkHashMap, HashMap<Long, Item> itemHashMap) {
+    public void recoverGoodLink(HashMap<Long, TGoodsLink> tGoodsLinkHashMap, HashMap<Long, Item> itemHashMap) {
         for (Map.Entry entry : itemHashMap.entrySet()) {
             TGoodsLink tGoodsLink = tGoodsLinkHashMap.get(entry.getKey());
             if (tGoodsLink != null && tGoodsLink.getIsDel() == 1) {
@@ -887,10 +893,11 @@ public class TradesImpl implements ITradesService {
 
     /**
      * 根据goodLink得到shopName
+     *
      * @param shopName
      * @return
      */
-    public  HashMap<Long, TGoodsLink> getTGoodSLinkByShopName(String shopName) {
+    public HashMap<Long, TGoodsLink> getTGoodSLinkByShopName(String shopName) {
         Long start = System.currentTimeMillis();
         List<TGoodsLink> goodsLinks = selectByShop(shopName);
         Long end = System.currentTimeMillis();
@@ -900,6 +907,7 @@ public class TradesImpl implements ITradesService {
 
     /**
      * 通知修改退款的或取消退款的
+     *
      * @param topic
      * @param content
      */
@@ -907,13 +915,12 @@ public class TradesImpl implements ITradesService {
 
         topic = topic.trim();
         content = content.trim();
-
         boolean isSucceed = false;
-
-        if (topic.equals("taobao_refund_RefundCreated")){
+        if (topic.equals("taobao_refund_RefundCreated")) {
             //退款
             Trades trades = new Trades();
-            Long tid = getTidFromContent(content);
+            Long tid = Long.parseLong(getMapFromContent(content).get("tid"));
+            logger.info("退款,tid = {}", tid);
             if (tid != null) {
                 trades.setTid(tid);
                 trades.setIsRefund("1");
@@ -923,34 +930,53 @@ public class TradesImpl implements ITradesService {
         } else if (topic.equals("taobao_refund_RefundClosed")) {
             //取消退款
             Trades trades = new Trades();
-            Long tid = getTidFromContent(content);
+            Long tid = Long.parseLong(getMapFromContent(content).get("tid"));
+            logger.info("取消退款,tid = {}", tid);
             if (tid != null) {
                 trades.setTid(tid);
                 trades.setIsRefund("0");
                 isSucceed = tradesMapper.updateByPrimaryKeySelective(trades) > 0;
             }
-        } else {
-            logger.info("收到其他消息");
+        } else if (topic.equals("taobao_trade_TradeMemoModified")) {//交易备注修改
+            //taobao的数据
+            Trades trades = new Trades();
+            Long taobaoTid = Long.parseLong(getMapFromContent(content).get("tid"));
+            String taobaoSellermemo = getMapFromContent(content).get("seller_memo");
+            if (org.apache.commons.lang.StringUtils.isBlank(taobaoSellermemo)){
+                //某些情况下这一条订单没有备注，比如
+                // String tid = "284704838052170693";
+                // String token = "620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742";
+                taobaoSellermemo = "暂无备注";
+            }
+            logger.info("交易备注修改,tid={},seller_memo={}", taobaoTid, taobaoSellermemo);
+            trades.setTid(taobaoTid);
+            trades.setSellerMemo(taobaoSellermemo);
+            isSucceed = tradesMapper.updateByPrimaryKeySelective(trades) > 0;
+        } else{
+            logger.info("收到其他消息：topic={},content={}", topic, content);
         }
         return isSucceed;
     }
 
+
     /**
      * 得到message.content 的tid
+     *
      * @param infoContent message.content
      * @return
      */
-    public static Long getTidFromContent(String infoContent) {
+    public static Map<String, String> getMapFromContent(String infoContent) {
+        Map<String, String> map = new HashMap<>();
         infoContent = infoContent.replace("{", "");
         infoContent = infoContent.replace("}", "");
-        infoContent = infoContent.replaceAll("\"", "");
-        List<String> stringArrayList = Arrays.asList(infoContent.split(","));
+//        infoContent = infoContent.replaceAll("\"", "");
+        List<String> stringArrayList = Arrays.asList(infoContent.split(",\""));
         for (String string : stringArrayList) {
-            System.out.println(string);
-            if (string.contains("tid")) {
-                return Long.parseLong(string.substring(string.indexOf(":") + 1));
-            }
+            string = string.replaceAll("\"", "");
+            String key = string.substring(0, string.indexOf(":"));
+            String value = string.substring(string.indexOf(":") + 1);
+            map.put(key, value);
         }
-        return null;
+        return map;
     }
 }

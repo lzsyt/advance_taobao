@@ -76,6 +76,28 @@ public class TbaoUtils {
     }
 
 
+    public List<Trade> getSoldIncrement(Long offer,List<Trade> tradeList,String sessionKey,Date start ,Date end){
+        TradesSoldIncrementvGetRequest req = new TradesSoldIncrementvGetRequest();
+        req.setFields("tid,type,status,payment,orders");
+        req.setStartCreate(start);
+        req.setEndCreate(end);
+        req.setPageNo(offer);
+        req.setPageSize(40L);
+        req.setUseHasNext(true);
+        TradesSoldIncrementvGetResponse rsp = null;
+        try {
+            rsp = client.execute(req, sessionKey);
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+        tradeList.addAll(rsp.getTrades());
+        if (rsp.getHasNext()){
+            getSoldIncrement(++offer, tradeList, sessionKey, start, end);
+        }
+        return tradeList;
+    }
+
+
     /**
      *  获取订单的部分信息
      * @param tid

@@ -9,6 +9,8 @@ import com.taobao.api.internal.tmc.MessageHandler;
 import com.taobao.api.internal.tmc.MessageStatus;
 import com.taobao.api.internal.tmc.TmcClient;
 import com.taobao.api.internal.toplink.LinkException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -23,6 +25,8 @@ public class AdvanceApplication extends SpringBootServletInitializer {
 
 
     public static void main(String[] args) throws Exception {
+        Logger logger = LoggerFactory.getLogger(AdvanceApplication.class);
+
         SpringApplication.run(AdvanceApplication.class, args);
 
         ITradesService iTradesService = SpringUtil.getBean(ITradesService.class);
@@ -31,13 +35,15 @@ public class AdvanceApplication extends SpringBootServletInitializer {
         client.setMessageHandler(new MessageHandler() {
             public void onMessage(Message message, MessageStatus status) {
                 try {
-                    System.out.println("getTopic：" + message.getTopic());
-                    System.out.println("getContent" + message.getContent());
+                    logger.info("getTopic = {}", message.getTopic());
+                    logger.info("getContent = {}", message.getContent());
                     iTradesService.infoRefund(message.getTopic(), message.getContent());
 
                 } catch (Exception e) {
+                    logger.info("淘宝消息接口发生异常",e.getMessage());
                     e.printStackTrace();
                     status.fail(); // 消息处理失败回滚，服务端需要重发
+                    logger.info("消息重发");
                     // 重试注意：不是所有的异常都需要系统重试。
                     // 对于字段不全、主键冲突问题，导致写DB异常，不可重试，否则消息会一直重发
                     // 对于，由于网络问题，权限问题导致的失败，可重试。

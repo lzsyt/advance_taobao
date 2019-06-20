@@ -1,3 +1,35 @@
+POST http://localhost:8080/getOrders?shopNum=481526051923396574
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-17T052642.200.txt
+
+###
+
+POST http://localhost:8080/getOrders?shopNum=482362370683582483&userId=001B133C-A289-11E8-B710-00163E0CF556
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-17T052357.200.txt
+
+###
+
+GET http://localhost:8080/getOrders?shopNum=482362370683582483&userId=001B133C-A289-11E8-B710-00163E0CF556
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-17T052332.405.json
+
+###
+
+GET http://localhost:8080/down?shopId=9&userId=001B133C-A289-11E8-B710-00163E0CF556
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-06-17T090302.200.json
+
+###
+
 GET http://localhost:8080/updateAll?shopId=9&userId=001B133C-A289-11E8-B710-00163E0CF556
 Accept: */*
 Cache-Control: no-cache
