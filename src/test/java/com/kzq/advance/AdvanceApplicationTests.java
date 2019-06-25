@@ -1,15 +1,25 @@
 package com.kzq.advance;
 
+import com.kzq.advance.common.util.SpringUtil;
 import com.kzq.advance.common.utils.TbaoUtils;
 import com.kzq.advance.common.utils.TradeStatus;
 import com.kzq.advance.service.ITradesService;
 import com.power.doc.builder.ApiDocBuilder;
 import com.power.doc.model.ApiConfig;
+import com.taobao.api.ApiException;
+import com.taobao.api.DefaultTaobaoClient;
+import com.taobao.api.TaobaoClient;
 import com.taobao.api.domain.Refund;
 import com.taobao.api.domain.Trade;
+import com.taobao.api.internal.tmc.Message;
+import com.taobao.api.internal.tmc.MessageHandler;
 import com.taobao.api.internal.tmc.MessageStatus;
 import com.taobao.api.internal.tmc.TmcClient;
+import com.taobao.api.internal.toplink.LinkException;
+import com.taobao.api.internal.util.TaobaoUtils;
+import com.taobao.api.request.TradeFullinfoGetRequest;
 import com.taobao.api.request.TradeMemoUpdateRequest;
+import com.taobao.api.response.TradeFullinfoGetResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +40,12 @@ public class AdvanceApplicationTests {
     @Autowired
     ITradesService iTradesService;
 
+
+    @Test
+    public void test2() {
+//        497234177980395119
+    }
+
     @Test
     public void contextLoads() {
         ApiConfig config = new ApiConfig();
@@ -40,7 +56,7 @@ public class AdvanceApplicationTests {
         //采用严格模式
         config.isStrict();
         //文档输出路径
-        config.setOutPath("/doc");
+        config.setOutPath("/root/doc/advance/");
         ApiDocBuilder.builderControllersApi(config);
         //将生成的文档输出到/Users/dujf/Downloads/md目录下，严格模式下api-doc会检测Controller的接口注释
     }
@@ -192,8 +208,6 @@ public class AdvanceApplicationTests {
 //    }
 
 
-
-
 //        //<editor-fold desc="原备注">
 //        //光合硅能旗舰店
 //        String memo2 = TbaoUtils.findOrderMemo(tid, token);
@@ -217,7 +231,7 @@ public class AdvanceApplicationTests {
 //        System.out.println("..................");
 
 
-        //
+    //
 
 //    //查看授权列表
 //    @Test
@@ -258,42 +272,94 @@ public class AdvanceApplicationTests {
 //添加测试备注添加测试备注添加测试备注添加测试备注添加测试备注添加测试备注
 
     @Test
-    public void replace(){
-//        String tid = "425524353967012217";
+    public void replace() {
+
+//        ITradesService iTradesService = SpringUtil.getBean(ITradesService.class);
+//        TmcClient client = new TmcClient("25500416", "25720ff4e7b9f8c5cfe95827c7e35479", "default"); // 关于default参考消息分组说明
+//        client.setMessageHandler(new MessageHandler() {
+//            public void onMessage(Message message, MessageStatus status) {
+//                try {
+//                    System.out.println("getTopic：" + message.getTopic());
+//                    System.out.println("getContent" + message.getContent());
+//                    iTradesService.infoRefund(message.getTopic(), message.getContent());
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    status.fail();
+//                    System.out.println(e);
+//                }
+//            }
+//        });
+//
+//        try {
+//            client.connect("ws://mc.api.taobao.com"); // 消息环境地址：ws://mc.api.tbsandbox.com/
+//        } catch (LinkException e) {
+//            e.printStackTrace();
+//        }
+
+
+//        String tid = "284704838052170693";
 //        String token = "6200824224b73677a8d4375add3237e3ZZ21bb86aa67d8c305543718";
 //
-//        //光合硅能旗舰店
-////        String memo2 = TbaoUtils.findOrderMemo(tid, token);
-////        System.out.println("原备注");
-////        System.out.println(memo2);
-////        System.out.println("..................");
-//
-//        System.out.println("还原");
 //        TradeMemoUpdateRequest replaceRequest = new TradeMemoUpdateRequest();
 //        String originalMemo = TbaoUtils.findOrderMemo(tid, token);
 //        replaceRequest.setTid(Long.parseLong(tid));
-//        String newMome = originalMemo.replace(";添加测试备注;添加测试备注;添加测试备注;添加测试备注", "");
+//        String newMome = originalMemo + "测试";
 //        replaceRequest.setMemo(newMome);
 //        TbaoUtils.updateTradeMemo(replaceRequest, token);
 //        System.out.println("............................");
 //
 //
-//        String memo3 = TbaoUtils.findOrderMemo(tid, token);
-//        System.out.println("还原之后的备注");
-//        System.out.println(memo3);
-//        System.out.println("..................");
-
+//        try {
+//            Thread.sleep(5000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
 
 
     //查询备注
+
+
+    //tid = "307033231495571607";token = "620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742"; sellermemo=null
+
     @Test
-    public void findmem(){
-//        String tid = "425524353967012217";
-//        String token = "6200824224b73677a8d4375add3237e3ZZ21bb86aa67d8c305543718";
-//        String memo2 = TbaoUtils.findOrderMemo(tid, token);
-//        System.out.println("修改之后的备注");
-//        System.out.println(memo2);
-//        System.out.println("..................");
+    public void findmem() {
+        String tid = "504133187924735642";
+        String token = "6200824224b73677a8d4375add3237e3ZZ21bb86aa67d8c305543718";
+        String memo2 = TbaoUtils.findOrderMemo(tid, token);
+        System.out.println("备注=【{" + memo2 + "}】");
     }
+
+
+    @Test
+    public void testtrade() {
+        System.out.println(TbaoUtils.getBillDetail("307033231495571607", "tid,type,status,payment,orders", "620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742"));
+
+    }
+
+
+    //    buyer_memo
+    @Test
+    public void getTrade() {
+
+
+        DefaultTaobaoClient client = new DefaultTaobaoClient("https://eco.taobao.com/router/rest", "25500416", "25720ff4e7b9f8c5cfe95827c7e35479");
+        TradeFullinfoGetRequest req = new TradeFullinfoGetRequest();
+        req.setFields("tid,type,status,payment,orders,promotion_details,buyer_message");
+        req.setTid(497234177980395119L);
+        TradeFullinfoGetResponse rsp = null;
+        try {
+            rsp = client.execute(req, "6201c2251aedcbaf8909faeb8b0ac0ZZbffae87097672592456823406");
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+        System.out.println(rsp.getTrade().getBuyerMessage());
+
+
+//        Trade trade = TbaoUtils.getTrade("buyer_message", "284704838052170693", "620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742").getTrade();
+//        trade.getBuyerMemo();
+//        System.out.println(trade.getBuyerMemo());
+    }
+
 }

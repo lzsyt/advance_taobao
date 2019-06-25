@@ -35,8 +35,8 @@ public class AdvanceApplication extends SpringBootServletInitializer {
         client.setMessageHandler(new MessageHandler() {
             public void onMessage(Message message, MessageStatus status) {
                 try {
-                    logger.info("getTopic = {}", message.getTopic());
-                    logger.info("getContent = {}", message.getContent());
+                    logger.info("getTopic = [{}]", message.getTopic());
+                    logger.info("getContent = [{}]", message.getContent());
                     iTradesService.infoRefund(message.getTopic(), message.getContent());
 
                 } catch (Exception e) {

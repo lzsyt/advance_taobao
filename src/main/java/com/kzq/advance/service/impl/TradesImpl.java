@@ -722,7 +722,8 @@ public class TradesImpl implements ITradesService {
                     //插入sku
                     if (!existSku(itemSku)) {
                         goodsSkuMapper.insertSelective(itemSku);
-                    };
+                    }
+                    ;
                 }
             }
         }
@@ -920,7 +921,7 @@ public class TradesImpl implements ITradesService {
             //退款
             Trades trades = new Trades();
             Long tid = Long.parseLong(getMapFromContent(content).get("tid"));
-            logger.info("退款,tid = {}", tid);
+            logger.info("退款,tid = [{}]", tid);
             if (tid != null) {
                 trades.setTid(tid);
                 trades.setIsRefund("1");
@@ -931,7 +932,7 @@ public class TradesImpl implements ITradesService {
             //取消退款
             Trades trades = new Trades();
             Long tid = Long.parseLong(getMapFromContent(content).get("tid"));
-            logger.info("取消退款,tid = {}", tid);
+            logger.info("取消退款,tid = [{}]", tid);
             if (tid != null) {
                 trades.setTid(tid);
                 trades.setIsRefund("0");
@@ -942,18 +943,19 @@ public class TradesImpl implements ITradesService {
             Trades trades = new Trades();
             Long taobaoTid = Long.parseLong(getMapFromContent(content).get("tid"));
             String taobaoSellermemo = getMapFromContent(content).get("seller_memo");
-            if (org.apache.commons.lang.StringUtils.isBlank(taobaoSellermemo)){
+            if (org.apache.commons.lang.StringUtils.isBlank(taobaoSellermemo)) {
                 //某些情况下这一条订单没有备注，比如
                 // String tid = "284704838052170693";
                 // String token = "620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742";
-                taobaoSellermemo = "暂无备注";
+                logger.info("没有备注，不做操作，tid=【{}】", taobaoTid);
+            } else {
+                logger.info("交易备注修改,tid= [{}],seller_memo = [{}]", taobaoTid, taobaoSellermemo);
+                trades.setTid(taobaoTid);
+                trades.setSellerMemo(taobaoSellermemo);
+                isSucceed = tradesMapper.updateByPrimaryKeySelective(trades) > 0;
             }
-            logger.info("交易备注修改,tid={},seller_memo={}", taobaoTid, taobaoSellermemo);
-            trades.setTid(taobaoTid);
-            trades.setSellerMemo(taobaoSellermemo);
-            isSucceed = tradesMapper.updateByPrimaryKeySelective(trades) > 0;
-        } else{
-            logger.info("收到其他消息：topic={},content={}", topic, content);
+        } else {
+            logger.info("收到其他消息：topic=[{}],content=[{}]", topic, content);
         }
         return isSucceed;
     }
@@ -973,9 +975,11 @@ public class TradesImpl implements ITradesService {
         List<String> stringArrayList = Arrays.asList(infoContent.split(",\""));
         for (String string : stringArrayList) {
             string = string.replaceAll("\"", "");
-            String key = string.substring(0, string.indexOf(":"));
-            String value = string.substring(string.indexOf(":") + 1);
-            map.put(key, value);
+            if (!StringUtils.isEmpty(string)) {
+                String value = string.substring(string.indexOf(":") + 1);
+                String key = string.substring(0, string.indexOf(":"));
+                map.put(key, value);
+            }
         }
         return map;
     }
