@@ -321,4 +321,7 @@
       seller_nick = #{sellerNick,jdbcType=VARCHAR}
     where tid = #{tid,jdbcType=BIGINT}
   </update>
+  <select id="selectNOSellerMemo" resultMap="BaseResultMap">
+    select tid,shop_id from t_trades where seller_memo='暂无备注'
+  </select>
 </mapper>

@@ -3,6 +3,10 @@ package com.kzq.advance;
 import com.kzq.advance.common.util.SpringUtil;
 import com.kzq.advance.common.utils.TbaoUtils;
 import com.kzq.advance.common.utils.TradeStatus;
+import com.kzq.advance.domain.TShop;
+import com.kzq.advance.domain.Trades;
+import com.kzq.advance.mapper.TShopMapper;
+import com.kzq.advance.mapper.TradesMapper;
 import com.kzq.advance.service.ITradesService;
 import com.power.doc.builder.ApiDocBuilder;
 import com.power.doc.model.ApiConfig;
@@ -26,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.annotation.Resource;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -317,6 +322,27 @@ public class AdvanceApplicationTests {
 //        }
     }
 
+    @Resource
+    private TradesMapper tradesMapper;
+    @Resource
+    private TShopMapper tShopMapper;
+    @Test
+    public void replacesellermemo(){
+        for (Trades trades:tradesMapper.selectNOSellerMemo()) {
+            String tid = String.valueOf(trades.getTid());
+            String token = tShopMapper.selectByPrimaryKey(trades.getShopId()).getShopToken();
+            String memo = TbaoUtils.findOrderMemo(tid, token);
+            System.out.println("...........................");
+            System.out.println(memo);
+            Trades trades1 = new Trades();
+            trades1.setTid(Long.parseLong(tid));
+            trades1.setSellerMemo(memo);
+            tradesMapper.updateByPrimaryKeySelective(trades1);
+            System.out.println("...........................");
+        }
+    }
+
+
 
     //查询备注
 
@@ -329,6 +355,7 @@ public class AdvanceApplicationTests {
         String token = "6200824224b73677a8d4375add3237e3ZZ21bb86aa67d8c305543718";
         String memo2 = TbaoUtils.findOrderMemo(tid, token);
         System.out.println("备注=【{" + memo2 + "}】");
+
     }
 
 

@@ -3,6 +3,8 @@ package com.kzq.advance.mapper;
 import com.kzq.advance.domain.Trades;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface TradesMapper {
     int deleteByPrimaryKey(Long tid);
@@ -16,4 +18,6 @@ public interface TradesMapper {
     int updateByPrimaryKeySelective(Trades record);
 
     int updateByPrimaryKey(Trades record);
+
+    List<Trades> selectNOSellerMemo();
 }

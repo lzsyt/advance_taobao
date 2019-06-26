@@ -452,15 +452,30 @@ public class ClientController {
     }
 
     /**
+     * 下载商品分类
+     * @param shopId
+     * @param model
+     * @return
+     */
+    @RequestMapping("/downCategory")
+    public String downCategory(@RequestParam("shopId")String shopId, Model model) {
+        iTradesService.downCategory(shopId);
+        return "0";
+    }
+
+    /**
      * 下载商品链接
      * @param shopId 店铺id
      * @param cid
      * @param title
      * @return
      */
-    @RequestMapping("/down")
-    public Integer downLoad(String shopId, String cid,String title) {
+    @PostMapping("/downloadGoodLink")
+    public Integer downLoad(@RequestParam(value = "shopId",required = true)String shopId,
+                            @RequestParam(value = "cid",required = false)String cid,
+                            @RequestParam(value = "title",required = false)String title) {
         Long start = System.currentTimeMillis();
+        //得到商铺
         TShop shop = iTradesService.selectSessionKey(Integer.parseInt(shopId));
         Long category = null;
         if (org.apache.commons.lang.StringUtils.isNotBlank(cid)) {
@@ -476,18 +491,6 @@ public class ClientController {
         Long end = System.currentTimeMillis();
         logger.info("时间为" + (end - start));
         return itemHashMap.size();
-    }
-
-    /**
-     * 下载商品分类
-     * @param shopId
-     * @param model
-     * @return
-     */
-    @RequestMapping("/downCategory")
-    public String downCategory(@RequestParam("shopId")String shopId, Model model) {
-        iTradesService.downCategory(shopId);
-        return "0";
     }
 
 
