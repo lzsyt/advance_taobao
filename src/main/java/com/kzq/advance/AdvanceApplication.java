@@ -25,10 +25,10 @@ public class AdvanceApplication extends SpringBootServletInitializer {
 
 
     public static void main(String[] args) throws Exception {
-        Logger logger = LoggerFactory.getLogger(AdvanceApplication.class);
 
         SpringApplication.run(AdvanceApplication.class, args);
 
+        Logger logger = LoggerFactory.getLogger(AdvanceApplication.class);
         ITradesService iTradesService = SpringUtil.getBean(ITradesService.class);
         TmcClient client = new TmcClient("25500416", "25720ff4e7b9f8c5cfe95827c7e35479", "default"); // 关于default参考消息分组说明
 

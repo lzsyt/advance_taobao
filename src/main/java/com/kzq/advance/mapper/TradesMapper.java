@@ -20,4 +20,6 @@ public interface TradesMapper {
     int updateByPrimaryKey(Trades record);
 
     List<Trades> selectNOSellerMemo();
+
+    String getShopTokenByTid(String tid);
 }

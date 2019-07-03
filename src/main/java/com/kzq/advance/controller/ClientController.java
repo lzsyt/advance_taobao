@@ -529,6 +529,38 @@ public class ClientController {
     }
 
 
+    /**
+     * 查询订单状态
+     * @param tid
+     * @return
+     */
+    @PostMapping("getTradeStatus")
+    public String getTradeStatus(@RequestParam("tid")String tid){
+        String session = iTradesService.getShopTokenByTid(tid);
+        String status = TbaoUtils.getTrade("status",tid , session).getTrade().getStatus();
+        if (status.equals("SELLER_CONSIGNED_PART")){//卖家部分发货
+            return "部分发货";
+        }else if(status.equals("WAIT_SELLER_SEND_GOODS")){//等待卖家发货,即:买家已付款
+            return "未发货";
+        }else if(status.equals("WAIT_BUYER_CONFIRM_GOODS")){//(等待买家确认收货,即:卖家已发货
+            return "已发货";
+        }else if(status.equals("TRADE_NO_CREATE_PAY")){//没有创建支付宝交易
+            return "未发货";
+        }else if (status.equals("WAIT_BUYER_PAY")){//等待买家付款
+            return "未发货";
+        }else if(status.equals("TRADE_BUYER_SIGNED")){//买家已签收,货到付款专用
+            return "已完成";
+        }else if (status.equals("TRADE_FINISHED")){//已完成
+            return "已完成";
+        }else if(status.equals("TRADE_CLOSED")){//已关闭
+            return "已关闭";
+        }else if (status.equals("TRADE_CLOSED_BY_TAOBAO")){//付款以前，卖家或买家主动关闭交易
+            return "已关闭";
+        }
+        return null;
+    }
+
+
 //    /**
 //     *  传入tid判断是否退款，通过开始时间，和结束时间缩短时间
 //     * @param ShopIdAndTidstr   传入的tid和和shopid

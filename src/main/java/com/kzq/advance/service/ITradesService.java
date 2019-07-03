@@ -20,6 +20,8 @@ import java.util.Map;
  */
 public interface ITradesService {
 
+    public String getShopTokenByTid(String tid);
+
     public TUser getUser(String userId);
 
     public List<TGoodsSku> setLongTGoodsSkuList(List<Long> numIIds);

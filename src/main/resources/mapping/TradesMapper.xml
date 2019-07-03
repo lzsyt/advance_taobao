@@ -324,4 +324,9 @@
   <select id="selectNOSellerMemo" resultMap="BaseResultMap">
     select tid,shop_id from t_trades where seller_memo='暂无备注'
   </select>
+
+
+  <select id="getShopTokenByTid" resultType="java.lang.String" parameterType="java.lang.String">
+    select t_shop.shop_token from t_shop inner join t_trades on t_trades.shop_id=t_shop.id where t_trades.tid=#{tid}
+  </select>
 </mapper>

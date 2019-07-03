@@ -61,6 +61,11 @@ public class TradesImpl implements ITradesService {
 
 
     @Override
+    public String getShopTokenByTid(String tid) {
+        return tradesMapper.getShopTokenByTid(tid);
+    }
+
+    @Override
     public TUser getUser(String userId) {
         return userMapper.findUserByUserId(userId);
     }
