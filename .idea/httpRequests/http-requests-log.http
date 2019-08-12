@@ -1,3 +1,9 @@
+POST http://localhost:8080/getTradeStatus?tid=498792130995286338
+Accept: */*
+Cache-Control: no-cache
+
+###
+
 POST http://localhost:8080/findOrders?shopid=7
 Accept: */*
 Cache-Control: no-cache

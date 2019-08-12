@@ -389,4 +389,10 @@ public class AdvanceApplicationTests {
 //        System.out.println(trade.getBuyerMemo());
     }
 
+
+    @Test
+    public void Test(){
+        TbaoUtils.getTrade("status", "497234177980395119", "6201c2251aedcbaf8909faeb8b0ac0ZZbffae87097672592456823406").getTrade().getStatus();
+    }
+
 }

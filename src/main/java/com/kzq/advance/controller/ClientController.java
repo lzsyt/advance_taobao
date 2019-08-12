@@ -17,10 +17,13 @@ import com.taobao.api.request.TradeMemoAddRequest;
 import com.taobao.api.request.TradeMemoUpdateRequest;
 import com.taobao.api.response.TradeFullinfoGetResponse;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -535,29 +538,64 @@ public class ClientController {
      * @return
      */
     @PostMapping("getTradeStatus")
-    public String getTradeStatus(@RequestParam("tid")String tid){
+    public String getTradeStatus(@RequestParam("tid") String tid) {
         String session = iTradesService.getShopTokenByTid(tid);
-        String status = TbaoUtils.getTrade("status",tid , session).getTrade().getStatus();
-        if (status.equals("SELLER_CONSIGNED_PART")){//卖家部分发货
+        String status = TbaoUtils.getTrade("status", tid, session).getTrade().getStatus();
+        if (status.equals("SELLER_CONSIGNED_PART")) {//卖家部分发货
             return "部分发货";
-        }else if(status.equals("WAIT_SELLER_SEND_GOODS")){//等待卖家发货,即:买家已付款
+        } else if (status.equals("WAIT_SELLER_SEND_GOODS")) {//等待卖家发货,即:买家已付款
             return "未发货";
-        }else if(status.equals("WAIT_BUYER_CONFIRM_GOODS")){//(等待买家确认收货,即:卖家已发货
+        } else if (status.equals("WAIT_BUYER_CONFIRM_GOODS")) {//(等待买家确认收货,即:卖家已发货
             return "已发货";
-        }else if(status.equals("TRADE_NO_CREATE_PAY")){//没有创建支付宝交易
+        } else if (status.equals("TRADE_NO_CREATE_PAY")) {//没有创建支付宝交易
             return "未发货";
-        }else if (status.equals("WAIT_BUYER_PAY")){//等待买家付款
+        } else if (status.equals("WAIT_BUYER_PAY")) {//等待买家付款
             return "未发货";
-        }else if(status.equals("TRADE_BUYER_SIGNED")){//买家已签收,货到付款专用
+        } else if (status.equals("TRADE_BUYER_SIGNED")) {//买家已签收,货到付款专用
             return "已完成";
-        }else if (status.equals("TRADE_FINISHED")){//已完成
+        } else if (status.equals("TRADE_FINISHED")) {//已完成
             return "已完成";
-        }else if(status.equals("TRADE_CLOSED")){//已关闭
+        } else if (status.equals("TRADE_CLOSED")) {//已关闭
             return "已关闭";
-        }else if (status.equals("TRADE_CLOSED_BY_TAOBAO")){//付款以前，卖家或买家主动关闭交易
+        } else if (status.equals("TRADE_CLOSED_BY_TAOBAO")) {//付款以前，卖家或买家主动关闭交易
             return "已关闭";
         }
         return null;
+    }
+
+
+    /**
+     * 发货
+     *
+     * @param subtidlist   需要拆分的子订单
+     * @param tid          交易订单
+     * @param out_sid      物流单号
+     * @param company_code 物流公司
+     * @param shopId       店铺id
+     * @return
+     */
+    @PostMapping("consignment")
+    public Boolean consignment(@RequestParam(required = false) List<String> subtidlist,
+                               @RequestParam Long tid,
+                               @RequestParam String out_sid,
+                               @RequestParam String company_code,
+                               @RequestParam String shopId) {
+
+        String token = iTradesService.getShopTokenByTid(shopId);
+        Long is_split = 0L;
+        StringBuilder stringBuilder = new StringBuilder();
+        String sub_tid = null;
+        if (subtidlist != null && subtidlist.size() != 0) {
+            is_split = 1L;
+            subtidlist.forEach(model -> {
+                stringBuilder.append(model + ",");
+            });
+            sub_tid = stringBuilder.toString();
+            sub_tid = sub_tid.substring(0, sub_tid.length() - 1);
+        }
+
+//        return TbaoUtils.shipments(sub_tid, out_sid, company_code, tid, is_split, token);
+        return false;
     }
 
 

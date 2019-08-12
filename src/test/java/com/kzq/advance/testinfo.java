@@ -40,4 +40,29 @@ public class testinfo {
     }
 
 
+    @Test
+    public void count(){
+        int i = 1;
+        int j = i++;
+        if (i==(++j)&&((i++)==j)){
+            i += j;
+        }
+        System.out.println(i);
+    }
+
+
+    @Test
+    public void test3(){
+//        int num = 2147483647;
+//        num += 2;
+//        System.out.println(num);
+
+    }
+    @Test
+    public void test4(){
+
+        System.out.println((char)68);
+
+    }
+
 }

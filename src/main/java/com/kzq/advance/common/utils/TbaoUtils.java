@@ -317,7 +317,7 @@ public class TbaoUtils {
         } catch (ApiException e) {
             e.printStackTrace();
         }
-        System.out.println(rsp.getBody());
+//        System.out.println(rsp.getBody());
 
         return rsp;
     }
@@ -657,6 +657,23 @@ public class TbaoUtils {
             e.printStackTrace();
         }
         return rsp.getShopCats();
+    }
+
+
+    public static boolean shipments(String subTid,String outSid,String companyCode,Long tid,Long isSplit,String sessionKey){
+        LogisticsOfflineSendRequest req = new LogisticsOfflineSendRequest();
+        req.setSubTid(subTid);
+        req.setTid(tid);
+        req.setIsSplit(isSplit);
+        req.setOutSid(outSid);
+        req.setCompanyCode(companyCode);
+        LogisticsOfflineSendResponse rsp = null;
+        try {
+            rsp = client.execute(req, sessionKey);
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+        return rsp.getShipping().getIsSuccess();
     }
 
 
