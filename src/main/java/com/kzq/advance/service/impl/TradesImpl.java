@@ -911,8 +911,10 @@ public class TradesImpl implements ITradesService {
 
     /**
      * 通知修改退款的或取消退款的
-     *  @param topic
-     * @param content*/
+     *
+     * @param topic  主题，也就是消息类型
+     * @param content  消息内容
+     */
     @Async
     public void infoRefund(String topic, String content) {
 
@@ -920,49 +922,57 @@ public class TradesImpl implements ITradesService {
         content = content.trim();
         Map<String, String> parameter = getMapFromContent(content);
 
-        if (topic.equals("taobao_refund_RefundCreated")) {
-            //退款
-            refundCreated( parameter);
+        if (parameter.get("tid") == null) {
+            throw new RuntimeException("tid 为空");
+        }
+        Long tid = Long.valueOf(parameter.get("tid"));
 
-        } else if (topic.equals("taobao_refund_RefundClosed")) {
-            //取消退款
-            refundClose( parameter);
-
-        } else if (topic.equals("taobao_trade_TradeMemoModified")) {
-            //taobao的数据交易备注修改
-            tradeMemoChange( parameter);//交易备注修改
-
-        } else if (topic.equals("taobao_trade_TradeChanged")) {
-            //订单状态修改
-            changeTrade( parameter);
-
-        } else {
-            logger.info("收到其他消息：topic=[{}],content=[{}]", topic, content);
+        switch (topic) {
+            case "taobao_refund_RefundCreated":   //退款
+                refundCreated(tid);
+                break;
+            case "taobao_refund_RefundClosed":   //取消退款
+                refundClose(tid);
+                break;
+            case "taobao_trade_TradeMemoModified":  //taobao的数据交易备注修改
+                String sellerMemo = parameter.get("seller_memo");
+                if (sellerMemo == null) {
+                    throw new RuntimeException("sellerMemo 为空");
+                }
+                tradeMemoChange(tid, sellerMemo);  //交易备注修改
+                break;
+            case "taobao_trade_TradeChanged":  //订单状态修改
+                String sellerNick = parameter.get("seller_nick");
+                if (sellerNick == null) {
+                    throw new RuntimeException("sellerNick 为空");
+                }
+                changeTrade(tid, sellerNick);
+                break;
+            default:
+                logger.info("收到其他消息：topic=[{}],content=[{}]", topic, content);
+                break;
         }
     }
 
 
     /**
      *
+     * 订单状态更改
      *
-     * @param parameter
-     * @return
      */
-
-    private void changeTrade(Map<String, String> parameter) {
+    private void changeTrade(Long tid, String seller_nick) {
         Trades trades = new Trades();
-        if (parameter.get("tid") != null) {
-            String tid = parameter.get("tid");
-            logger.info("订单状态更改，tid={}", tid);
-            //查店铺
-            String seller_nick = parameter.get("seller_nick");
-            TShop tShop = new TShop();
-            tShop.setShopName(seller_nick);
-            String token = shopMapper.selectShop(tShop).getShopToken();
-            //得到淘宝订单
-            Trade trade = TbaoUtils.getTrade("tid,receiver_address,status,receiver_name,payment,receiver_mobile,pay_time,buyer_memo,seller_memo,seller_nick,orders,order", tid, token).getTrade();
-            //等待卖家发货
-            if (trade.getStatus().equals("WAIT_SELLER_SEND_GOODS")) {
+
+        logger.info("订单状态更改，tid={}", tid);
+        //查店铺
+        TShop tShop = new TShop();
+        tShop.setShopName(seller_nick);
+        String token = shopMapper.selectShop(tShop).getShopToken();
+        //得到淘宝订单
+        Trade trade = TbaoUtils.getTrade("tid,receiver_address,status,receiver_name,payment,receiver_mobile,pay_time,buyer_memo,seller_memo,seller_nick,orders,order", String.valueOf(tid), token).getTrade();
+        //等待卖家发货
+        switch (trade.getStatus()) {
+            case "WAIT_SELLER_SEND_GOODS":   //WAIT_SELLER_SEND_GOODS 等待买家发货
                 logger.info("插入已付款订单，id=[{}]", tid);
                 BeanUtils.copyProperties(trade, trades);
                 trades.setStatus("1");
@@ -973,83 +983,74 @@ public class TradesImpl implements ITradesService {
                         tradesOrderMapper.insertSelective(ttradesOrder);
                     }
                 }
-                tradesMapper.insertSelective(trades) ;
-            } else if (trade.getStatus().equals("SELLER_CONSIGNED_PART")) {//SELLER_CONSIGNED_PART  买家部分发货     WAIT_BUYER_CONFIRM_GOODS 等待买家确认收货
+                tradesMapper.insertSelective(trades);
+                break;
+            case "SELLER_CONSIGNED_PART": //SELLER_CONSIGNED_PART  买家部分发货     WAIT_BUYER_CONFIRM_GOODS 等待买家确认收货
                 logger.info("买家部分发货；tid={}", tid);
                 trades.setTid(trade.getTid());
                 trades.setStatus("5");
-                 tradesMapper.updateByPrimaryKeySelective(trades) ;
-            }else if (trade.getStatus().equals("WAIT_BUYER_CONFIRM_GOODS")) {//WAIT_BUYER_CONFIRM_GOODS
+                tradesMapper.updateByPrimaryKeySelective(trades);
+                break;
+            case "WAIT_BUYER_CONFIRM_GOODS": //WAIT_BUYER_CONFIRM_GOODS  等待买家确认收货
                 logger.info("等待买家确认收货；tid={}", tid);
                 trades.setTid(trade.getTid());
                 trades.setStatus("2");
-                 tradesMapper.updateByPrimaryKeySelective(trades);
-            } else if (trade.getStatus().equals("TRADE_BUYER_SIGNED")) { // TRADE_BUYER_SIGNED
+                tradesMapper.updateByPrimaryKeySelective(trades);
+                break;
+            case "TRADE_BUYER_SIGNED":  // TRADE_BUYER_SIGNED  买家收货
                 logger.info("买家收货；tid={}", tid);
                 trades.setTid(trade.getTid());
                 trades.setStatus("3");
-                tradesMapper.updateByPrimaryKeySelective(trades) ;
-            } else if (trade.getStatus().equals("TRADE_FINISHED")) {  //TRADE_FINISHED 交易成功
+                tradesMapper.updateByPrimaryKeySelective(trades);
+                break;
+            case "TRADE_FINISHED":   //TRADE_FINISHED 交易成功
                 logger.info("交易成功；tid={}", tid);
                 trades.setTid(trade.getTid());
                 trades.setStatus("4");
-                tradesMapper.updateByPrimaryKeySelective(trades) ;
-            } else {
+                tradesMapper.updateByPrimaryKeySelective(trades);
+                break;
+            default:
                 logger.info("其他状态:{}", trade.getStatus());
-            }
+                break;
         }
     }
 
     /**
-     *  退款
-     * @param parameter
-     * @return
+     * 退款
      */
-    private void refundCreated( Map<String, String> parameter) {
+    private void refundCreated(Long tid) {
         Trades trades = new Trades();
-        if (parameter.get("tid") != null) {
-            Long tid = Long.parseLong(parameter.get("tid"));
-            logger.info("退款,tid = [{}]", tid);
-            trades.setTid(tid);
-            trades.setIsRefund("1");
-            tradesMapper.updateByPrimaryKeySelective(trades);
-        }
+        logger.info("退款,tid = [{}]", tid);
+        trades.setTid(tid);
+        trades.setIsRefund("1");
+        tradesMapper.updateByPrimaryKeySelective(trades);
     }
 
     /**
-     *  取消退款
-     * @param parameter
-     * @return
+     * 取消退款
      */
-    private void refundClose( Map<String, String> parameter) {
+    private void refundClose(Long tid) {
         Trades trades = new Trades();
-        if (parameter.get("tid") != null) {
-            Long tid = Long.parseLong(parameter.get("tid"));
-            logger.info("取消退款,tid = [{}]", tid);
-            trades.setTid(tid);
-            trades.setIsRefund("0");
-           tradesMapper.updateByPrimaryKeySelective(trades) ;
-        }
+        logger.info("取消退款,tid = [{}]", tid);
+        trades.setTid(tid);
+        trades.setIsRefund("0");
+        tradesMapper.updateByPrimaryKeySelective(trades);
     }
 
     /**
      * 交易备注修改
-     * @param parameter 消息内容
-     * @return
      */
-    private void tradeMemoChange( Map<String, String> parameter) {
+    private void tradeMemoChange(Long tid, String sellermemo) {
         Trades trades = new Trades();
-        Long taobaoTid = Long.parseLong(parameter.get("tid"));
-        String taobaoSellermemo = parameter.get("seller_memo");
-        if (org.apache.commons.lang.StringUtils.isBlank(taobaoSellermemo)) {
+        if (org.apache.commons.lang.StringUtils.isBlank(sellermemo)) {
             //某些情况下这一条订单没有备注，比如
             // String tid = "284704838052170693";
             // String token = "620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742";
-            logger.info("没有备注，不做操作，tid=【{}】", taobaoTid);
+            logger.info("没有备注，不做操作，tid=【{}】", tid);
         } else {
-            logger.info("交易备注修改,tid= [{}],seller_memo = [{}]", taobaoTid, taobaoSellermemo);
-            trades.setTid(taobaoTid);
-            trades.setSellerMemo(taobaoSellermemo);
+            logger.info("交易备注修改,tid= [{}],seller_memo = [{}]", tid, sellermemo);
+            trades.setTid(tid);
+            trades.setSellerMemo(sellermemo);
             tradesMapper.updateByPrimaryKeySelective(trades);
         }
     }

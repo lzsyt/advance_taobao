@@ -534,31 +534,32 @@ public class ClientController {
 
     /**
      * 查询订单状态
-     * @param tid
-     * @return
+     * @param tid tid
+     * @return  订单状态
      */
     @PostMapping("getTradeStatus")
     public String getTradeStatus(@RequestParam("tid") String tid) {
         String session = iTradesService.getShopTokenByTid(tid);
         String status = TbaoUtils.getTrade("status", tid, session).getTrade().getStatus();
-        if (status.equals("SELLER_CONSIGNED_PART")) {//卖家部分发货
-            return "部分发货";
-        } else if (status.equals("WAIT_SELLER_SEND_GOODS")) {//等待卖家发货,即:买家已付款
-            return "未发货";
-        } else if (status.equals("WAIT_BUYER_CONFIRM_GOODS")) {//(等待买家确认收货,即:卖家已发货
-            return "已发货";
-        } else if (status.equals("TRADE_NO_CREATE_PAY")) {//没有创建支付宝交易
-            return "未发货";
-        } else if (status.equals("WAIT_BUYER_PAY")) {//等待买家付款
-            return "未发货";
-        } else if (status.equals("TRADE_BUYER_SIGNED")) {//买家已签收,货到付款专用
-            return "已完成";
-        } else if (status.equals("TRADE_FINISHED")) {//已完成
-            return "已完成";
-        } else if (status.equals("TRADE_CLOSED")) {//已关闭
-            return "已关闭";
-        } else if (status.equals("TRADE_CLOSED_BY_TAOBAO")) {//付款以前，卖家或买家主动关闭交易
-            return "已关闭";
+        switch (status) {
+            case "SELLER_CONSIGNED_PART": //卖家部分发货
+                return "部分发货";
+            case "WAIT_SELLER_SEND_GOODS": //等待卖家发货,即:买家已付款
+                return "未发货";
+            case "WAIT_BUYER_CONFIRM_GOODS": //(等待买家确认收货,即:卖家已发货
+                return "已发货";
+            case "TRADE_NO_CREATE_PAY": //没有创建支付宝交易
+                return "未发货";
+            case "WAIT_BUYER_PAY": //等待买家付款
+                return "未发货";
+            case "TRADE_BUYER_SIGNED": //买家已签收,货到付款专用
+                return "已完成";
+            case "TRADE_FINISHED": //已完成
+                return "已完成";
+            case "TRADE_CLOSED": //已关闭
+                return "已关闭";
+            case "TRADE_CLOSED_BY_TAOBAO": //付款以前，卖家或买家主动关闭交易
+                return "已关闭";
         }
         return null;
     }
@@ -594,8 +595,7 @@ public class ClientController {
             sub_tid = sub_tid.substring(0, sub_tid.length() - 1);
         }
 
-//        return TbaoUtils.shipments(sub_tid, out_sid, company_code, tid, is_split, token);
-        return false;
+        return TbaoUtils.shipments(sub_tid, out_sid, company_code, tid, is_split, token);
     }
 
 
