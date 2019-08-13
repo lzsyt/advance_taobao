@@ -1,7 +1,6 @@
 package com.kzq.advance.controller;
 
 import com.kzq.advance.common.utils.TbaoUtils;
-import com.kzq.advance.common.utils.TradeStatus;
 import com.kzq.advance.common.utils.URLUtils;
 import com.kzq.advance.domain.*;
 import com.kzq.advance.service.ILogisticsService;
@@ -527,8 +526,7 @@ public class ClientController {
             return null;
         }
         String files = "tid,type,status,payment,orders";
-        String string = TbaoUtils.getTrade(files, tid, shop.getShopToken()).getTrade().getStatus();
-        return TradeStatus.getValueByKey(string);
+        return TbaoUtils.getTrade(files, tid, shop.getShopToken()).getTrade().getStatus();
     }
 
 

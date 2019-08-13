@@ -1,9 +1,6 @@
 package com.kzq.advance;
 
-import com.kzq.advance.common.util.SpringUtil;
 import com.kzq.advance.common.utils.TbaoUtils;
-import com.kzq.advance.common.utils.TradeStatus;
-import com.kzq.advance.domain.TShop;
 import com.kzq.advance.domain.Trades;
 import com.kzq.advance.mapper.TShopMapper;
 import com.kzq.advance.mapper.TradesMapper;
@@ -12,17 +9,7 @@ import com.power.doc.builder.ApiDocBuilder;
 import com.power.doc.model.ApiConfig;
 import com.taobao.api.ApiException;
 import com.taobao.api.DefaultTaobaoClient;
-import com.taobao.api.TaobaoClient;
-import com.taobao.api.domain.Refund;
-import com.taobao.api.domain.Trade;
-import com.taobao.api.internal.tmc.Message;
-import com.taobao.api.internal.tmc.MessageHandler;
-import com.taobao.api.internal.tmc.MessageStatus;
-import com.taobao.api.internal.tmc.TmcClient;
-import com.taobao.api.internal.toplink.LinkException;
-import com.taobao.api.internal.util.TaobaoUtils;
 import com.taobao.api.request.TradeFullinfoGetRequest;
-import com.taobao.api.request.TradeMemoUpdateRequest;
 import com.taobao.api.response.TradeFullinfoGetResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,12 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
