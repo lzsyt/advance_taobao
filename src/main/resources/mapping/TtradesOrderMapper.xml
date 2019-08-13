@@ -69,9 +69,6 @@
       <if test="numIid != null" >
         num_iid,
       </if>
-      <if test="totalFee != null" >
-        total_fee,
-      </if>
       <if test="logisticsCompany != null" >
         logistics_company,
       </if>
@@ -106,9 +103,6 @@
       </if>
       <if test="numIid != null" >
         #{numIid,jdbcType=CHAR},
-      </if>
-      <if test="totalFee != null" >
-        #{totalFee,jdbcType=DECIMAL},
       </if>
       <if test="logisticsCompany != null" >
         #{logisticsCompany,jdbcType=CHAR},

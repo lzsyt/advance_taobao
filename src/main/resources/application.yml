@@ -19,4 +19,6 @@ pagehelper:
 logging:
   config: classpath:logback-spring.xml
 
+spring.datasource.druid.test-on-borrow: true
+spring.datasource.druid.test-while-idle: true
 

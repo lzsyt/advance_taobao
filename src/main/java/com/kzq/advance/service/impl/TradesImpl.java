@@ -1,20 +1,18 @@
 package com.kzq.advance.service.impl;
 
 
-import com.kzq.advance.common.utils.BeanUtils;
+import org.springframework.beans.BeanUtils;
 import com.kzq.advance.common.utils.HttpUtils;
 import com.kzq.advance.common.utils.TbaoUtils;
 import com.kzq.advance.domain.*;
 import com.kzq.advance.mapper.*;
 import com.kzq.advance.service.ITradesService;
-import com.taobao.api.domain.Item;
-import com.taobao.api.domain.Order;
-import com.taobao.api.domain.SellerCat;
-import com.taobao.api.domain.Sku;
+import com.taobao.api.domain.*;
 import com.taobao.api.internal.util.StringUtils;
 import com.taobao.api.response.TradeFullinfoGetResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -78,7 +76,7 @@ public class TradesImpl implements ITradesService {
         return TGoodsSkuList;
     }
 
-    public List<TGoodsSku> getTGoodsSkuByNumId(Long numId) {
+    private List<TGoodsSku> getTGoodsSkuByNumId(Long numId) {
         List<TGoodsSku> tGoodsSkus = new ArrayList<>();
         for (TGoodsSku tgoodsku : TGoodsSkuList) {
             if (tgoodsku.getNumIid().toString().equals(numId.toString())) {
@@ -91,8 +89,8 @@ public class TradesImpl implements ITradesService {
     /**
      * 类型转换
      *
-     * @param t
-     * @return
+     * @param t Order
+     * @return TtradesOrder
      */
     public TtradesOrder formOrder(Order t) {
         TtradesOrder order = new TtradesOrder();
@@ -115,7 +113,7 @@ public class TradesImpl implements ITradesService {
     /**
      * 自动生成出库单
      *
-     * @param param
+     * @param param param
      */
     public void addWsbill(String param) {//调用生成出库单的接口
 
@@ -913,56 +911,147 @@ public class TradesImpl implements ITradesService {
 
     /**
      * 通知修改退款的或取消退款的
-     *
-     * @param topic
-     * @param content
-     */
-    public boolean infoRefund(String topic, String content) {
+     *  @param topic
+     * @param content*/
+    @Async
+    public void infoRefund(String topic, String content) {
 
         topic = topic.trim();
         content = content.trim();
-        boolean isSucceed = false;
+        Map<String, String> parameter = getMapFromContent(content);
+
         if (topic.equals("taobao_refund_RefundCreated")) {
             //退款
-            Trades trades = new Trades();
-            Long tid = Long.parseLong(getMapFromContent(content).get("tid"));
-            logger.info("退款,tid = [{}]", tid);
-            if (tid != null) {
-                trades.setTid(tid);
-                trades.setIsRefund("1");
-                isSucceed = tradesMapper.updateByPrimaryKeySelective(trades) > 0;
-            }
+            refundCreated( parameter);
 
         } else if (topic.equals("taobao_refund_RefundClosed")) {
             //取消退款
-            Trades trades = new Trades();
-            Long tid = Long.parseLong(getMapFromContent(content).get("tid"));
-            logger.info("取消退款,tid = [{}]", tid);
-            if (tid != null) {
-                trades.setTid(tid);
-                trades.setIsRefund("0");
-                isSucceed = tradesMapper.updateByPrimaryKeySelective(trades) > 0;
-            }
-        } else if (topic.equals("taobao_trade_TradeMemoModified")) {//交易备注修改
-            //taobao的数据
-            Trades trades = new Trades();
-            Long taobaoTid = Long.parseLong(getMapFromContent(content).get("tid"));
-            String taobaoSellermemo = getMapFromContent(content).get("seller_memo");
-            if (org.apache.commons.lang.StringUtils.isBlank(taobaoSellermemo)) {
-                //某些情况下这一条订单没有备注，比如
-                // String tid = "284704838052170693";
-                // String token = "620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742";
-                logger.info("没有备注，不做操作，tid=【{}】", taobaoTid);
-            } else {
-                logger.info("交易备注修改,tid= [{}],seller_memo = [{}]", taobaoTid, taobaoSellermemo);
-                trades.setTid(taobaoTid);
-                trades.setSellerMemo(taobaoSellermemo);
-                isSucceed = tradesMapper.updateByPrimaryKeySelective(trades) > 0;
-            }
+            refundClose( parameter);
+
+        } else if (topic.equals("taobao_trade_TradeMemoModified")) {
+            //taobao的数据交易备注修改
+            tradeMemoChange( parameter);//交易备注修改
+
+        } else if (topic.equals("taobao_trade_TradeChanged")) {
+            //订单状态修改
+            changeTrade( parameter);
+
         } else {
             logger.info("收到其他消息：topic=[{}],content=[{}]", topic, content);
         }
-        return isSucceed;
+    }
+
+
+    /**
+     *
+     *
+     * @param parameter
+     * @return
+     */
+
+    private void changeTrade(Map<String, String> parameter) {
+        Trades trades = new Trades();
+        if (parameter.get("tid") != null) {
+            String tid = parameter.get("tid");
+            logger.info("订单状态更改，tid={}", tid);
+            //查店铺
+            String seller_nick = parameter.get("seller_nick");
+            TShop tShop = new TShop();
+            tShop.setShopName(seller_nick);
+            String token = shopMapper.selectShop(tShop).getShopToken();
+            //得到淘宝订单
+            Trade trade = TbaoUtils.getTrade("tid,receiver_address,status,receiver_name,payment,receiver_mobile,pay_time,buyer_memo,seller_memo,seller_nick,orders,order", tid, token).getTrade();
+            //等待卖家发货
+            if (trade.getStatus().equals("WAIT_SELLER_SEND_GOODS")) {
+                logger.info("插入已付款订单，id=[{}]", tid);
+                BeanUtils.copyProperties(trade, trades);
+                trades.setStatus("1");
+                if (trade.getOrders() != null) {
+                    TtradesOrder ttradesOrder = new TtradesOrder();
+                    for (Order order : trade.getOrders()) {
+                        BeanUtils.copyProperties(order, ttradesOrder);
+                        tradesOrderMapper.insertSelective(ttradesOrder);
+                    }
+                }
+                tradesMapper.insertSelective(trades) ;
+            } else if (trade.getStatus().equals("SELLER_CONSIGNED_PART")) {//SELLER_CONSIGNED_PART  买家部分发货     WAIT_BUYER_CONFIRM_GOODS 等待买家确认收货
+                logger.info("买家部分发货；tid={}", tid);
+                trades.setTid(trade.getTid());
+                trades.setStatus("5");
+                 tradesMapper.updateByPrimaryKeySelective(trades) ;
+            }else if (trade.getStatus().equals("WAIT_BUYER_CONFIRM_GOODS")) {//WAIT_BUYER_CONFIRM_GOODS
+                logger.info("等待买家确认收货；tid={}", tid);
+                trades.setTid(trade.getTid());
+                trades.setStatus("2");
+                 tradesMapper.updateByPrimaryKeySelective(trades);
+            } else if (trade.getStatus().equals("TRADE_BUYER_SIGNED")) { // TRADE_BUYER_SIGNED
+                logger.info("买家收货；tid={}", tid);
+                trades.setTid(trade.getTid());
+                trades.setStatus("3");
+                tradesMapper.updateByPrimaryKeySelective(trades) ;
+            } else if (trade.getStatus().equals("TRADE_FINISHED")) {  //TRADE_FINISHED 交易成功
+                logger.info("交易成功；tid={}", tid);
+                trades.setTid(trade.getTid());
+                trades.setStatus("4");
+                tradesMapper.updateByPrimaryKeySelective(trades) ;
+            } else {
+                logger.info("其他状态:{}", trade.getStatus());
+            }
+        }
+    }
+
+    /**
+     *  退款
+     * @param parameter
+     * @return
+     */
+    private void refundCreated( Map<String, String> parameter) {
+        Trades trades = new Trades();
+        if (parameter.get("tid") != null) {
+            Long tid = Long.parseLong(parameter.get("tid"));
+            logger.info("退款,tid = [{}]", tid);
+            trades.setTid(tid);
+            trades.setIsRefund("1");
+            tradesMapper.updateByPrimaryKeySelective(trades);
+        }
+    }
+
+    /**
+     *  取消退款
+     * @param parameter
+     * @return
+     */
+    private void refundClose( Map<String, String> parameter) {
+        Trades trades = new Trades();
+        if (parameter.get("tid") != null) {
+            Long tid = Long.parseLong(parameter.get("tid"));
+            logger.info("取消退款,tid = [{}]", tid);
+            trades.setTid(tid);
+            trades.setIsRefund("0");
+           tradesMapper.updateByPrimaryKeySelective(trades) ;
+        }
+    }
+
+    /**
+     * 交易备注修改
+     * @param parameter 消息内容
+     * @return
+     */
+    private void tradeMemoChange( Map<String, String> parameter) {
+        Trades trades = new Trades();
+        Long taobaoTid = Long.parseLong(parameter.get("tid"));
+        String taobaoSellermemo = parameter.get("seller_memo");
+        if (org.apache.commons.lang.StringUtils.isBlank(taobaoSellermemo)) {
+            //某些情况下这一条订单没有备注，比如
+            // String tid = "284704838052170693";
+            // String token = "620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742";
+            logger.info("没有备注，不做操作，tid=【{}】", taobaoTid);
+        } else {
+            logger.info("交易备注修改,tid= [{}],seller_memo = [{}]", taobaoTid, taobaoSellermemo);
+            trades.setTid(taobaoTid);
+            trades.setSellerMemo(taobaoSellermemo);
+            tradesMapper.updateByPrimaryKeySelective(trades);
+        }
     }
 
 
@@ -970,14 +1059,14 @@ public class TradesImpl implements ITradesService {
      * 得到message.content 的tid
      *
      * @param infoContent message.content
-     * @return
+     * @return 返回字段
      */
     public static Map<String, String> getMapFromContent(String infoContent) {
         Map<String, String> map = new HashMap<>();
         infoContent = infoContent.replace("{", "");
         infoContent = infoContent.replace("}", "");
 //        infoContent = infoContent.replaceAll("\"", "");
-        List<String> stringArrayList = Arrays.asList(infoContent.split(",\""));
+        String[] stringArrayList = infoContent.split(",\"");
         for (String string : stringArrayList) {
             string = string.replaceAll("\"", "");
             if (!StringUtils.isEmpty(string)) {
