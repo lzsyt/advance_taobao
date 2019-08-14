@@ -231,32 +231,58 @@ public class TbaoUtils {
         return tradeList;
     }
 
+
+
+    public static List<Trade> getTrades(String sessionKey, List<Trade> tradeList,Long offer,Date start) {
+        TradesSoldGetRequest req = new TradesSoldGetRequest();
+        req.setFields("tid,status");
+        TradesSoldGetResponse rsp = null;
+        try {
+            req.setPageNo(offer);
+            req.setPageSize(40L);
+            req.setStartCreated(start);
+//            req.setStartCreated(end);
+            req.setUseHasNext(true);
+            rsp = client.execute(req, sessionKey);
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+        tradeList.addAll(rsp.getTrades());
+        if (rsp.getHasNext()){
+            getTrades(sessionKey, tradeList, ++offer,start);
+        }else{
+            return tradeList;
+        }
+        return tradeList;
+    }
+
+
     /**
      * 获取某个店铺所有订单
      *
      * @param sessionKey
      * @return
      */
-    public static String findOrdersforStr(String sessionKey) {
-        TradesSoldGetRequest req = new TradesSoldGetRequest();
-
-        req.setFields("tid,created_time,modify_time,seller_memo,buyer_memo,pay_time,pic_path,post_fee,buyer_nick,orders,title,total_fee,trade_from,type,status,payment,receiver_address,receiver_name,receiver_state,receiver_town,receiver_city,receiver_district,receiver_country,receiver_mobile,receiver_phone,buyer_message");
-
-        //req.setStartCreated(startCreated);
-        // req.setEndCreated(StringUtils.parseDateTime("2018-12-29 10:59:59"));
-
-        TradesSoldGetResponse rsp = null;
-        //620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742
-        try {
-            rsp = client.execute(req, sessionKey);
-        } catch (ApiException e) {
-            e.printStackTrace();
-        }
-        System.out.println(rsp.getBody());
-
-        return rsp.getBody();
-
-    }
+//    public static String findOrdersforStr(String sessionKey) {
+//        TradesSoldGetRequest req = new TradesSoldGetRequest();
+//
+//        req.setFields("tid,created_time,modify_time,seller_memo,buyer_memo,pay_time,pic_path,post_fee,buyer_nick,orders,title,total_fee,trade_from,type,status,payment,receiver_address,receiver_name,receiver_state,receiver_town,receiver_city,receiver_district,receiver_country,receiver_mobile,receiver_phone,buyer_message");
+//
+//        //req.setStartCreated(startCreated);
+//        // req.setEndCreated(StringUtils.parseDateTime("2018-12-29 10:59:59"));
+//
+//        TradesSoldGetResponse rsp = null;
+//        //620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742
+//        try {
+//            rsp = client.execute(req, sessionKey);
+//        } catch (ApiException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(rsp.getBody());
+//
+//        return rsp.getBody();
+//
+//    }
 
     /**
      * 获取一个订单的详情

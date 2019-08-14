@@ -1,6 +1,7 @@
 package com.kzq.advance.controller;
 
 import com.kzq.advance.common.utils.TbaoUtils;
+import com.kzq.advance.common.utils.TradeStatus;
 import com.kzq.advance.common.utils.URLUtils;
 import com.kzq.advance.domain.*;
 import com.kzq.advance.service.ILogisticsService;
@@ -497,9 +498,9 @@ public class ClientController {
 
 
     /**
-     * 根据店铺id查询已付款且未发货的链接信息
-     * @param shopId
-     * @return
+     * 下载店铺id查询已付款且未发货的链接信息
+     * @param shopId 店铺id
+     * @return 交易链接
      */
     @RequestMapping("/findOrders")
     public List<Trade> findOrders(@RequestParam("shopid") String shopId) {
@@ -519,14 +520,15 @@ public class ClientController {
      */
     @RequestMapping("/getStatusByTid")
     public String getStatusByTid(
-            @RequestParam(value = "tid",required = true) String tid,
-            @RequestParam(value = "shopId",required = true) String shopId) {
+            @RequestParam(value = "tid") String tid,
+            @RequestParam(value = "shopId") String shopId) {
         TShop shop = iTradesService.selectSessionKey(Integer.parseInt(shopId));
         if (StringUtils.isEmpty(shop.getShopToken())) {
             return null;
         }
         String files = "tid,type,status,payment,orders";
-        return TbaoUtils.getTrade(files, tid, shop.getShopToken()).getTrade().getStatus();
+        String string = TbaoUtils.getTrade(files, tid, shop.getShopToken()).getTrade().getStatus();
+        return TradeStatus.getValueByKey(string);
     }
 
 
@@ -571,7 +573,7 @@ public class ClientController {
      * @param out_sid      物流单号
      * @param company_code 物流公司
      * @param shopId       店铺id
-     * @return
+     * @return 发货是否成功
      */
     @PostMapping("consignment")
     public Boolean consignment(@RequestParam(required = false) List<String> subtidlist,
@@ -581,16 +583,16 @@ public class ClientController {
                                @RequestParam String shopId) {
 
         String token = iTradesService.getShopTokenByTid(shopId);
-        Long is_split = 0L;
+        long is_split = 0L;
         StringBuilder stringBuilder = new StringBuilder();
         String sub_tid = null;
         if (subtidlist != null && subtidlist.size() != 0) {
             is_split = 1L;
-            subtidlist.forEach(model -> {
-                stringBuilder.append(model + ",");
-            });
+            for (String model : subtidlist) {
+                stringBuilder.append(model).append(",");
+            }
+            stringBuilder.delete(stringBuilder.length() - 1, stringBuilder.length());
             sub_tid = stringBuilder.toString();
-            sub_tid = sub_tid.substring(0, sub_tid.length() - 1);
         }
 
         return TbaoUtils.shipments(sub_tid, out_sid, company_code, tid, is_split, token);

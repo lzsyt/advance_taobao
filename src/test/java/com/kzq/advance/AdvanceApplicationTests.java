@@ -54,7 +54,7 @@ public class AdvanceApplicationTests {
 //    @Autowired
 //    private JdbcBean jdbcBean;
 //
-//    @Test
+//    @mytest
 //    public void backup(){
 ////        DataBaseBackUp dataBaseBackUp = new DataBaseBackUp();
 ////        dataBaseBackUp.backup(jdbcBean);
@@ -126,13 +126,13 @@ public class AdvanceApplicationTests {
     }
 
 
-//    @Test
+//    @mytest
 //    public void testdate() {
 //        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 //        System.out.println(dateFormat.format(new Date()));
 //    }
 
-//    @Test
+//    @mytest
 //    public void getrefunddetail() {
 ////        Refund refund = TbaoUtils.getRefundDetail("27820354954388552", "6201e18676d89175cfea2e4f59ZZ7e66d179cbad513a6ff1739075914");
 ////        Date created = refund.getCreated();
@@ -220,7 +220,7 @@ public class AdvanceApplicationTests {
     //
 
 //    //查看授权列表
-//    @Test
+//    @mytest
 //    public void xiaoxifuwuapi(){
 //
 //        DefaultTaobaoClient client = new DefaultTaobaoClient("https://eco.taobao.com/router/rest", "25500416", "25720ff4e7b9f8c5cfe95827c7e35479");

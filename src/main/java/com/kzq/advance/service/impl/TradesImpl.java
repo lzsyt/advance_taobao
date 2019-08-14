@@ -912,8 +912,8 @@ public class TradesImpl implements ITradesService {
     /**
      * 通知修改退款的或取消退款的
      *
-     * @param topic  主题，也就是消息类型
-     * @param content  消息内容
+     * @param topic   主题，也就是消息类型
+     * @param content 消息内容
      */
     @Async
     public void infoRefund(String topic, String content) {
@@ -928,18 +928,17 @@ public class TradesImpl implements ITradesService {
         Long tid = Long.valueOf(parameter.get("tid"));
 
         switch (topic) {
-            case "taobao_refund_RefundCreated":   //退款
+            case "taobao_refund_RefundCreated":   //申请退款
                 refundCreated(tid);
+                break;
+            case "taobao_refund_RefundSuccess":   //申请退款
+                refundSucceed(tid);
                 break;
             case "taobao_refund_RefundClosed":   //取消退款
                 refundClose(tid);
                 break;
             case "taobao_trade_TradeMemoModified":  //taobao的数据交易备注修改
-                String sellerMemo = parameter.get("seller_memo");
-                if (sellerMemo == null) {
-                    throw new RuntimeException("sellerMemo 为空");
-                }
-                tradeMemoChange(tid, sellerMemo);  //交易备注修改
+                tradeMemoChange(tid, parameter.get("seller_memo"));  //交易备注修改
                 break;
             case "taobao_trade_TradeChanged":  //订单状态修改
                 String sellerNick = parameter.get("seller_nick");
@@ -956,9 +955,7 @@ public class TradesImpl implements ITradesService {
 
 
     /**
-     *
      * 订单状态更改
-     *
      */
     private void changeTrade(Long tid, String seller_nick) {
         Trades trades = new Trades();
@@ -1016,13 +1013,25 @@ public class TradesImpl implements ITradesService {
     }
 
     /**
-     * 退款
+     * 申请退款
      */
     private void refundCreated(Long tid) {
         Trades trades = new Trades();
-        logger.info("退款,tid = [{}]", tid);
+        logger.info("申请退款,tid = [{}]", tid);
         trades.setTid(tid);
         trades.setIsRefund("1");
+        tradesMapper.updateByPrimaryKeySelective(trades);
+    }
+
+    /**
+     * 退款成功
+     * @param tid
+     */
+    private void refundSucceed(Long tid) {
+        Trades trades = new Trades();
+        logger.info("退款成功,tid = [{}]", tid);
+        trades.setTid(tid);
+        trades.setIsRefund("2");
         tradesMapper.updateByPrimaryKeySelective(trades);
     }
 

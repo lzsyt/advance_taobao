@@ -66,7 +66,7 @@ public class InfoTest {
     }
 
 
-//    @Test
+//    @mytest
     public void primit(String token){
 
         //taobao_refund_RefundSuccess（退款成功消息）
@@ -84,7 +84,8 @@ public class InfoTest {
         DefaultTaobaoClient client = new DefaultTaobaoClient("https://eco.taobao.com/router/rest", "25500416", "25720ff4e7b9f8c5cfe95827c7e35479");
         TmcUserPermitRequest req = new TmcUserPermitRequest();
 //        req.setTopics("taobao_refund_RefundCreated,taobao_refund_RefundClosed,taobao_trade_TradeMemoModified");
-        req.setTopics("taobao_refund_RefundCreated,taobao_refund_RefundClosed,taobao_trade_TradeMemoModified,taobao_jds_TradeTrace");
+        req.setTopics("taobao_trade_TradeMemoModified,taobao_trade_TradeChanged,taobao_refund_RefundCreated,taobao_refund_RefundClosed,taobao_refund_RefundSuccess");
+//        req.setTopics("taobao_refund_RefundCreated,taobao_refund_RefundClosed,taobao_trade_TradeMemoModified,taobao_jds_TradeTrace,taobao_refund_RefundSuccess");
         TmcUserPermitResponse rsp = null;
         try {
             rsp = client.execute(req, token);
