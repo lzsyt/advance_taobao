@@ -61,7 +61,8 @@ public class TestRefund {
 
     public void refund(String token,Date start,Date end){
 
-        List<Refund> refundList =  TbaoUtils.getRefund(token, new ArrayList<Refund>(), 1L, start, end);
+//        List<Refund> refundList =  TbaoUtils.getRefund(token, new ArrayList<Refund>(), 1L, start, end);
+        List<Refund> refundList = null;
 
 
         for (Refund refund:refundList) {

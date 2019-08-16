@@ -14,15 +14,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Component
+//@Component
 public class ScheduleUtil {
 
     private static final Logger getLogger = LoggerFactory.getLogger(ScheduleUtil.class);
 
-    @Resource
+//    @Resource
     private TradesMapper tradesMapper;
 
-    @Async
+//    @Async
     public void compare(String sessionkey, Date start) {
         List<Trade> TaobaoTradesList = TbaoUtils.getTrades(sessionkey, new ArrayList<>(), 1L, start);
         for (Trade trade:TaobaoTradesList) {

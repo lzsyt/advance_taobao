@@ -3,6 +3,7 @@ package com.kzq.advance;
 import com.kzq.advance.common.util.SpringUtil;
 
 import com.kzq.advance.service.ITradesService;
+import com.kzq.advance.service.InformationService;
 import com.taobao.api.internal.tmc.TmcClient;
 import com.taobao.api.internal.toplink.LinkException;
 import org.slf4j.Logger;
@@ -26,14 +27,14 @@ public class AdvanceApplication extends SpringBootServletInitializer {
         SpringApplication.run(AdvanceApplication.class, args);
 
 //        Logger logger = LoggerFactory.getLogger(AdvanceApplication.class);
-//        ITradesService iTradesService = SpringUtil.getBean(ITradesService.class);
+//        InformationService informationService = SpringUtil.getBean(InformationService.class);
 //        TmcClient client = new TmcClient("25500416", "25720ff4e7b9f8c5cfe95827c7e35479", "default"); // 关于default参考消息分组说明
 //
 //        client.setMessageHandler((message, status) -> {
 //            try {
 //                logger.info("getTopic = [{}]", message.getTopic());
 //                logger.info("getContent = [{}]", message.getContent());
-//                iTradesService.infoRefund(message.getTopic(), message.getContent());
+//                informationService.infoRefund(message.getTopic(), message.getContent());
 //            } catch (Exception e) {
 //                logger.info("淘宝消息接口发生异常",e.getMessage());
 //                e.printStackTrace();

@@ -4,6 +4,7 @@ import com.kzq.advance.common.utils.TbaoUtils;
 import com.kzq.advance.domain.Trades;
 import com.kzq.advance.domain.TtradesOrder;
 import com.kzq.advance.service.ITradesService;
+import com.kzq.advance.service.InformationService;
 import com.kzq.advance.service.impl.TradesImpl;
 import com.taobao.api.domain.Order;
 import com.taobao.api.domain.Trade;
@@ -25,6 +26,9 @@ public class TestGetTrade {
 
     @Autowired
     private ITradesService tradesService;
+
+    @Autowired
+    private InformationService informationService;
 
 
     @Test
@@ -50,6 +54,6 @@ public class TestGetTrade {
     public void test2(){
         String topic = "taobao_trade_TradeChanged";
         String content = "{\"buyer_nick\":\"若德斯满\",\"payment\":\"579.00\",\"status\":\"WAIT_SELLER_SEND_GOODS\",\"iid\":580897696635,\"oid\":577942721885407170,\"tid\":577942721885407170,\"type\":\"guarantee_trade\",\"seller_nick\":\"光合旗舰店\"}";
-        tradesService.infoRefund(topic, content);
+        informationService.infoRefund(topic, content);
     }
 }

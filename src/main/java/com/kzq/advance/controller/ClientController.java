@@ -1,12 +1,15 @@
 package com.kzq.advance.controller;
 
+import com.kzq.advance.common.utils.ControllerUtils;
 import com.kzq.advance.common.utils.TbaoUtils;
 import com.kzq.advance.common.utils.TradeStatus;
 import com.kzq.advance.common.utils.URLUtils;
 import com.kzq.advance.domain.*;
+import com.kzq.advance.mapper.TShopMapper;
 import com.kzq.advance.service.ILogisticsService;
 import com.kzq.advance.service.ITradesService;
 import com.kzq.advance.service.IWsBillService;
+import com.kzq.advance.service.TShopService;
 import com.taobao.api.domain.Item;
 import com.taobao.api.domain.Refund;
 import com.taobao.api.domain.Sku;
@@ -16,6 +19,8 @@ import com.taobao.api.request.CainiaoWaybillIiGetRequest;
 import com.taobao.api.request.TradeMemoAddRequest;
 import com.taobao.api.request.TradeMemoUpdateRequest;
 import com.taobao.api.response.TradeFullinfoGetResponse;
+import net.sf.json.JSON;
+import net.sf.json.JSONObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +29,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
 
 @RestController
 public class ClientController {
@@ -38,6 +45,10 @@ public class ClientController {
     ILogisticsService logisticsService;
     @Autowired
     IWsBillService wsBillService;
+
+    @Autowired
+    private TShopService tShopService;
+
 
     protected org.apache.logging.log4j.Logger logger = LogManager.getLogger(ClientController.class);
 
@@ -321,7 +332,7 @@ public class ClientController {
         String template_url = logisticsCompany.getStandardTemplateUrl();
         //加入模本信息
         //http://cloudprint.cainiao.com/template/standard/101
-        logger.info("模板url：" +template_url);
+        logger.info("模板url：" + template_url);
 
         orderInfoDto.setTemplateUrl(template_url);
         orderInfoDto.setUserId(1L);
@@ -377,7 +388,7 @@ public class ClientController {
      */
 
     @RequestMapping("/updateAll")
-    public String updateAll(HttpServletRequest request, @RequestParam("userId")String userid) {
+    public String updateAll(HttpServletRequest request, @RequestParam("userId") String userid) {
 
         if (iTradesService.getUser(userid) == null) {
             return "-1";
@@ -447,36 +458,54 @@ public class ClientController {
         TradeFullinfoGetResponse rsp = iTradesService.getOrder(shopNum, shopId);
         if (rsp != null) {
             //没有错误
-            return rsp.getBody();
+            Trade trade = rsp.getTrade();
+            String originalStatus = trade.getStatus();
+            logger.info(originalStatus);
+            TShop tShop = new TShop();
+
+            if (StringUtils.isEmpty(shopId)){
+                String token = tShopService.findBySellerNick(trade.getSellerNick()).getShopToken();
+                tShop.setShopToken(token);
+            }else{
+                tShop = iTradesService.selectSessionKey(Integer.parseInt(shopId));
+            }
+
+            ControllerUtils.isRefund(trade, tShop);
+            String rspbody = rsp.getBody();
+            return rspbody.replace(originalStatus, trade.getStatus());
         }
         return null;
 
 
     }
 
+
+
     /**
      * 下载商品分类
+     *
      * @param shopId
      * @param model
      * @return
      */
     @RequestMapping("/downCategory")
-    public String downCategory(@RequestParam("shopId")String shopId, Model model) {
+    public String downCategory(@RequestParam("shopId") String shopId, Model model) {
         iTradesService.downCategory(shopId);
         return "0";
     }
 
     /**
      * 下载商品链接
+     *
      * @param shopId 店铺id
      * @param cid
      * @param title
      * @return
      */
     @PostMapping("/downloadGoodLink")
-    public Integer downLoad(@RequestParam(value = "shopId",required = true)String shopId,
-                            @RequestParam(value = "cid",required = false)String cid,
-                            @RequestParam(value = "title",required = false)String title) {
+    public Integer downLoad(@RequestParam(value = "shopId", required = true) String shopId,
+                            @RequestParam(value = "cid", required = false) String cid,
+                            @RequestParam(value = "title", required = false) String title) {
         Long start = System.currentTimeMillis();
         //得到商铺
         TShop shop = iTradesService.selectSessionKey(Integer.parseInt(shopId));
@@ -499,6 +528,7 @@ public class ClientController {
 
     /**
      * 下载店铺id查询已付款且未发货的链接信息
+     *
      * @param shopId 店铺id
      * @return 交易链接
      */
@@ -509,12 +539,19 @@ public class ClientController {
             return null;
         }
         List<Trade> tradeList = TbaoUtils.findOrders(shop.getShopToken(), new ArrayList<Trade>(), 1L);
+
+        for (Trade trade : tradeList) {
+//            logger.info(trade.getTid() + ":" + trade.getStatus());
+            ControllerUtils.isRefund(trade, shop);
+        }
+
         return tradeList;
     }
 
     /**
      * 根据店铺id和订单号查询订单状态
-     * @param tid  订单号
+     *
+     * @param tid    订单号
      * @param shopId 店铺号
      * @return 订单的状态
      */
@@ -534,8 +571,9 @@ public class ClientController {
 
     /**
      * 查询订单状态
+     *
      * @param tid tid
-     * @return  订单状态
+     * @return 订单状态
      */
     @PostMapping("getTradeStatus")
     public String getTradeStatus(@RequestParam("tid") String tid) {
@@ -594,8 +632,13 @@ public class ClientController {
             stringBuilder.delete(stringBuilder.length() - 1, stringBuilder.length());
             sub_tid = stringBuilder.toString();
         }
-
-        return TbaoUtils.shipments(sub_tid, out_sid, company_code, tid, is_split, token);
+        boolean is_succeed = TbaoUtils.shipments(sub_tid, out_sid, company_code, tid, is_split, token);
+        if (is_succeed) {
+            logger.info("发货成功");
+        } else {
+            logger.info("发货失败");
+        }
+        return is_succeed;
     }
 
 

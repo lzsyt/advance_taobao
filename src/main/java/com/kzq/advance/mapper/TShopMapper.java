@@ -21,6 +21,10 @@ public interface TShopMapper {
     int updateByPrimaryKeySelective(TShop record);
 
     int updateByPrimaryKey(TShop record);
+
     //查询所有sessionKey
     List<TShop> selectAll();
+
+    //根据店铺名查询店铺
+    public TShop findBySellerNick(String sellerNick);
 }

@@ -1,3 +1,25 @@
+POST http://localhost:8080/getOrders?shopNum=264913831107254992
+Accept: */*
+Cache-Control: no-cache
+
+###
+
+POST http://localhost:8080/getOrders?shopNum=552213516686569304
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-15T051337.200.txt
+
+###
+
+POST http://localhost:8080/getOrders?shopNum=552213516686569304
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-15T051319.500.json
+
+###
+
 POST http://localhost:8080/getTradeStatus?tid=498792130995286338
 Accept: */*
 Cache-Control: no-cache

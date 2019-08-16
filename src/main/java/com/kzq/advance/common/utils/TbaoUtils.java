@@ -145,32 +145,27 @@ public class TbaoUtils {
      * @param sessionKey
      * @return
      */
-    public static List<Refund> getRefund(String sessionKey, List<Refund> refundList, Long offer, Date start, Date end) {
+    public static List<Refund> getRefund(String sessionKey, List<Refund> refundList, Long offer, String buyNick) {
         RefundsReceiveGetRequest req = new RefundsReceiveGetRequest();
         req.setFields("refund_id,tid,status");
         req.setPageNo(offer);
         req.setPageSize(100L);
         req.setUseHasNext(true);
-        req.setStartModified(start);
-        req.setEndModified(end);
+        req.setBuyerNick(buyNick);
         RefundsReceiveGetResponse rsp = null;
         try {
-
             rsp = client.execute(req, sessionKey);
-            System.out.println(rsp.getBody());
-
+            logger.info(rsp.getBody());
         } catch (ApiException e) {
             e.printStackTrace();
+        }
+        if (rsp.getRefunds() == null) {
+            return new ArrayList<Refund>();
         }
         List<Refund> list = rsp.getRefunds();
         refundList.addAll(list);
         if (rsp.getHasNext()) {
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            getRefund(sessionKey, refundList, ++offer, start, end);
+            getRefund(sessionKey, refundList, ++offer, buyNick);
         }
         return refundList;
     }
@@ -686,6 +681,16 @@ public class TbaoUtils {
     }
 
 
+    /**
+     * 发货的接口
+     * @param subTid
+     * @param outSid
+     * @param companyCode
+     * @param tid
+     * @param isSplit
+     * @param sessionKey
+     * @return
+     */
     public static boolean shipments(String subTid,String outSid,String companyCode,Long tid,Long isSplit,String sessionKey){
         LogisticsOfflineSendRequest req = new LogisticsOfflineSendRequest();
         req.setSubTid(subTid);
@@ -699,6 +704,7 @@ public class TbaoUtils {
         } catch (ApiException e) {
             e.printStackTrace();
         }
+        logger.info(rsp.getBody());
         return rsp.getShipping().getIsSuccess();
     }
 
@@ -715,13 +721,15 @@ public class TbaoUtils {
 //        CainiaoWaybillIiSearchResponse rsp = client.execute(req, sessionKey);
 //        System.out.println(rsp.getBody());
      // getProduct(41211667580L,"620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742");
-        List<Item> items= getProducts("584375462366","620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742");
+      /*  List<Item> items= getProducts("584375462366","620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742");
 
 
             //光合硅能旗舰店
             String memo=TbaoUtils.findOrderMemo("425524353967012217","6200824224b73677a8d4375add3237e3ZZ21bb86aa67d8c305543718");
             System.out.println(memo);
+*/
 
+//        findOneOrder("545734016547017976", "620192999bded03c32cb6d579d53619524170ZZ3d62d8f22231644742");
             /*    CainiaoCloudprintStdtemplatesGetRequest req = new CainiaoCloudprintStdtemplatesGetRequest();
             CainiaoCloudprintStdtemplatesGetResponse rsp = client.execute(req);
             System.out.println(rsp.getBody());*/

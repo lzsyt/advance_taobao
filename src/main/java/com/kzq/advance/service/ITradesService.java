@@ -127,6 +127,4 @@ public interface ITradesService {
 
     public  HashMap<Long, TGoodsLink> formatTGoodsLinksToMap(List<TGoodsLink> goodsLinks);
 
-
-    public void infoRefund(String topic, String content);
 }

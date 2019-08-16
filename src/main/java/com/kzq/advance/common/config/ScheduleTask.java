@@ -24,8 +24,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@Component
-@EnableScheduling
+//@Component
+//@EnableScheduling
 public class ScheduleTask {
 
     @Resource
@@ -36,9 +36,8 @@ public class ScheduleTask {
 
     public static final Logger logger = LoggerFactory.getLogger(ScheduleTask.class);
 
-    //每一分钟执行一次
-    @Async
-    @Scheduled(cron = "59 59 23 * * ?")
+//    @Async
+//    @Scheduled(cron = "59 59 23 * * ?")
     public void Task(){
         logger.info("定时任务开始");
         List<TShop> tShopList = tShopMapper.selectAll();

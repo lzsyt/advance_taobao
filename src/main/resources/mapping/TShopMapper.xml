@@ -96,4 +96,8 @@
   <select id="findShopNameByShopId" resultType="java.lang.String" parameterType="java.lang.Integer">
     select shop_name from t_shop where id=#{id}
   </select>
+
+  <select id="findBySellerNick" resultType="com.kzq.advance.domain.TShop" parameterType="java.lang.String">
+    select * from t_shop where shop_name=#{sellerNick};
+  </select>
 </mapper>

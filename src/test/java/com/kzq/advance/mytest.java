@@ -45,4 +45,12 @@ public class mytest {
         System.out.println(reStr);
         System.out.println(reStr2);
     }
+
+
+
+    @Test
+    public void test3(){
+        String status = TbaoUtils.getTrade("status", "552213516686569304", "6200824224b73677a8d4375add3237e3ZZ21bb86aa67d8c305543718").getTrade().getStatus();
+        System.out.println(status);
+    }
 }
