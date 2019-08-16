@@ -12,7 +12,6 @@ import com.taobao.api.internal.util.StringUtils;
 import com.taobao.api.response.TradeFullinfoGetResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -876,6 +875,11 @@ public class TradesImpl implements ITradesService {
             tGoodsLinkHashMap.put(i.getNumIid(), i);
         }
         return tGoodsLinkHashMap;
+    }
+
+    @Override
+    public Trades getByTid(String tid) {
+        return tradesMapper.selectByPrimaryKey(Long.parseLong(tid));
     }
 
     /**

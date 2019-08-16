@@ -5,6 +5,8 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="shop_name" property="shopName" jdbcType="VARCHAR" />
     <result column="shop_token" property="shopToken" jdbcType="VARCHAR" />
+    <result column="shop_tel" property="shopTel" jdbcType="VARCHAR" />
+    <result column="shop_adds" property="shopAdds" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, shop_name, shop_token
@@ -97,7 +99,7 @@
     select shop_name from t_shop where id=#{id}
   </select>
 
-  <select id="findBySellerNick" resultType="com.kzq.advance.domain.TShop" parameterType="java.lang.String">
+  <select id="findBySellerNick"  resultMap="BaseResultMap"  parameterType="java.lang.String">
     select * from t_shop where shop_name=#{sellerNick};
   </select>
 </mapper>

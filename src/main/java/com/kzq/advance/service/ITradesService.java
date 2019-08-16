@@ -127,4 +127,5 @@ public interface ITradesService {
 
     public  HashMap<Long, TGoodsLink> formatTGoodsLinksToMap(List<TGoodsLink> goodsLinks);
 
+    Trades getByTid(String tid);
 }

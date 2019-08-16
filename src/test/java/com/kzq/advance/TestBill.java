@@ -26,7 +26,7 @@ public class TestBill {
                 "\"type\":\"guarantee_trade\"," +
                 "\"seller_nick\":\"光合硅能旗舰店\"}";
         String content2 = "{\"buyer_nick\":\"梁聪0813\",\"payment\":\"3790.00\",\"status\":\"TRADE_CLOSED_BY_TAOBAO\",\"iid\":0,\"oid\":498590560186548436,\"seller_flag\":0,\"tid\":498590560186548436,\"type\":\"guarantee_trade\",\"seller_nick\":\"光合旗舰店\"}\n";
-        Map<String, String> map = TradesImpl.getMapFromContent(content2);
+//        Map<String, String> map = TradesImpl.getMapFromContent(content2);
 
     }
 

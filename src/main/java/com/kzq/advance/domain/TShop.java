@@ -7,6 +7,26 @@ public class TShop {
 
     private String shopToken;
 
+    private String shopTel;
+
+    private String shopAdds;
+
+    public String getShopAdds() {
+        return shopAdds;
+    }
+
+    public void setShopAdds(String shopAdds) {
+        this.shopAdds = shopAdds;
+    }
+
+    public String getShopTel() {
+        return shopTel;
+    }
+
+    public void setShopTel(String shopTel) {
+        this.shopTel = shopTel;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -262,16 +262,19 @@ public class ClientController {
 
         CainiaoWaybillIiGetRequest.UserInfoDto userInfoDto = new CainiaoWaybillIiGetRequest.UserInfoDto();
         //根据tid获取出库单详情
-        TWsBill bill = wsBillService.getByTid(tid);
+        Trades bill = iTradesService.getByTid(tid);
 
 
         //客户名称就是店铺名称
-        String senderName = bill.getCustomer();
+        String senderName = bill.getSellerNick();
 
         userInfoDto.setAddress(sendAddress);
         userInfoDto.setName(senderName);
 
-        userInfoDto.setMobile("17751515681");
+        TShop tShop = tShopService.findBySellerNick(bill.getSellerNick());
+        String mobile = tShop.getShopTel();
+
+        userInfoDto.setMobile(mobile);
         //请求面单信息
         CainiaoWaybillIiGetRequest.TradeOrderInfoDto orderInfoDto = new CainiaoWaybillIiGetRequest.TradeOrderInfoDto();
         orderInfoDto.setObjectId("1");
@@ -301,7 +304,7 @@ public class ClientController {
         CainiaoWaybillIiGetRequest.AddressDto address = new CainiaoWaybillIiGetRequest.AddressDto();
 
 
-        String dealAddress = bill.getDealAddress();
+        String dealAddress = bill.getReceiverAddress();
         logger.info("收件人地址：" + dealAddress);
 
         Map<String, String> map = URLUtils.addressSplit(dealAddress);
