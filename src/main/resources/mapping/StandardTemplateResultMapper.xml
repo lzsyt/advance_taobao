@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kzq.advance.mapper.StandardTemplateResultMapper" >
+  <resultMap id="BaseResultMap" type="com.kzq.advance.domain.StandardTemplateResult" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="cp_code" property="cp_code" jdbcType="VARCHAR" />
+    <result column="resource_code" property="resourceCode" jdbcType="VARCHAR" />
+    <result column="standardTemplateId" property="standard_template_id" jdbcType="INTEGER" />
+    <result column="standard_template_url" property="standardTemplateUrl" jdbcType="VARCHAR" />
+    <result column="standard_waybill_type" property="standardWaybillType" jdbcType="VARCHAR" />
+  </resultMap>
+
+</mapper>

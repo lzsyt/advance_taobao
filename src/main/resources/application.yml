@@ -22,3 +22,7 @@ logging:
 spring.datasource.druid.test-on-borrow: true
 spring.datasource.druid.test-while-idle: true
 
+mapper.mappers: com.kzq.advance.common.base.BaseMapper
+mapper.not-empty: false
+mapper.identity: MYSQL
+

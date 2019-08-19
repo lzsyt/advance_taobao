@@ -1,17 +1,20 @@
 package com.kzq.advance.service.impl;
 
 
-import org.springframework.beans.BeanUtils;
 import com.kzq.advance.common.utils.HttpUtils;
 import com.kzq.advance.common.utils.TbaoUtils;
 import com.kzq.advance.domain.*;
 import com.kzq.advance.mapper.*;
 import com.kzq.advance.service.ITradesService;
-import com.taobao.api.domain.*;
+import com.taobao.api.domain.Item;
+import com.taobao.api.domain.Order;
+import com.taobao.api.domain.SellerCat;
+import com.taobao.api.domain.Sku;
 import com.taobao.api.internal.util.StringUtils;
 import com.taobao.api.response.TradeFullinfoGetResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

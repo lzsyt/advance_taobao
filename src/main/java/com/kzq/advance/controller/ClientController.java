@@ -1,17 +1,15 @@
 package com.kzq.advance.controller;
 
-import com.kzq.advance.common.utils.ControllerUtils;
+import com.kzq.advance.common.utils.TradeUtil;
 import com.kzq.advance.common.utils.TbaoUtils;
 import com.kzq.advance.common.utils.TradeStatus;
 import com.kzq.advance.common.utils.URLUtils;
 import com.kzq.advance.domain.*;
-import com.kzq.advance.mapper.TShopMapper;
 import com.kzq.advance.service.ILogisticsService;
 import com.kzq.advance.service.ITradesService;
 import com.kzq.advance.service.IWsBillService;
 import com.kzq.advance.service.TShopService;
 import com.taobao.api.domain.Item;
-import com.taobao.api.domain.Refund;
 import com.taobao.api.domain.Sku;
 import com.taobao.api.domain.Trade;
 import com.taobao.api.internal.util.StringUtils;
@@ -19,22 +17,16 @@ import com.taobao.api.request.CainiaoWaybillIiGetRequest;
 import com.taobao.api.request.TradeMemoAddRequest;
 import com.taobao.api.request.TradeMemoUpdateRequest;
 import com.taobao.api.response.TradeFullinfoGetResponse;
-import net.sf.json.JSON;
-import net.sf.json.JSONObject;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -264,6 +256,10 @@ public class ClientController {
         //根据tid获取出库单详情
         Trades bill = iTradesService.getByTid(tid);
 
+        if (bill == null) {
+            logger.info("数据库中没有此订单，tid为{}", tid);
+            return "-2";
+        }
 
         //客户名称就是店铺名称
         String senderName = bill.getSellerNick();
@@ -473,7 +469,7 @@ public class ClientController {
                 tShop = iTradesService.selectSessionKey(Integer.parseInt(shopId));
             }
 
-            ControllerUtils.isRefund(trade, tShop);
+            TradeUtil.isRefund(trade, tShop);
             String rspbody = rsp.getBody();
             return rspbody.replace(originalStatus, trade.getStatus());
         }
@@ -545,7 +541,7 @@ public class ClientController {
 
         for (Trade trade : tradeList) {
 //            logger.info(trade.getTid() + ":" + trade.getStatus());
-            ControllerUtils.isRefund(trade, shop);
+            TradeUtil.isRefund(trade, shop);
         }
 
         return tradeList;

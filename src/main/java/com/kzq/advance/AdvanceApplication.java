@@ -1,19 +1,12 @@
 package com.kzq.advance;
 
-import com.kzq.advance.common.util.SpringUtil;
-
-import com.kzq.advance.service.ITradesService;
-import com.kzq.advance.service.InformationService;
-import com.taobao.api.internal.tmc.TmcClient;
-import com.taobao.api.internal.toplink.LinkException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import tk.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
+@MapperScan("com.kzq.advance.mapper")
 @SpringBootApplication
 public class AdvanceApplication extends SpringBootServletInitializer {
     @Override

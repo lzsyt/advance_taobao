@@ -1,7 +1,6 @@
 package com.kzq.advance.common.utils;
 
-import com.kzq.advance.domain.Trades;
-import com.kzq.advance.mapper.TradesMapper;
+import com.taobao.api.response.CainiaoCloudprintStdtemplatesGetResponse.StandardTemplateResult;
 import com.taobao.api.ApiException;
 import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.domain.*;
@@ -709,7 +708,16 @@ public class TbaoUtils {
     }
 
 
-
+    public static List<StandardTemplateResult> stdtemplatesGet(){
+        CainiaoCloudprintStdtemplatesGetRequest req = new CainiaoCloudprintStdtemplatesGetRequest();
+        CainiaoCloudprintStdtemplatesGetResponse rsp = null;
+        try {
+            rsp = client.execute(req);
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+        return rsp.getResult().getDatas();
+    }
 
     /**
      * @param args

@@ -7,7 +7,7 @@ import com.taobao.api.domain.Trade;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ControllerUtils {
+public class TradeUtil {
     public static void isRefund(Trade trade, TShop tShop) {
         List<Refund> refundList = TbaoUtils.getRefund(tShop.getShopToken(), new ArrayList<Refund>(), 1L, trade.getBuyerNick());
         for (Refund refund : refundList) {
