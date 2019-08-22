@@ -1,6 +1,5 @@
 package com.kzq.advance.common.utils;
 
-import com.taobao.api.response.CainiaoCloudprintStdtemplatesGetResponse.StandardTemplateResult;
 import com.taobao.api.ApiException;
 import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.domain.*;
@@ -11,6 +10,7 @@ import com.taobao.api.internal.tmc.TmcClient;
 import com.taobao.api.internal.util.StringUtils;
 import com.taobao.api.request.*;
 import com.taobao.api.response.*;
+import com.taobao.api.response.CainiaoCloudprintStdtemplatesGetResponse.StandardTemplateResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +46,27 @@ public class TbaoUtils {
         client.setUseSimplifyJson(true);
 
     }
+
+    public static Boolean WayBillCancel(List<String> TradeOrderList,String cpCode,String wayBillCode){
+        WlbWaybillICancelRequest req = new WlbWaybillICancelRequest();
+        WlbWaybillICancelRequest.WaybillApplyCancelRequest obj1 = new WlbWaybillICancelRequest.WaybillApplyCancelRequest();
+//        obj1.setRealUserId(2134234234L);
+        obj1.setTradeOrderList(TradeOrderList);
+        obj1.setCpCode(cpCode);
+        obj1.setWaybillCode(wayBillCode);
+//        obj1.setPackageId("E12321321-1234567");
+        req.setWaybillApplyCancelRequest(obj1);
+        WlbWaybillICancelResponse rsp = null;
+        try {
+            rsp = client.execute(req, sessionKey);
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+        logger.info(rsp.getBody());
+        return rsp.getCancelResult();
+    }
+
+
 
 
     public static String getCurrentSessionKey() {
@@ -534,10 +555,9 @@ public class TbaoUtils {
     public static String deleteMemo(String tid, String delete, String sessionKey) {
         String memo = findOrderMemo(tid, sessionKey);
         memo = memo.replace(delete, "");
-
         memo = memo.trim();
         TradeMemoUpdateRequest req = new TradeMemoUpdateRequest();
-        req.setTid(347255267786949048L);
+        req.setTid(Long.valueOf(tid));
         req.setMemo(memo);
         updateTradeMemo(req, sessionKey);
         return memo;
@@ -724,6 +744,37 @@ public class TbaoUtils {
      * @throws LinkException
      */
     public static void main(String[] args) throws LinkException, ApiException {
+
+
+
+//        TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);
+        CainiaoWaybillIiQueryByWaybillcodeRequest req = new CainiaoWaybillIiQueryByWaybillcodeRequest();
+        List<CainiaoWaybillIiQueryByWaybillcodeRequest.WaybillDetailQueryByWaybillCodeRequest> list2 = new ArrayList<CainiaoWaybillIiQueryByWaybillcodeRequest.WaybillDetailQueryByWaybillCodeRequest>();
+        CainiaoWaybillIiQueryByWaybillcodeRequest.WaybillDetailQueryByWaybillCodeRequest obj3 = new CainiaoWaybillIiQueryByWaybillcodeRequest.WaybillDetailQueryByWaybillCodeRequest();
+        list2.add(obj3);
+        obj3.setCpCode("POSTB");
+        obj3.setObjectId("1");
+        obj3.setWaybillCode("9896079715121");
+        req.setParamList(list2);
+        CainiaoWaybillIiQueryByWaybillcodeResponse rsp = client.execute(req, sessionKey);
+        System.out.println(rsp.getBody());
+
+
+
+////        TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);
+//        CainiaoWaybillIiQueryByTradecodeRequest req = new CainiaoWaybillIiQueryByTradecodeRequest();
+//        List<CainiaoWaybillIiQueryByTradecodeRequest.WaybillDetailQueryByBizSubCodeRequest> list2 = new ArrayList<CainiaoWaybillIiQueryByTradecodeRequest.WaybillDetailQueryByBizSubCodeRequest>();
+//        CainiaoWaybillIiQueryByTradecodeRequest.WaybillDetailQueryByBizSubCodeRequest obj3 = new CainiaoWaybillIiQueryByTradecodeRequest.WaybillDetailQueryByBizSubCodeRequest();
+//        list2.add(obj3);
+//
+//        obj3.setBizSubCode("585330081751921130");
+//        obj3.setObjectId("1");
+//        req.setParamList(list2);
+//        CainiaoWaybillIiQueryByTradecodeResponse rsp = client.execute(req, "6200824224b73677a8d4375add3237e3ZZ21bb86aa67d8c305543718");
+//        System.out.println(rsp.getBody());
+
+
+
 //        CainiaoWaybillIiSearchRequest req = new CainiaoWaybillIiSearchRequest();
 //        req.setCpCode("EYB");
 //        CainiaoWaybillIiSearchResponse rsp = client.execute(req, sessionKey);

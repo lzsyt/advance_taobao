@@ -1,14 +1,11 @@
 package com.kzq.advance.controller;
 
-import com.kzq.advance.common.utils.TradeUtil;
 import com.kzq.advance.common.utils.TbaoUtils;
 import com.kzq.advance.common.utils.TradeStatus;
+import com.kzq.advance.common.utils.TradeUtil;
 import com.kzq.advance.common.utils.URLUtils;
 import com.kzq.advance.domain.*;
-import com.kzq.advance.service.ILogisticsService;
-import com.kzq.advance.service.ITradesService;
-import com.kzq.advance.service.IWsBillService;
-import com.kzq.advance.service.TShopService;
+import com.kzq.advance.service.*;
 import com.taobao.api.domain.Item;
 import com.taobao.api.domain.Sku;
 import com.taobao.api.domain.Trade;
@@ -31,6 +28,10 @@ import java.util.Map;
 
 @RestController
 public class ClientController {
+
+
+    @Autowired
+    private TPrintTplService tPrintTplService;
     @Autowired
     ITradesService iTradesService;
     @Autowired
@@ -163,7 +164,7 @@ public class ClientController {
         if (org.apache.commons.lang.StringUtils.isNotBlank(newSellerMemo)) {
             //替换备注
             logger.info("原来的备注：" + sellerMemo);
-
+            logger.info("oldSellerMemo：" + oldSellerMemo);
             if (oldSellerMemo.contains(newSellerMemo)) {
                 logger.info("不用更新了：" + newSellerMemo);
                 return "success";
@@ -237,7 +238,7 @@ public class ClientController {
      * 参数：cpcode 出库单id
      */
     @RequestMapping("/getWaybillCloudPrint")
-    public String getWaybillCloudPrint(HttpServletRequest request, String cpCode, String tid) {
+    public String getWaybillCloudPrint(HttpServletRequest request, String cpCode, String tid,String data,String type) {
 
         if (StringUtils.isEmpty(cpCode)) {
             return "-1";
@@ -248,7 +249,7 @@ public class ClientController {
 
         }
         //获取物流公司模板
-        LogisticsCompany logisticsCompany = logisticsService.getLogisticsCompany(cpCode);
+//        TPrintTpl tPrintTpl= tPrintTplService.findByCpCode(cpCode,type);
         //获取寄件人信息
         CainiaoWaybillIiGetRequest.AddressDto sendAddress = logisticsService.getSendAddress(cpCode);
 
@@ -300,35 +301,57 @@ public class ClientController {
         CainiaoWaybillIiGetRequest.AddressDto address = new CainiaoWaybillIiGetRequest.AddressDto();
 
 
-        String dealAddress = bill.getReceiverAddress();
-        logger.info("收件人地址：" + dealAddress);
+        if (org.springframework.util.StringUtils.isEmpty(data)) {
+            String dealAddress = bill.getReceiverAddress();
+            logger.info("收件人地址：" + dealAddress);
 
-        Map<String, String> map = URLUtils.addressSplit(dealAddress);
-        if (map == null || map.size() < 1) {
-            logger.info("收件人地址分割失败：" + dealAddress);
+            Map<String, String> map = URLUtils.addressSplit(dealAddress);
+            if (map == null || map.size() < 1) {
+                logger.info("收件人地址分割失败：" + dealAddress);
+                return "-1";
+            }
 
-            return "-1";
+            List<Map<String, String>> addressRes = URLUtils.addressResolution(map.get("address"));
+            if (addressRes == null || addressRes.size() < 1) {
+                logger.info("地址分割失败：" + map.get("address"));
+                return "-1";
 
+            }
+            String province = addressRes.get(0).get("province");
+            logger.info("电话：" + map.get("telephone"));
+
+            address.setDetail(map.get("address"));
+            address.setProvince(province);
+            userInfo.setAddress(address);
+            userInfo.setMobile(map.get("telephone"));
+            userInfo.setName(map.get("name"));
+        }else{
+            logger.info("使用参数地址");
+            String[] datas = data.split(";");
+            List<Map<String, String>> addressRes = URLUtils.addressResolution(datas[0]);
+            if (addressRes == null || addressRes.size() < 1) {
+                logger.info("地址分割失败：" + datas[0]);
+                return "-1";
+
+            }
+            String province = addressRes.get(0).get("province");
+
+
+
+            logger.info("address={}",datas[0]);
+            address.setDetail(datas[0]);
+            logger.info("province={}",province);
+            address.setProvince(province);
+
+            userInfo.setAddress(address);
+            logger.info("电话={}",datas[1]);
+            userInfo.setMobile(datas[1]);
+            logger.info("姓名={}",datas[2]);
+            userInfo.setName(datas[2]);
         }
-
-        List<Map<String, String>> addressRes = URLUtils.addressResolution(map.get("address"));
-        if (addressRes == null || addressRes.size() < 1) {
-            logger.info("地址分割失败：" + map.get("address"));
-
-            return "-1";
-
-        }
-        String province = addressRes.get(0).get("province");
-        logger.info("电话：" + map.get("telephone"));
-
-        address.setDetail(map.get("address"));
-        address.setProvince(province);
-        userInfo.setAddress(address);
-        userInfo.setMobile(map.get("telephone"));
-        userInfo.setName(map.get("name"));
         //加入收货人信息
         orderInfoDto.setRecipient(userInfo);
-        String template_url = logisticsCompany.getStandardTemplateUrl();
+        String template_url = request.getParameter("templateUrl");
         //加入模本信息
         //http://cloudprint.cainiao.com/template/standard/101
         logger.info("模板url：" + template_url);
@@ -462,10 +485,10 @@ public class ClientController {
             logger.info(originalStatus);
             TShop tShop = new TShop();
 
-            if (StringUtils.isEmpty(shopId)){
+            if (StringUtils.isEmpty(shopId)) {
                 String token = tShopService.findBySellerNick(trade.getSellerNick()).getShopToken();
                 tShop.setShopToken(token);
-            }else{
+            } else {
                 tShop = iTradesService.selectSessionKey(Integer.parseInt(shopId));
             }
 
@@ -477,7 +500,6 @@ public class ClientController {
 
 
     }
-
 
 
     /**
@@ -640,6 +662,19 @@ public class ClientController {
         return is_succeed;
     }
 
+    /**
+     * 商家取消获取的电子面单号
+     * @param TradeOrder 交易订单号
+     * @param cpCode CP快递公司编码
+     * @param wayBillCode 电子面单号码
+     * @return 是否取消成功
+     */
+    @PostMapping("WayBillCancel")
+    public String WayBillCancel(String TradeOrder,String cpCode,String wayBillCode){
+        List<String> TradeOrderList = new ArrayList<>();
+        TradeOrderList.add(TradeOrder);
+        return String.valueOf(TbaoUtils.WayBillCancel(TradeOrderList, cpCode, wayBillCode));
+    }
 
 //    /**
 //     *  传入tid判断是否退款，通过开始时间，和结束时间缩短时间
