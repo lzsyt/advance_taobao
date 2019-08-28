@@ -34,10 +34,9 @@ public class TNewsTradeServiceImpl implements TNewsTradeService {
         //<editor-fold desc="编写查询条件">
         Example example = Example.builder(TNewTrades.class)
                 .select()
-                .where(Sqls.custom().andEqualTo("status", "0").andEqualTo("shopId", shopId))
+                .where(Sqls.custom().andEqualTo("status", "0").andEqualTo("shopId", shopId).andEqualTo("isDel", 0))
                 .build();
         //</editor-fold>
-//.andEqualTo("isDel", 0)
         List<TNewTrades> tNewTradesList = tNewTradesMapper.selectByExample(example);
         Trade trade = null;
         for (TNewTrades tNewTrades : tNewTradesList) {

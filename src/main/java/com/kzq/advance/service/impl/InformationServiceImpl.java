@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.util.Sqls;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -106,6 +108,13 @@ public class InformationServiceImpl implements InformationService {
         switch (trade.getStatus()) {
             case "WAIT_SELLER_SEND_GOODS":   //WAIT_SELLER_SEND_GOODS 等待买家发货
                 logger.info("插入已付款订单，id=[{}]", tid);
+
+                Example example = Example.builder(TNewTrades.class)
+                        .select().where(Sqls.custom().andEqualTo("tid", tid)).build();
+                if (newTradesMapper.selectByExample(example) == null) {
+                    logger.info("数据库中已有此订单,拒绝重复插入,tid=", tid);
+                    break;
+                }
                 BeanUtils.copyProperties(trade, newTrades);
                 newTrades.setStatus("0");
                 newTrades.setCreatedTime(new Date());
@@ -117,6 +126,7 @@ public class InformationServiceImpl implements InformationService {
                         tNewTradesOrder.setTid(String.valueOf(trade.getTid()));
                         tNewTradesOrder.setNum(Math.toIntExact(order.getNum()));
                         tNewTradesOrder.setNumIid(String.valueOf(order.getNumIid()));
+                        tNewTradesOrder.setPayment(order.getPayment());
                         tNewTradesOrderMapper.insertSelective(tNewTradesOrder);
                     }
                 }

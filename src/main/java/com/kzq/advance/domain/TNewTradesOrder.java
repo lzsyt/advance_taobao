@@ -25,7 +25,7 @@ public class TNewTradesOrder implements Serializable {
 
     private String numIid;
 
-    private Long payment;
+    private String payment;
 
     private String skuId;
 
@@ -109,11 +109,11 @@ public class TNewTradesOrder implements Serializable {
         this.numIid = numIid == null ? null : numIid.trim();
     }
 
-    public Long getPayment() {
+    public String getPayment() {
         return payment;
     }
 
-    public void setPayment(Long payment) {
+    public void setPayment(String payment) {
         this.payment = payment;
     }
 }
