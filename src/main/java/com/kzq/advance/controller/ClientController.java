@@ -29,6 +29,9 @@ import java.util.Map;
 @RestController
 public class ClientController {
 
+    @Autowired
+    TNewsTradeService tNewsTradeService;
+
 
     @Autowired
     private TPrintTplService tPrintTplService;
@@ -332,7 +335,6 @@ public class ClientController {
             if (addressRes == null || addressRes.size() < 1) {
                 logger.info("地址分割失败：" + datas[0]);
                 return "-1";
-
             }
             String province = addressRes.get(0).get("province");
 
@@ -555,18 +557,18 @@ public class ClientController {
      */
     @RequestMapping("/findOrders")
     public List<Trade> findOrders(@RequestParam("shopid") String shopId) {
-        TShop shop = iTradesService.selectSessionKey(Integer.parseInt(shopId));
-        if (StringUtils.isEmpty(shop.getShopToken())) {
-            return null;
-        }
-        List<Trade> tradeList = TbaoUtils.findOrders(shop.getShopToken(), new ArrayList<Trade>(), 1L);
+//        TShop shop = iTradesService.selectSessionKey(Integer.parseInt(shopId));
+//        if (StringUtils.isEmpty(shop.getShopToken())) {
+//            return null;
+//        }
+//        List<Trade> tradeList = TbaoUtils.findOrders(shop.getShopToken(), new ArrayList<Trade>(), 1L);
+//
+//        for (Trade trade : tradeList) {
+////            logger.info(trade.getTid() + ":" + trade.getStatus());
+//            TradeUtil.isRefund(trade, shop);
+//        }
 
-        for (Trade trade : tradeList) {
-//            logger.info(trade.getTid() + ":" + trade.getStatus());
-            TradeUtil.isRefund(trade, shop);
-        }
-
-        return tradeList;
+        return tNewsTradeService.findOrders(shopId);
     }
 
     /**

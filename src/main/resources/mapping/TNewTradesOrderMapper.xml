@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kzq.advance.mapper.TNewTradesOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.kzq.advance.domain.TNewTradesOrder" >
+    <id column="oid" property="oid" jdbcType="BIGINT" />
+    <result column="pic_path" property="picPath" jdbcType="VARCHAR" />
+    <result column="sku_properties_name" property="skuPropertiesName" jdbcType="VARCHAR" />
+    <result column="tid" property="tid" jdbcType="CHAR" />
+    <result column="refund_status" property="refundStatus" jdbcType="CHAR" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+    <result column="num_iid" property="numIid" jdbcType="CHAR" />
+    <result column="payment" property="payment" jdbcType="DECIMAL" />
+  </resultMap>
+</mapper>
