@@ -61,6 +61,6 @@ public class TNewsTradesController {
         }
         TmcClient client = TmcClientUtil.getTmcClientUtil().getClient();
         client.close();
-        return "-1";
+        return "1";
     }
 }
