@@ -12,5 +12,6 @@
     <result column="num" property="num" jdbcType="INTEGER" />
     <result column="num_iid" property="numIid" jdbcType="CHAR" />
     <result column="payment" property="payment" jdbcType="DECIMAL" />
+    <result column="sku_id" property="skuId" jdbcType="VARCHAR" />
   </resultMap>
 </mapper>

@@ -3,7 +3,9 @@ package com.kzq.advance.domain;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Table(name = "t_new_trades")
 public class TNewTrades implements Serializable {
@@ -63,6 +65,16 @@ public class TNewTrades implements Serializable {
     private Byte isDel;
 
     private Date delTime;
+
+    private List<TNewTradesOrder> tNewTradesOrders = new ArrayList<>();
+
+    public List<TNewTradesOrder> gettNewTradesOrders() {
+        return tNewTradesOrders;
+    }
+
+    public void settNewTradesOrders(List<TNewTradesOrder> tNewTradesOrders) {
+        this.tNewTradesOrders = tNewTradesOrders;
+    }
 
     public Long getTid() {
         return tid;

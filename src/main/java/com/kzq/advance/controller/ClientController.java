@@ -567,8 +567,11 @@ public class ClientController {
 ////            logger.info(trade.getTid() + ":" + trade.getStatus());
 //            TradeUtil.isRefund(trade, shop);
 //        }
-
-        return tNewsTradeService.findOrders(shopId);
+        Long start = System.currentTimeMillis();
+        List<Trade> trades = tNewsTradeService.findOrders(shopId);
+        Long end = System.currentTimeMillis();
+        logger.debug("执行时间={}", (end - start));
+        return trades;
     }
 
     /**

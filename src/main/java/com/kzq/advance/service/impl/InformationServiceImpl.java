@@ -19,6 +19,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
@@ -53,7 +54,7 @@ public class InformationServiceImpl implements InformationService {
      * @param content 消息内容
      */
     @Async
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)//不可重复读
     public void infoRefund(String topic, String content) {
 
         topic = topic.trim();
@@ -108,11 +109,11 @@ public class InformationServiceImpl implements InformationService {
         switch (trade.getStatus()) {
             case "WAIT_SELLER_SEND_GOODS":   //WAIT_SELLER_SEND_GOODS 等待买家发货
                 logger.info("插入已付款订单，id=[{}]", tid);
-
+                //判断是否存在这条数据，因为如果我这边没有及时处理淘宝消息，淘宝会重发，一般间隔为10s
                 Example example = Example.builder(TNewTrades.class)
                         .select().where(Sqls.custom().andEqualTo("tid", tid)).build();
-                if (newTradesMapper.selectByExample(example) == null) {
-                    logger.info("数据库中已有此订单,拒绝重复插入,tid=", tid);
+                if (newTradesMapper.selectByExample(example).size()!=0) {
+                    logger.info("数据库中已有此订单,拒绝重复插入,tid={}", tid);
                     break;
                 }
                 BeanUtils.copyProperties(trade, newTrades);

@@ -1,5 +1,6 @@
 package com.kzq.advance;
 
+import com.kzq.advance.common.singleton.TmcClientUtil;
 import com.kzq.advance.common.util.SpringUtil;
 import com.kzq.advance.service.InformationService;
 import com.taobao.api.internal.tmc.TmcClient;
@@ -27,7 +28,8 @@ public class AdvanceApplication extends SpringBootServletInitializer {
 
         Logger logger = LoggerFactory.getLogger(AdvanceApplication.class);
         InformationService informationService = SpringUtil.getBean(InformationService.class);
-        TmcClient client = new TmcClient("25500416", "25720ff4e7b9f8c5cfe95827c7e35479", "default"); // 关于default参考消息分组说明
+        //使用单例
+        TmcClient client = TmcClientUtil.getTmcClientUtil().getClient(); // 关于default参考消息分组说明
 
         client.setMessageHandler((message, status) -> {
             try {

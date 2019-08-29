@@ -55,7 +55,7 @@ public class TestGetTrade {
     @Test
     public void test2() {
         String topic = "taobao_trade_TradeChanged";
-        String content = "{\"buyer_nick\":\"高江群群\",\"payment\":\"820.00\",\"status\":\"WAIT_SELLER_SEND_GOODS\",\"iid\":45558754196,\"oid\":597936801494539223,\"tid\":597936801494539223,\"type\":\"guarantee_trade\",\"seller_nick\":\"光合菲泰专卖店\"}";
+        String content = "{\"buyer_nick\":\"高江群群\",\"payment\":\"820.00\",\"status\":\"WAIT_SELLER_SEND_GOODS\",\"iid\":45558754196,\"oid\":597936801494539223,\"tid\":597944995935852820,\"type\":\"guarantee_trade\",\"seller_nick\":\"光合旗舰店\"}";
         informationService.infoRefund(topic, content);
     }
 

@@ -30,5 +30,44 @@
     <result column="is_refund" property="isRefund" jdbcType="TINYINT" />
     <result column="is_del" property="isDel" jdbcType="TINYINT" />
     <result column="del_time" property="delTime" jdbcType="TIMESTAMP" />
+    <collection column="tid" property="tNewTradesOrders" select="getOrders"></collection>
   </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    tid, receiver_address, status, receiver_name, payment, receiver_state, receiver_city,
+    receiver_district, receiver_country, receiver_mobile, receiver_phone, receiver_town,
+    created_time, modify_time, pay_time, pic_path, post_fee, buyer_nick, title, total_fee,
+    trade_from, buyer_memo, seller_memo, shop_id, seller_nick, is_refund, is_del, del_time
+  </sql>
+
+  <sql id="TNewTradeOrder_Column_List" >
+    oid, pic_path, sku_properties_name, tid, refund_status, status, title, num, num_iid,
+    payment,sku_id
+  </sql>
+
+  <select id="getOrders" resultMap="TNewTradesOrderResultMap" parameterType="java.lang.String">
+    select <include refid="TNewTradeOrder_Column_List" /> from t_new_trades_order where tid=#{tid}
+  </select>
+
+  <select id="getTrades" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from t_new_trades where shop_id=#{shopId} and is_del=0 and status='0'
+  </select>
+
+
+  <resultMap id="TNewTradesOrderResultMap" type="com.kzq.advance.domain.TNewTradesOrder" >
+    <id column="oid" property="oid" jdbcType="BIGINT" />
+    <result column="pic_path" property="picPath" jdbcType="VARCHAR" />
+    <result column="sku_properties_name" property="skuPropertiesName" jdbcType="VARCHAR" />
+    <result column="tid" property="tid" jdbcType="CHAR" />
+    <result column="refund_status" property="refundStatus" jdbcType="CHAR" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+    <result column="num_iid" property="numIid" jdbcType="CHAR" />
+    <result column="payment" property="payment" jdbcType="DECIMAL" />
+    <result column="sku_id" property="skuId" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  
 </mapper>
