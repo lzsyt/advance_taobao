@@ -133,34 +133,48 @@ public class InformationServiceImpl implements InformationService {
                 }
                 newTradesMapper.insertSelective(newTrades);
                 break;
-//            case "SELLER_CONSIGNED_PART": //SELLER_CONSIGNED_PART  买家部分发货     WAIT_BUYER_CONFIRM_GOODS 等待买家确认收货
-//                logger.info("买家部分发货；tid={}", tid);
-//                newTrades.setTid(trade.getTid());
-//                newTrades.setStatus("5");
-//                newTrades.setModifyTime(new Date());
-//                newTradesMapper.updateByPrimaryKeySelective(newTrades);
-//                break;
-//            case "WAIT_BUYER_CONFIRM_GOODS": //WAIT_BUYER_CONFIRM_GOODS  等待买家确认收货
-//                logger.info("等待买家确认收货；tid={}", tid);
-//                newTrades.setTid(trade.getTid());
-//                newTrades.setStatus("2");
-//                newTrades.setModifyTime(new Date());
-//                newTradesMapper.updateByPrimaryKeySelective(newTrades);
-//                break;
-//            case "TRADE_BUYER_SIGNED":  // TRADE_BUYER_SIGNED  买家收货
-//                logger.info("买家收货；tid={}", tid);
-//                newTrades.setTid(trade.getTid());
-//                newTrades.setStatus("3");
-//                newTrades.setModifyTime(new Date());
-//                newTradesMapper.updateByPrimaryKeySelective(newTrades);
-//                break;
-//            case "TRADE_FINISHED":   //TRADE_FINISHED 交易成功
-//                logger.info("交易成功；tid={}", tid);
-//                newTrades.setTid(trade.getTid());
-//                newTrades.setStatus("4");
-//                newTrades.setModifyTime(new Date());
-//                newTradesMapper.updateByPrimaryKeySelective(newTrades);
-//                break;
+            case "SELLER_CONSIGNED_PART": //SELLER_CONSIGNED_PART  卖家部分发货
+                logger.info("买家部分发货；tid={}", tid);
+                newTrades.setTid(trade.getTid());
+                newTrades.setStatus("5");
+                newTrades.setModifyTime(new Date());
+                newTradesMapper.updateByPrimaryKeySelective(newTrades);
+                break;
+            case "WAIT_BUYER_CONFIRM_GOODS": //WAIT_BUYER_CONFIRM_GOODS  等待卖家确认收货
+                logger.info("等待买家确认收货；tid={}", tid);
+                newTrades.setTid(trade.getTid());
+                newTrades.setStatus("2");
+                newTrades.setModifyTime(new Date());
+                newTradesMapper.updateByPrimaryKeySelective(newTrades);
+                break;
+            case "TRADE_BUYER_SIGNED":  // TRADE_BUYER_SIGNED  买家收货
+                logger.info("买家收货；tid={}", tid);
+                newTrades.setTid(trade.getTid());
+                newTrades.setStatus("3");
+                newTrades.setModifyTime(new Date());
+                newTradesMapper.updateByPrimaryKeySelective(newTrades);
+                break;
+            case "TRADE_FINISHED":   //TRADE_FINISHED 交易成功
+                logger.info("交易成功；tid={}", tid);
+                newTrades.setTid(trade.getTid());
+                newTrades.setStatus("4");
+                newTrades.setModifyTime(new Date());
+                newTradesMapper.updateByPrimaryKeySelective(newTrades);
+                break;
+            case "TRADE_CLOSED_BY_TAOBAO":   // 淘宝关闭交易，付款以前，卖家或买家主动关闭交易
+                logger.info("淘宝关闭交易；tid={}", tid);
+                newTrades.setTid(trade.getTid());
+                newTrades.setStatus("TRADE_CLOSED_BY_TAOBAO");
+                newTrades.setModifyTime(new Date());
+                newTradesMapper.updateByPrimaryKeySelective(newTrades);
+                break;
+            case "TRADE_CLOSED":   // 付款以后退款成功
+                logger.info("付款以后退款成功；tid={}", tid);
+                newTrades.setTid(trade.getTid());
+                newTrades.setStatus("TRADE_CLOSED");
+                newTrades.setModifyTime(new Date());
+                newTradesMapper.updateByPrimaryKeySelective(newTrades);
+                break;
             default:
                 logger.info("其他状态:{},tid:{}", trade.getStatus(),tid);
                 break;
