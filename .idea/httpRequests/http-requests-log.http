@@ -1,3 +1,103 @@
+POST http://localhost:8080/tnewstrade?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-30T050051.200.txt
+
+###
+
+POST http://localhost:8080/tnewstrade?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-30T045745.500.json
+
+###
+
+POST http://localhost:8080/tnewstrade?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-30T045449.500.json
+
+###
+
+POST http://localhost:8080/tnewstrade?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-30T045313.500.json
+
+###
+
+POST http://localhost:8080/tnewstrade\?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+###
+
+POST http://39.106.187.174/tnewstrade?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-30T044231.500.json
+
+###
+
+POST http://localhost/tnewstrade?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+###
+
+POST http://39.106.187.174/tnewstrade?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-30T124708.504.html
+
+###
+
+POST http://39.106.187.174/closeTmcClient?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-30T124442.200.txt
+
+###
+
+POST http://39.106.187.174/closeTmcClient?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-30T124215.200.txt
+
+###
+
+POST http://localhost:8080/findOrders?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-30T094640.200.json
+
+###
+
+POST http://localhost:8080/findOrders?pwd=3311300zmn3311300&shopid=8
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-30T094447.200.json
+
+###
+
+POST http://localhost:8080/findOrder?pwd=3311300zmn3311300&shopId=8
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-30T094324.404.json
+
+###
+
 POST http://39.106.187.174/closeTmcClient?pwd=3311300zmn3311300
 Accept: */*
 Cache-Control: no-cache
@@ -289,106 +389,6 @@ Accept: */*
 Cache-Control: no-cache
 
 <> 2019-08-27T041456.200.json
-
-###
-
-POST http://localhost:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-27T041051.200.json
-
-###
-
-POST http://localhost:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-27T040609.200.json
-
-###
-
-POST http://localhost:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-27T040507.500.json
-
-###
-
-POST http://localhost:8080/findOrders?shopid=7
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-27T024437.200.json
-
-###
-
-POST http://localhost:8080/getOrders?shopNum=264913831107254992
-Accept: */*
-Cache-Control: no-cache
-
-###
-
-POST http://localhost:8080/getOrders?shopNum=552213516686569304
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-15T051337.200.txt
-
-###
-
-POST http://localhost:8080/getOrders?shopNum=552213516686569304
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-15T051319.500.json
-
-###
-
-POST http://localhost:8080/getTradeStatus?tid=498792130995286338
-Accept: */*
-Cache-Control: no-cache
-
-###
-
-POST http://localhost:8080/findOrders?shopid=7
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-06-20T050413.200.json
-
-###
-
-POST http://localhost:8080/getOrders?shopNum=481526051923396574
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-06-17T052642.200.txt
-
-###
-
-POST http://localhost:8080/getOrders?shopNum=482362370683582483&userId=001B133C-A289-11E8-B710-00163E0CF556
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-06-17T052357.200.txt
-
-###
-
-GET http://localhost:8080/getOrders?shopNum=482362370683582483&userId=001B133C-A289-11E8-B710-00163E0CF556
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-06-17T052332.405.json
-
-###
-
-GET http://localhost:8080/down?shopId=9&userId=001B133C-A289-11E8-B710-00163E0CF556
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-06-17T090302.200.json
 
 ###
 
