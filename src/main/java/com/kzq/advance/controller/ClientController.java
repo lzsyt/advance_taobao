@@ -660,9 +660,9 @@ public class ClientController {
         }
         boolean is_succeed = TbaoUtils.shipments(sub_tid, out_sid, company_code, tid, is_split, token);
         if (is_succeed) {
-            logger.info("发货成功");
+            logger.info("发货成功,tid={}",tid);
         } else {
-            logger.info("发货失败");
+            logger.info("发货失败,tid={}",tid);
         }
         return is_succeed;
     }

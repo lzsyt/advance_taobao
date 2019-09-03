@@ -669,9 +669,10 @@ public class TbaoUtils {
      * 查询面单服务订购及面单使用情况
      */
 
-    public static List<WaybillApplySubscriptionInfo> waybillISearch() {
+    public static List<WaybillApplySubscriptionInfo> waybillISearch(String cpcode) {
         WlbWaybillISearchRequest req = new WlbWaybillISearchRequest();
         WaybillApplyRequest obj1 = new WaybillApplyRequest();
+        obj1.setCpCode(cpcode);
         req.setWaybillApplyRequest(obj1);
         WlbWaybillISearchResponse rsp = null;
         try {

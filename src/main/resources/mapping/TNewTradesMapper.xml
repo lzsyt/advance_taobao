@@ -51,7 +51,7 @@
   </select>
 
   <select id="getTrades" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List" /> from t_new_trades where shop_id=#{shopId} and is_del=0 and status='0' or status = '5'
+    select <include refid="Base_Column_List" /> from t_new_trades where shop_id=#{shopId} and status='0' or status = '5'
   </select>
 
 

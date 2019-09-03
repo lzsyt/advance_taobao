@@ -1,6 +1,7 @@
 package com.kzq.advance.service.impl;
 
 import com.kzq.advance.common.utils.TbaoUtils;
+import com.kzq.advance.common.utils.TradeUtil;
 import com.kzq.advance.domain.TNewTrades;
 import com.kzq.advance.domain.TNewTradesOrder;
 import com.kzq.advance.domain.TShop;
@@ -93,6 +94,7 @@ public class InformationServiceImpl implements InformationService {
     /**
      * 订单状态更改
      */
+    @Async
     public void changeTrade(Long tid, String seller_nick) {
         TNewTrades newTrades = new TNewTrades();
 
@@ -108,6 +110,21 @@ public class InformationServiceImpl implements InformationService {
         //等待卖家发货
         switch (trade.getStatus()) {
             case "WAIT_SELLER_SEND_GOODS":   //WAIT_SELLER_SEND_GOODS 等待买家发货
+
+
+                //判断是否退款
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                TradeUtil.isRefund(trade, tShop);
+                if (trade.getStatus().equals("1")){
+                    logger.info("申请退款,tid = [{}]", tid);
+                    break;
+                }
+
+
                 logger.info("插入已付款订单，id=[{}]", tid);
                 //判断是否存在这条数据，因为如果我这边没有及时处理淘宝消息，淘宝会重发，一般间隔为10s
                 Example example = Example.builder(TNewTrades.class)
