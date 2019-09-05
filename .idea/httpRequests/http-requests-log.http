@@ -1,3 +1,183 @@
+POST http://localhost:8080/getTradeByBuyerNick?pwd=3311300zmn3311300&shopId=16&buyerNick=舞台梦幻
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-09-05T113757.200.txt
+
+###
+
+POST http://localhost:8080/getTradeByBuyerNick?pwd=3311300zmn3311300&shopId=16&buyerNick=舞台梦幻
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-09-05T112404.200.json
+
+###
+
+POST http://localhost:8080/getTradeByBuyerNick?pwd=3311300zmn3311300&shopId=16&buyerNick=舞台梦幻
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-09-05T111204.200.json
+
+###
+
+POST http://localhost:8080/getTradeByBuyerNick?pwd=3311300zmn3311300&shopId=16&buyerNick=舞台梦幻
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-09-05T111146.200.json
+
+###
+
+POST http://localhost:8080/getTradeByBuyerNick?pwd=3311300zmn3311300&shopId=16&buyerNick=舞台梦幻
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-09-05T110921.200.json
+
+###
+
+POST http://localhost:8080/getTradeByBuyerNick?pwd=3311300zmn3311300&shopId=16&buyerNick=舞台梦幻
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-09-05T110717.200.json
+
+###
+
+POST http://localhost:8080/getTradeByBuyerNick?pwd=3311300zmn3311300&shopId=16&buyerNick=舞台梦幻
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-09-05T110522.200.json
+
+###
+
+POST http://localhost:8080/getTradeByBuyerNick?pwd=3311300zmn3311300&shopId=16&buyerNick=舞台梦幻
+Accept: */*
+Cache-Control: no-cache
+
+###
+
+POST http://localhost:8080/getTradeByBuyerNick?pwd=3311300zmn3311300&shopId=12&buyerNick=充满忌廉遐想的灰伯爵
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-09-05T095449.200.json
+
+###
+
+POST http://39.106.187.174/getTradeByBuyerNick?pwd=3311300zmn3311300&shopId=12&buyerNick=充满忌廉遐想的灰伯爵
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-09-05T095431.404.json
+
+###
+
+POST http://39.106.187.174/closeTmcClient?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-09-03T052300.200.txt
+
+###
+
+POST http://localhost:8080/tnewstrade?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-09-03T111227.200.txt
+
+###
+
+POST http://localhost:8080/tnewstrade?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-31T034039.200.txt
+
+###
+
+POST http://localhost:8080/tnewstrade?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-31T033915.500.json
+
+###
+
+POST http://localhost:8080/tnewstrade?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+###
+
+POST http://localhost:8080/tnewstrade?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-31T113324.200.txt
+
+###
+
+POST http://localhost:8080/tnewstrade?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-31T113120.500.json
+
+###
+
+POST http://localhost:8080/tnewstrade?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-31T113044.500.json
+
+###
+
+POST http://localhost:8080/tnewstrade?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-31T112654.500.json
+
+###
+
+POST http://localhost:8080/tnewstrade?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-31T112302.500.json
+
+###
+
+POST http://localhost:8080/tnewstrade?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-31T093311.200.txt
+
+###
+
+POST http://localhost:8080/tnewstrade?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-31T090147.200.txt
+
+###
+
+POST http://localhost:8080/tnewstrade?pwd=3311300zmn3311300&shopid=7
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-08-31T085744.500.json
+
+###
+
 POST http://localhost:8080/tnewstrade?pwd=3311300zmn3311300&shopid=7
 Accept: */*
 Cache-Control: no-cache
@@ -205,190 +385,6 @@ Accept: */*
 Cache-Control: no-cache
 
 <> 2019-08-29T105659.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=7
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-29T105607.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=7
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-29T105556.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=7
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-29T105445.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=7
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-29T105320.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=11
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-29T105259.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=11
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-29T105152.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=10
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-29T105052.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=7
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-29T104852.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=9
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-29T104330.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=9
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-29T103511.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-29T103459.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-29T103130.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-28T070244.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-28T070120.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-28T065753.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-27T051015.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-27T050741.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-27T050353.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-27T050350.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-27T050338.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-27T050244.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-27T045614.200.json
-
-###
-
-POST http://192.168.1.125:8080/findOrders?shopid=8
-Accept: */*
-Cache-Control: no-cache
-
-<> 2019-08-27T041456.200.json
 
 ###
 

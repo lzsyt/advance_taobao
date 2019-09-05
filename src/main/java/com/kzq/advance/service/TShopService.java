@@ -5,4 +5,6 @@ import com.kzq.advance.domain.TShop;
 public interface TShopService {
 
     public TShop findBySellerNick(String sellerNick);
+
+    public TShop findById(String shopId);
 }

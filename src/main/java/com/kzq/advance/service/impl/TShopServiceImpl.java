@@ -16,4 +16,9 @@ public class TShopServiceImpl implements TShopService {
     public TShop findBySellerNick(String sellerNick) {
         return tShopMapper.findBySellerNick(sellerNick);
     }
+
+    @Override
+    public TShop findById(String shopId) {
+        return tShopMapper.selectByPrimaryKey(shopId);
+    }
 }

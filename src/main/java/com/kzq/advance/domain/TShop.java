@@ -1,6 +1,11 @@
 package com.kzq.advance.domain;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Table
 public class TShop {
+    @Id
     private Integer id;
 
     private String shopName;

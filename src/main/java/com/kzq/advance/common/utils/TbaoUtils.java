@@ -208,6 +208,40 @@ public class TbaoUtils {
     }
 
 
+    public static List<Trade> findTrade(String sessionKey, List<Trade> tradeList,Long offer,String buyerNick){
+        TradesSoldGetRequest req = new TradesSoldGetRequest();
+        req.setFields("tid,buyer_nick,seller_nick,pay_time,payment,seller_memo,created,buyer_message");
+        TradesSoldGetResponse rsp = null;
+        try {
+            req.setPageNo(offer);
+            req.setPageSize(40L);
+            req.setBuyerNick(buyerNick);
+            req.setUseHasNext(true);
+            rsp = client.execute(req, sessionKey);
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+        return getTradesMemo(sessionKey, tradeList, offer, rsp);
+    }
+
+    private static List<Trade> getTradesMemo(String sessionKey, List<Trade> tradeList, Long offer, TradesSoldGetResponse rsp) {
+        List<Trade> trades = rsp.getTrades();
+        for (Trade trade : trades) {
+            Trade trade1 = getTrade("seller_memo,buyer_message", String.valueOf(trade.getTid()), sessionKey).getTrade();
+            trade.setBuyerMemo(trade1.getBuyerMessage());
+            trade.setSellerMemo(trade1.getSellerMemo());
+        }
+
+        tradeList.addAll(trades);
+        if (rsp.getHasNext()) {
+            findOrders(sessionKey, tradeList, ++offer);
+        } else {
+            return tradeList;
+        }
+        return tradeList;
+    }
+
+
     /**
      * 获取某个店铺所有订单，返回list
      *
@@ -230,20 +264,7 @@ public class TbaoUtils {
         } catch (ApiException e) {
             e.printStackTrace();
         }
-        List<Trade> trades = rsp.getTrades();
-        for (Trade trade : trades) {
-            Trade trade1= getTrade("seller_memo,buyer_message", String.valueOf(trade.getTid()), sessionKey).getTrade();
-            trade.setBuyerMemo(trade1.getBuyerMemo());
-            trade.setSellerMemo(trade1.getSellerMemo());
-        }
-
-        tradeList.addAll(trades);
-        if (rsp.getHasNext()){
-            findOrders(sessionKey, tradeList, ++offer);
-        }else{
-            return tradeList;
-        }
-        return tradeList;
+        return getTradesMemo(sessionKey, tradeList, offer, rsp);
     }
 
 
@@ -359,7 +380,7 @@ public class TbaoUtils {
             e.printStackTrace();
         }
 //        System.out.println(rsp.getBody());
-
+        logger.info(rsp.getBody());
         return rsp;
     }
 
